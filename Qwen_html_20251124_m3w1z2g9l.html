@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Nusantara AI — Asisten Cerdas</title>
+  <style>
+    :root {
+      --primary-blue: #60A5FA;
+      --secondary-pink: #EC4899;
+      --gray-text: #6B7280;
+      --bg-white: #ffffff;
+      --placeholder-gray: #9CA3AF;
+      --tech-blue: #38bdf8;
+      --top-bg-color: #EAD6EE;
+    }
+    body {
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      background: linear-gradient(135deg, #f9d9ff, #c3f3ff, #e0daff);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      box-sizing: border-box;
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      overflow-x: hidden;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .top-banner {
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      z-index: 100;
+      animation: fadeInUp 1s ease-out forwards;
+    }
+    .top-banner h1 {
+      color: #374151;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      background: var(--top-bg-color);
+      padding: 12px 24px;
+      border-radius: 50px;
+      display: inline-block;
+      animation: pulse 3s infinite ease-in-out;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(234, 214, 238, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(234, 214, 238, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(234, 214, 238, 0); }
+    }
+
+    .magic-bubble {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 50%;
+      box-shadow: 
+        0 0 30px rgba(255, 255, 255, 0.5),
+        inset 0 0 20px rgba(255, 255, 255, 0.3);
+      animation: float 6s ease-in-out infinite;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .magic-bubble::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(56, 189, 248, 0.3), rgba(165, 243, 252, 0.3));
+      border-radius: 50%;
+      filter: blur(20px);
+      opacity: 0.8;
+      z-index: -1;
+    }
+    .magic-bubble::after {
+      content: "";
+      position: absolute;
+      bottom: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 20px;
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(56, 189, 248, 0.1));
+      border-radius: 50%;
+      filter: blur(10px);
+      opacity: 0.5;
+      z-index: -2;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-5px) scale(1.02); }
+    }
+
+    .title {
+      color: #374151;
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+      max-width: 90%;
+      line-height: 1.3;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      margin-top: -20px;
+      letter-spacing: 0.5px;
+    }
+    .ask-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-white);
+      border-radius: 50px;
+      padding: 12px 18px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+      width: 480px;
+      max-width: 95%;
+      transition: all 0.25s ease;
+    }
+    .ask-box:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+    .ask-box .icon {
+      font-size: 18px;
+      color: var(--gray-text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+    .ask-box .icon:hover {
+      background: #f3f4f6;
+    }
+    .ask-box input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      color: var(--gray-text);
+      background: transparent;
+      min-width: 0;
+    }
+    .ask-box input::placeholder {
+      color: var(--placeholder-gray);
+    }
+    .send-btn, .tech-btn {
+      background: linear-gradient(90deg, var(--primary-blue), var(--secondary-pink));
+      color: white;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: none;
+    }
+    .send-btn:hover, .tech-btn:hover {
+      transform: scale(1.12);
+      box-shadow: 0 4px 10px rgba(96, 165, 250, 0.3);
+    }
+    .response {
+      background: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      max-width: 480px;
+      width: 95%;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+      color: #374151;
+      font-size: 15px;
+      line-height: 1.6;
+      text-align: left;
+      white-space: pre-wrap;
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 500px) {
+      .title { font-size: 20px; }
+      .ask-box { padding: 10px 16px; gap: 10px; }
+      .send-btn, .tech-btn { width: 34px; height: 34px; font-size: 14px; }
+      .magic-bubble { width: 100px; height: 100px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-banner">
+    <h1>Ask Me Anything — Nusantara AI</h1>
+  </div>
+
+  <div class="magic-bubble" id="magicBubble"></div>
+
+  <div class="title">Digital Nusantara AI — Asisten Cerdas</div>
+  <div class="ask-box">
+    <span class="icon" aria-label="Tambah topik">＋</span>
+    <span class="icon" aria-label="Pengumuman">📣</span>
+    <span class="icon" aria-label="Peta budaya">🗺️</span>
+    <input type="text" placeholder="Tanyakan sesuatu..." id="userInput" />
+    <button class="tech-btn" id="techBtn" aria-label="Cari tentang teknologi">🌐</button>
+    <div class="send-btn" id="sendBtn" aria-label="Kirim pertanyaan">✈️</div>
+  </div>
+  <div id="response" class="response" style="display:none;"></div>
+
+  <script>
+    // === DATABASE PENGETAHUAN LENGKAP (UPDATE) ===
+    const knowledgeBase = {
+      // === [BARU] STRUKTUR NARATIF TERPISAH ===
+      "tema": `# Tema\n\n**Pengertian:**\nInti pokok atau gagasan utama yang mendasari sebuah cerita.\n\n**Ciri:**\n- Bersifat universal\n- Menjadi dasar pengembangan cerita\n- Tidak selalu disebut eksplisit\n\n**Contoh tema:**\n- Persahabatan\n- Pengorbanan\n- Keadilan\n- Cinta tanah air`,
+      
+      "abstraksi": `# Abstraksi\n\n**Pengertian:**\nGambaran awal atau cuplikan singkat tentang keseluruhan cerita (opsional, tidak selalu ada).\n\n**Fungsi:**\n- Menarik perhatian pembaca\n- Memberi bayangan akhir cerita\n\n**Contoh:**\n"Dengan keberanian dan kejujuran, seorang anak desa berhasil mengungkap kejahatan yang selama ini disembunyikan."`,
+      
+      "orientasi": `# Orientasi\n\n**Pengertian:**\nBagian awal cerita yang berisi pengenalan tokoh, latar (waktu & tempat), dan suasana.\n\n**Tujuan:**\nAgar pembaca memahami "siapa, di mana, kapan, dan bagaimana" cerita berlangsung.\n\n**Contoh:**\n"Pada suatu pagi yang cerah di desa Sukamaju, Rina, seorang siswi kelas 6, berangkat ke sekolah sambil membawa bekal nasi...`,
+      
+      "komplikasi": `# Komplikasi\n\n**Pengertian:**\nRangkaian peristiwa yang menimbulkan konflik atau masalah dalam cerita.\n\n**Ciri:**\n- Terjadi konflik (manusia vs manusia, alam, diri sendiri, dsb)\n- Tegang, penuh ketegangan\n- Menjadi inti cerita\n\n**Contoh:**\n"Tiba-tiba, Rina melihat dompet kepala sekolah jatuh di jalan. Ia ingin mengembalikan, tapi temannya melarang..."`,
+      
+      "evaluasi": `# Evaluasi\n\n**Pengertian:**\nProses penilaian atau refleksi terhadap kejadian dalam cerita, sering muncul sebagai bagian dari resolusi.\n\n**Catatan:** Dalam banyak kurikulum, "evaluasi" digabung dengan **resolusi** atau **koda**.\n\n**Fungsi:**\nMenunjukkan bagaimana tokoh menyikapi masalah dan pelajaran yang didapat.`,
+      
+      "resolusi": `# Resolusi\n\n**Pengertian:**\nPenyelesaian konflik dalam cerita.\n\n**Tujuan:**\nMemberikan solusi atas masalah sehingga cerita mencapai akhir yang logis.\n\n**Catatan:** Resolusi bersifat **praktis** — bagaimana masalah diatasi agar tidak terulang.\n\n**Contoh:**\n"Rina akhirnya melaporkan temuannya ke guru, dan kepala sekolah memuji kejujurannya. Sejak itu, sekolah membuat kotak kejujuran..."`,
+      
+      "koda": `# Koda (Amanat)\n\n**Pengertian:**\nPesan moral yang ingin disampaikan penulis kepada pembaca.\n\n**Jenis:**\n- **Tersurat**: Langsung ditulis (contoh: "Moral dari cerita ini adalah jujur itu baik.")\n- **Tersirat**: Tidak langsung, tersirat dari tindakan tokoh\n\n**Contoh amanat:**\n"Kejujuran membawa berkah."`,
+      
+      // === [UPDATE] SIMPLE PRESENT TENSE LENGKAP ===
+      "present tense": `# Simple Present Tense\n\n**Pengertian:**\nMenyatakan kebiasaan, fakta umum, atau kejadian yang selalu benar.\n\n## ✅ Rumus Lengkap:\n\n### 🔹 Kalimat Positif:\n- I/You/We/They + Verb1 → They **play** football.\n- He/She/It + Verb1 + **s/es** → She **teaches** math.\n\n### 🔹 Kalimat Negatif:\n- I/You/We/They + **do not (don't)** + Verb1 → They **don't play** football.\n- He/She/It + **does not (doesn't)** + Verb1 → She **doesn't teach** math.\n\n### 🔹 Kalimat Tanya (Interrogative):\n- **Do** + I/You/We/They + Verb1? → **Do** they **play** football?\n- **Does** + He/She/It + Verb1? → **Does** she **teach** math?\n\n## 📌 Contoh:\n- The sun **rises** in the east. (fakta)\n- I **drink** coffee every morning. (kebiasaan)\n- **Do** you **like** apples? (pertanyaan)\n- She **doesn't go** to school on Sunday. (negatif)`,
+      
+      // === DATA LAMA TETAP DIPERTAHANKAN ===
+      "simple past tense": `# Simple Past Tense\n\n**Pengertian:** Digunakan untuk menyatakan kejadian yang terjadi di masa lalu.\n\n**Rumus:**\n- Positif: Subject + Verb2 (Contoh: He went to school)\n- Negatif: Subject + did not + Verb1 (Contoh: She did not eat rice)\n- Tanya: Did + Subject + Verb1? (Contoh: Did you play football?)\n\n**Kata keterangan waktu:** yesterday, last week, in 2010, ago.\n\n**Contoh Regular Verb:**\n- play → played\n- clean → cleaned\n\n**Contoh Irregular Verb:**\n- go → went\n- eat → ate\n- write → wrote`,
+      
+      "noun": `# Noun (Kata Benda)\n\n**Pengertian:** Kata yang menyatakan orang, tempat, benda, hewan, atau ide.\n\n**Jenis:**\n- Proper noun: Jakarta, Rina\n- Common noun: city, teacher\n- Concrete noun: book, water\n- Abstract noun: love, freedom`,
+      
+      "adjective": `# Adjective (Kata Sifat)\n\n**Pengertian:** Kata yang menjelaskan noun (benda/orang).\n\n**Contoh:** beautiful, tall, smart, red, old.\n\n**Posisi:** Biasanya sebelum noun (a beautiful flower) atau setelah linking verb (The flower is beautiful).`,
+      
+      "adverb of manner": `# Adverb of Manner\n\n**Pengertian:** Kata keterangan yang menjelaskan CARA suatu tindakan dilakukan.\n\n**Ciri:** Sering berakhiran -ly (tapi tidak selalu).\n\n**Contoh:**\n- She sings beautifully.\n- He drives carefully.\n- They speak softly.`,
+      
+      "imperative sentence": `# Imperative Sentence\n\n**Pengertian:** Kalimat perintah, larangan, atau permintaan.\n\n**Struktur:** Verb1 + ...\n\n**Contoh:**\n- Open the door.\n- Don't run in the hallway!\n- Please be quiet.`,
+      
+      "simple future tense": `# Simple Future Tense\n\n**Pengertian:** Menyatakan rencana atau prediksi di masa depan.\n\n**Rumus:**\n- will + Verb1 (Contoh: I will call you)\n- be going to + Verb1 (Contoh: She is going to travel)\n\n**Perbedaan:**\n- "Will" untuk keputusan spontan atau prediksi.\n- "Be going to" untuk rencana yang sudah dipikirkan.`,
+      
+      "pm dan am": `# Perbedaan AM dan PM\n\n- **AM** (Ante Meridiem): 12:00 malam sampai 11:59 pagi.\n- **PM** (Post Meridiem): 12:00 siang sampai 11:59 malam.\n\n**Contoh:**\n- 8:00 AM = Pukul 08.00 pagi\n- 8:00 PM = Pukul 20.00 malam`,
+      
+      "narrative text": `# Narrative Text\n\n**Tujuan:** Menghibur dan menyampaikan pesan moral.\n\n**Struktur Lengkap:**\n1. **Abstraksi** (opsional)\n2. **Orientasi**\n3. **Komplikasi**\n4. **Resolusi**\n5. **Koda**\n\n**Contoh tema:** "The Lion and the Mouse", "Malin Kundang".`,
+      
+      "teks hikayat": `# Teks Hikayat\n\n**Pengertian:** Cerita prosa lama yang menceritakan kehidupan kerajaan, pahlawan, atau tokoh bangsawan.\n\n**Ciri:**\n- Bersifat anonim\n- Mengandung nilai moral\n- Menggunakan bahasa Melayu klasik\n\n**Jenis:** Hikayat Hang Tuah, Hikayat Si Miskin.\n\n**Unsur Intrinsik:** Tema, alur, tokoh, latar, amanat.\n**Unsur Ekstrinsik:** Nilai budaya, sosial, agama.`,
+      
+      "laporan observasi": `# Teks Laporan Hasil Observasi\n\n**Tujuan:** Melaporkan hasil pengamatan secara objektif.\n\n**Struktur:**\n1. Pernyataan umum\n2. Deskripsi bagian/aspek\n\n**Ciri:**\n- Objektif (tanpa opini)\n- Menggunakan istilah teknis\n- Menggunakan kata definisi ("adalah", "merupakan")\n\n**Contoh tema:** "Laporan Pengamatan Tanaman Kacang Hijau".`,
+      
+      "teks negosiasi": `# Teks Negosiasi\n\n**Tujuan:** Mencapai kesepakatan melalui tawar-menawar.\n\n**Struktur:**\n1. Orientasi\n2. Permintaan\n3. Penawaran\n4. Persetujuan\n5. Penutup\n\n**Ciri:**\n- Menggunakan kalimat persuasif\n- Ada dua pihak yang bernegosiasi\n- Tujuan mencapai win-win solution`,
+      
+      "biotik dan abiotik": `# Biotik dan Abiotik\n\n- **Biotik**: Komponen hidup di ekosistem.\n  Contoh: manusia, hewan, tumbuhan, jamur.\n\n- **Abiotik**: Komponen tak hidup.\n  Contoh: air, tanah, batu, udara, cahaya matahari.`,
+      
+      "perubahan fisika": `# Perubahan Fisika\n\n**Pengertian:** Perubahan wujud tanpa menghasilkan zat baru. Sifatnya **reversibel** (bisa kembali).\n\n**Contoh:**\n- Air → es (membeku)\n- Es → air (mencair)\n- Air → uap (menguap)\n- Uap → air (mengembun)\n- Kapur barus → gas (menyublim)\n- Uap → es (deposisi)`,
+      
+      "perubahan kimia": `# Perubahan Kimia\n\n**Pengertian:** Perubahan yang menghasilkan zat baru. Sifatnya **irreversibel**.\n\n**Ciri:**\n- Perubahan warna\n- Timbul gas\n- Perubahan suhu\n- Terbentuk endapan\n\n**Contoh:**\n- Kayu dibakar → abu\n- Besi berkarat\n- Susu basi`,
+      
+      "ovovipar": `# Cara Berkembang Biak Hewan\n\n- **Ovovivipar**: Telur menetas di dalam tubuh induk, lalu dilahirkan. Contoh: ikan hiu, beberapa ular.\n- **Vivipar**: Melahirkan anak (tanpa telur). Contoh: manusia, kucing.\n- **Ovipar**: Bertelur. Contoh: ayam, burung.`,
+      
+      "simbiosis": `# Jenis Simbiosis\n\n1. **Mutualisme**: Saling menguntungkan. Contoh: lebah dan bunga.\n2. **Komensalisme**: Satu untung, lainnya tidak rugi/untung. Contoh: ikan remora dan hiu.\n3. **Parasitisme**: Satu untung, lainnya rugi. Contoh: cacing pita dalam usus manusia.`,
+      
+      "pancasila": `# Pancasila – Dasar Negara RI\n\n1. Ketuhanan Yang Maha Esa\n2. Kemanusiaan yang adil dan beradab\n3. Persatuan Indonesia\n4. Kerakyatan yang dipimpin oleh hikmat kebijaksanaan dalam permusyawaratan/perwakilan\n5. Keadilan sosial bagi seluruh rakyat Indonesia\n\nPancasila adalah sumber dari segala sumber hukum di Indonesia.`,
+      
+      "hak dan kewajiban": `# Hak dan Kewajiban\n\n- **Hak**: Sesuatu yang pantas diterima. Contoh: hak mendapat pendidikan, hak mengemukakan pendapat.\n- **Kewajiban**: Sesuatu yang harus dilakukan. Contoh: membayar pajak, menjaga kebersihan lingkungan.\n\n**Contoh konkret:**\n- Hak: Bisa mengambil kembali pulpen yang dipinjam teman.\n- Kewajiban: Melaksanakan piket kelas.`,
+      
+      "sil ke 4": `# Sila ke-4 Pancasila\n\n**Bunyi:** "Kerakyatan yang dipimpin oleh hikmat kebijaksanaan dalam permusyawaratan/perwakilan"\n\n**Contoh penerapan:**\n- Memberikan pendapat saat rapat RT\n- Memilih ketua kelas secara musyawarah\n- Menghargai suara mayoritas`,
+      
+      "sistem persamaan": `# Sistem Persamaan Linear\n\n1. **Eliminasi**: Menghilangkan salah satu variabel.\n2. **Substitusi**: Mengganti satu variabel dengan ekspresi lain.\n3. **Gabungan**: Eliminasi + Substitusi.\n\n**Contoh:**\n2x + y = 5\nx - y = 1\n\n→ x = 2, y = 1`,
+      
+      "logaritma": `# Logaritma\n\n**Pengertian:** Invers dari eksponen.\nJika a^b = c, maka log_a(c) = b.\n\n**Sifat:**\n- log(a×b) = log a + log b\n- log(a/b) = log a - log b\n- log(a^n) = n log a\n\n**Contoh:**\nlog₁₀(100) = 2 karena 10² = 100`,
+      
+      "persamaan kuadrat": `# Persamaan Kuadrat\n\n**Bentuk umum:** ax² + bx + c = 0\n\n**Rumus akar:**\nx = [-b ± √(b² - 4ac)] / (2a)\n\n**Diskriminan (D):** D = b² - 4ac\n- D > 0 → 2 akar real\n- D = 0 → 1 akar real\n- D < 0 → akar imajiner`,
+      
+      "fungsi eksponen": `# Fungsi Eksponen\n\n**Bentuk:** f(x) = a^x, a > 0, a ≠ 1\n\n**Sifat:**\n- a^m × a^n = a^(m+n)\n- (a^m)^n = a^(m×n)\n- a^(-n) = 1/a^n\n\n**Contoh grafik:** Selalu positif, melalui (0,1).`,
+      
+      "keuangan": `# Literasi Keuangan Dasar\n\n1. **Pendapatan**: Uang yang masuk (gaji, usaha).\n2. **Pengeluaran**: Uang yang keluar (belanja, tagihan).\n3. **Tabungan**: Pendapatan - Pengeluaran.\n4. **Investasi**: Menanam uang untuk keuntungan jangka panjang.\n5. **Anggaran**: Rencana pemasukan & pengeluaran.\n\n**Tips:**\n- 50% kebutuhan, 30% keinginan, 20% tabungan/investasi.`,
+      
+      "teknologi": `# Pengertian Teknologi\n\nMenurut KBBI: **Sarana atau alat untuk memecahkan masalah, memudahkan pekerjaan, atau berkomunikasi.**\n\n**Contoh:** Smartphone, internet, mesin cuci, AI.`,
+      
+      "budaya digital": `# Budaya Digital\n\n**Pengertian:** Cara berperilaku di dunia digital yang mencerminkan nilai budaya.\n\n**Contoh positif:**\n- Mencintai produk lokal (batik, tenun)\n- Membeli UMKM lewat e-commerce\n- Mempromosikan budaya Indonesia di media sosial`,
+      
+      "etika digital": `# Etika Digital\n\n1. Bersikap sopan di media sosial.\n2. Tidak menyebarkan hoax.\n3. Tidak memberikan komentar jahat (body shaming, hate speech).\n4. Menghargai privasi orang lain.\n5. Tidak plagiat karya digital.`,
+      
+      "mencegah hoax": `# Cara Mencegah Hoax\n\n1. Cek sumber berita (resmi/tidak).\n2. Verifikasi ke fakta (turnbackhoax.id).\n3. Jangan asal share.\n4. Gunakan fitur "laporkan" di media sosial.\n5. Edukasi keluarga tentang literasi digital.`,
+      
+      "keamanan digital": `# Keamanan Digital\n\n1. Gunakan password kuat (8+ karakter, gabung huruf besar/kecil, angka, simbol).\n2. Aktifkan 2FA (Two-Factor Authentication).\n3. Jangan gunakan WiFi publik untuk transaksi.\n4. Perbarui software secara berkala.\n5. Jangan klik link mencurigakan.`,
+      
+      "budaya": `# Budaya Secara Umum\n\n**Pengertian:**\nBudaya adalah seluruh cara hidup yang berkembang dan dimiliki bersama oleh suatu masyarakat, yang diwariskan dari generasi ke generasi.\n\n**Unsur Budaya (Koentjaraningrat):**\n1. Sistem religi\n2. Sistem kemasyarakatan\n3. Ilmu pengetahuan\n4. Bahasa\n5. Kesenian\n6. Sistem mata pencaharian\n7. Sistem teknologi & peralatan\n\n**Fungsi Budaya:**\n- Pedoman hidup\n- Identitas bangsa\n- Pemersatu masyarakat\n- Sarana ekspresi`,
+      
+      "provinsi indonesia": `# Beberapa Provinsi di Indonesia\n\n## 1. Jawa Barat\n- Ibu kota: Bandung\n- Suku: Sunda\n- Bahasa: Sunda\n- Pakaian adat: Pangsi & Kebaya Sunda\n- Tarian: Jaipong\n- Rumah adat: Imah (Joglo Sunda)\n\n## 2. Sumatera Barat\n- Ibu kota: Padang\n- Suku: Minangkabau\n- Bahasa: Minang\n- Pakaian adat: Baju Kurung Basiba\n- Tarian: Tari Piring\n- Rumah adat: Rumah Gadang\n\n## 3. Bali\n- Ibu kota: Denpasar\n- Suku: Bali\n- Bahasa: Bali\n- Pakaian adat: Kebaya Bali & Kamen\n- Tarian: Legong, Kecak\n- Rumah adat: Rumah Bali (Uma Lumbung)\n\n## 4. Papua\n- Ibu kota: Jayapura\n- Suku: Asmat, Dani\n- Bahasa: Papua (beragam)\n- Pakaian adat: Koteka (pria), Sali (wanita)\n- Tarian: Tari Perang\n- Rumah adat: Honai\n\n## 5. Kalimantan Selatan\n- Ibu kota: Banjarmasin\n- Suku: Banjar\n- Bahasa: Banjar\n- Pakaian adat: Baaju Kurung\n- Tarian: Tari Baksa Kembang\n- Rumah adat: Rumah Bubungan Tinggi`,
+      
+      "perangkat lunak": `# Perangkat Lunak (Software)\n\n**Pengertian:**\nKumpulan instruksi atau program yang mengatur komputer agar dapat menjalankan tugas tertentu.\n\n**Jenis:**\n- Sistem operasi: Windows, macOS, Linux, Android\n- Aplikasi: Microsoft Word, Google Chrome, WhatsApp, Zoom\n- Bahasa pemrograman: Python, JavaScript, Java\n\n**Fungsi:** Memberikan perintah kepada perangkat keras agar bekerja.`,
+      
+      "perangkat keras": `# Perangkat Keras (Hardware)\n\n**Pengertian:**\nKomponen fisik komputer atau perangkat elektronik yang dapat disentuh.\n\n**Contoh:**\n- Komputer: CPU, RAM, hard disk, keyboard, mouse, monitor\n- Smartphone: layar, baterai, kamera, prosesor\n- Laptop: touchpad, webcam, speaker, port USB\n\n**Fungsi:** Menjalankan perintah dari perangkat lunak secara fisik.`,
+      
+      "bola voli": `# Bola Voli\n\n- Jumlah pemain: 6 per tim\n- Lama pertandingan: Best of 5 set\n- Set dimenangkan oleh tim yang mencapai **25 poin** (selisih 2 poin)\n- Teknik dasar: servis, passing, smash, block, defense`,
+      
+      "sepak bola": `# Sepak Bola\n\n- Jumlah pemain: 11 per tim\n- Lama pertandingan: 2×45 menit\n- Tujuan: Memasukkan bola ke gawang lawan\n- Posisi: kiper, bek, gelandang, striker\n- Wasit: 1 wasit utama + 2 asisten`,
+      
+      "bulu tangkis": `# Bulu Tangkis\n\n- Lapangan: 13.40 m × 6.10 m (tunggal)\n- Sistem: Rally point (21 poin)\n- Servis harus di bawah pinggang\n- Peralatan: raket, kok (shuttlecock)\n- Ganda: 2 pemain per tim`,
+      
+      "renang": `# Renang\n\n- Gaya utama: bebas, punggung, dada, kupu-kupu\n- Start: dari balok start\n- Aturan: tidak boleh berjalan di dasar kolam\n- Teknik: streamline, kick, pull\n- Event: gaya bebas 50m, 100m, estafet, dll`,
+      
+      "default": `Terima kasih atas pertanyaannya!\n\nSaya memiliki data lengkap tentang:\n- Bahasa Inggris (tenses lengkap)\n- Struktur teks naratif (tema, orientasi, koda, dll)\n- IPA, Pancasila, Budaya, Provinsi\n- Perangkat Lunak & Keras\n- Matematika, Keuangan, Digital, Olahraga\n\nSilakan tanyakan:\n"rumus present tense negatif"\n"apa itu orientasi"\n"contoh koda"\n"provinsi bali"`
+    };
+
+    // === FUNGSI PENCARIAN ===
+    function getAnswer(query) {
+      const clean = query.toLowerCase().trim();
+      
+      for (const key in knowledgeBase) {
+        if (clean.includes(key)) {
+          return knowledgeBase[key];
+        }
+      }
+
+      // Kata kunci umum
+      if (clean.includes("tenses") || clean.includes("grammar")) return knowledgeBase["present tense"];
+      if (clean.includes("cerita") || clean.includes("narasi")) return knowledgeBase["narrative text"];
+      if (clean.includes("struktur teks")) return knowledgeBase["narrative text"];
+      if (clean.includes("tema") && !clean.includes("pancasila")) return knowledgeBase["tema"];
+      if (clean.includes("orientasi")) return knowledgeBase["orientasi"];
+      if (clean.includes("komplikasi")) return knowledgeBase["komplikasi"];
+      if (clean.includes("resolusi")) return knowledgeBase["resolusi"];
+      if (clean.includes("koda") || clean.includes("amanat")) return knowledgeBase["koda"];
+      if (clean.includes("pancasila")) return knowledgeBase["pancasila"];
+      if (clean.includes("matematika") || clean.includes("rumus")) return knowledgeBase["persamaan kuadrat"];
+      if (clean.includes("digital")) return knowledgeBase["etika digital"];
+      if (clean.includes("olahraga")) return knowledgeBase["bola voli"];
+
+      return knowledgeBase["default"];
+    }
+
+    function getWelcomeMessage() {
+      return "Hai! Saya Digital Nusantara AI 🤖\n\nSaya punya **data lengkap**:\n- Simple Present Tense (positif, negatif, tanya)\n- Struktur naratif: tema, orientasi, koda, dll\n- Budaya, Provinsi, Pancasila\n- Perangkat Lunak & Keras\n- Matematika, IPA, Digital, Olahraga\n\nCoba tanyakan:\n\"rumus present tense negatif\"\n\"apa itu resolusi\"\n\"contoh koda\"\n\"provinsi sumatera barat\"";
+    }
+
+    // === EVENT HANDLER ===
+    const input = document.getElementById('userInput');
+    const responseDiv = document.getElementById('response');
+    const sendBtn = document.getElementById('sendBtn');
+    const techBtn = document.getElementById('techBtn');
+    const magicBubble = document.getElementById('magicBubble');
+    let isProcessing = false;
+
+    function processQuestion() {
+      if (isProcessing) return;
+      const query = input.value.trim();
+      if (!query) return;
+      isProcessing = true;
+      
+      const answer = getAnswer(query);
+      responseDiv.style.display = 'block';
+      responseDiv.innerHTML = "🤖 " + answer
+        .replace(/\n/g, "<br>")
+        .replace(/# ([^\n]+)/g, '<strong>$1</strong>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      input.value = "";
+      
+      setTimeout(() => { isProcessing = false; }, 300);
+    }
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        processQuestion();
+      }
+    });
+
+    sendBtn.addEventListener('click', processQuestion);
+    techBtn.addEventListener('click', processQuestion);
+
+    magicBubble.addEventListener('click', () => {
+      magicBubble.style.transform = 'scale(1.1) rotate(10deg)';
+      setTimeout(() => { magicBubble.style.transform = 'scale(1) rotate(0deg)'; }, 300);
+    });
+
+    window.addEventListener('load', () => {
+      input.focus();
+      setTimeout(() => {
+        responseDiv.style.display = 'block';
+        responseDiv.innerHTML = "🤖 " + getWelcomeMessage().replace(/\n/g, "<br>");
+      }, 800);
+    });
+  </script>
+</body>
+</html>
