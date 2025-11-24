@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ask Me Anything — Nusantara Violin AI</title>
+  <title>Digital Nusantara AI — Asisten Cerdas</title>
   <style>
     :root {
       --primary-blue: #60A5FA;
@@ -12,8 +12,8 @@
       --bg-white: #ffffff;
       --placeholder-gray: #9CA3AF;
       --tech-blue: #38bdf8;
+      --top-bg-color: #EAD6EE;
     }
-
     body {
       height: 100vh;
       margin: 0;
@@ -22,87 +22,112 @@
       justify-content: center;
       align-items: center;
       gap: 24px;
-      background: linear-gradient(135deg, var(--primary-blue), var(--secondary-pink));
+      background: linear-gradient(135deg, #f9d9ff, #c3f3ff, #e0daff);
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       padding: 20px;
       box-sizing: border-box;
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      overflow-x: hidden;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    .robot-head {
-      position: relative;
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(145deg, #e0e0e0, #ffffff);
-      border-radius: 50%;
-      box-shadow: 
-        0 0 20px rgba(56, 189, 248, 0.6),
-        inset 0 0 10px rgba(255, 255, 255, 0.8);
-      animation: nod 6s infinite ease-in-out;
-      z-index: 10;
-    }
-
-    .robot-head::before {
-      content: "";
+    .top-banner {
       position: absolute;
       top: 20px;
-      left: 15px;
-      width: 20px;
-      height: 10px;
-      background: white;
+      left: 0;
+      right: 0;
+      text-align: center;
+      z-index: 100;
+      animation: fadeInUp 1s ease-out forwards;
+    }
+    .top-banner h1 {
+      color: #374151;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      background: var(--top-bg-color);
+      padding: 12px 24px;
+      border-radius: 50px;
+      display: inline-block;
+      animation: pulse 3s infinite ease-in-out;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(234, 214, 238, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(234, 214, 238, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(234, 214, 238, 0); }
+    }
+
+    .magic-bubble {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
       border-radius: 50%;
-      box-shadow: 25px 0 0 white;
+      box-shadow: 
+        0 0 30px rgba(255, 255, 255, 0.5),
+        inset 0 0 20px rgba(255, 255, 255, 0.3);
+      animation: float 6s ease-in-out infinite;
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
-
-    .glasses {
-      position: absolute;
-      top: 18px;
-      left: 12px;
-      width: 56px;
-      height: 20px;
-      background: white;
-      border-radius: 10px;
-      border: 2px solid #cbd5e1;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
-    }
-
-    .glasses::before,
-    .glasses::after {
+    .magic-bubble::before {
       content: "";
       position: absolute;
-      top: 5px;
-      width: 16px;
-      height: 16px;
-      background: #e2e8f0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(56, 189, 248, 0.3), rgba(165, 243, 252, 0.3));
       border-radius: 50%;
-      box-shadow: inset 0 0 8px rgba(56, 189, 248, 0.9);
+      filter: blur(20px);
+      opacity: 0.8;
+      z-index: -1;
     }
-
-    .glasses::before {
-      left: 3px;
+    .magic-bubble::after {
+      content: "";
+      position: absolute;
+      bottom: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 20px;
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(56, 189, 248, 0.1));
+      border-radius: 50%;
+      filter: blur(10px);
+      opacity: 0.5;
+      z-index: -2;
     }
-
-    .glasses::after {
-      right: 3px;
-    }
-
-    @keyframes nod {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      25% { transform: translateY(-4px) rotate(-1deg); }
-      50% { transform: translateY(0) rotate(0deg); }
-      75% { transform: translateY(-2px) rotate(1deg); }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-5px) scale(1.02); }
     }
 
     .title {
-      color: white;
-      font-size: 22px;
+      color: #374151;
+      font-size: 24px;
       font-weight: 700;
       text-align: center;
       max-width: 90%;
       line-height: 1.3;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
       margin-top: -20px;
+      letter-spacing: 0.5px;
     }
-
     .ask-box {
       display: flex;
       align-items: center;
@@ -115,11 +140,9 @@
       max-width: 95%;
       transition: all 0.25s ease;
     }
-
     .ask-box:hover {
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
     }
-
     .ask-box .icon {
       font-size: 18px;
       color: var(--gray-text);
@@ -132,11 +155,9 @@
       border-radius: 50%;
       transition: background 0.2s;
     }
-
     .ask-box .icon:hover {
       background: #f3f4f6;
     }
-
     .ask-box input {
       flex: 1;
       border: none;
@@ -146,11 +167,9 @@
       background: transparent;
       min-width: 0;
     }
-
     .ask-box input::placeholder {
       color: var(--placeholder-gray);
     }
-
     .send-btn, .tech-btn {
       background: linear-gradient(90deg, var(--primary-blue), var(--secondary-pink));
       color: white;
@@ -165,12 +184,10 @@
       transition: transform 0.2s, box-shadow 0.2s;
       border: none;
     }
-
     .send-btn:hover, .tech-btn:hover {
       transform: scale(1.12);
       box-shadow: 0 4px 10px rgba(96, 165, 250, 0.3);
     }
-
     .response {
       background: white;
       padding: 16px 20px;
@@ -180,38 +197,31 @@
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
       color: #374151;
       font-size: 15px;
-      line-height: 1.5;
+      line-height: 1.6;
       text-align: left;
       white-space: pre-wrap;
+      animation: fadeIn 0.5s ease;
     }
-
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     @media (max-width: 500px) {
-      .title {
-        font-size: 20px;
-      }
-      .ask-box {
-        padding: 10px 16px;
-        gap: 10px;
-      }
-      .send-btn, .tech-btn {
-        width: 34px;
-        height: 34px;
-        font-size: 14px;
-      }
-      .robot-head {
-        width: 60px;
-        height: 60px;
-      }
+      .title { font-size: 20px; }
+      .ask-box { padding: 10px 16px; gap: 10px; }
+      .send-btn, .tech-btn { width: 34px; height: 34px; font-size: 14px; }
+      .magic-bubble { width: 100px; height: 100px; }
     }
   </style>
 </head>
 <body>
-  <div class="robot-head">
-    <div class="glasses"></div>
+  <div class="top-banner">
+    <h1>Ask Me Anything — Nusantara AI</h1>
   </div>
 
-  <div class="title">Ask Me Anything — Nusantara Violin AI 🎻</div>
+  <div class="magic-bubble" id="magicBubble"></div>
 
+  <div class="title">Digital Nusantara AI — Asisten Cerdas</div>
   <div class="ask-box">
     <span class="icon" aria-label="Tambah topik">＋</span>
     <span class="icon" aria-label="Pengumuman">📣</span>
@@ -220,676 +230,183 @@
     <button class="tech-btn" id="techBtn" aria-label="Cari tentang teknologi">🌐</button>
     <div class="send-btn" id="sendBtn" aria-label="Kirim pertanyaan">✈️</div>
   </div>
-
   <div id="response" class="response" style="display:none;"></div>
 
   <script>
+    // === DATABASE PENGETAHUAN LENGKAP (UPDATE) ===
     const knowledgeBase = {
-      // === DATA LAMA TETAP ADA ===
-      budaya: {
-        keywords: ['budaya', 'adat', 'tradisi', 'kesenian', 'tari', 'rumah adat', 'makanan khas', 'seni', 'nusantara'],
-        pengertian: "Budaya Nusantara adalah keseluruhan cara hidup masyarakat Indonesia yang mencakup nilai, norma, seni, adat istiadat, dan kepercayaan.",
-        tari: ["Tari Saman (Aceh)", "Tari Pendet (Bali)", "Tari Reog Ponorogo (Jawa Timur)", "Tari Tor-Tor (Batak)"],
-        rumahAdat: ["Rumah Gadang (Minangkabau)", "Joglo (Jawa)", "Tongkonan (Toraja)", "Honai (Papua)"],
-        makanan: ["Rendang (Sumatra Barat)", "Gudeg (Yogyakarta)", "Papeda (Maluku/Papua)", "Soto Banjar (Kalimantan Selatan)"]
-      },
-      nkri: {
-        keywords: ['nkri', 'negara kesatuan', 'indonesia', 'pemerintahan pusat', 'jakarta', 'bentuk negara'],
-        pengertian: "Negara Kesatuan Republik Indonesia (NKRI) adalah bentuk negara Indonesia yang bersatu dengan satu pemerintahan pusat.",
-        manfaat: ["Menjaga persatuan", "Memudahkan koordinasi pemerintahan", "Memperkuat identitas nasional"],
-        contoh: "Semua provinsi di Indonesia berada di bawah satu pemerintahan pusat di Jakarta."
-      },
-      bhinnekaTunggalIka: {
-        keywords: ['bhinneka', 'bhinneka tunggal ika', 'berbeda tetap satu', 'toleransi', 'keberagaman', 'semboyan', 'indonesia'],
-        pengertian: "Bhinneka Tunggal Ika berarti 'Berbeda-beda tetapi tetap satu', semboyan resmi Indonesia yang mencerminkan persatuan dalam keberagaman.",
-        nilaiPancasila: "Sila ke-2 (Kemanusiaan yang Adil dan Beradab) dan Sila ke-3 (Persatuan Indonesia).",
-        manfaat: ["Memperkuat toleransi", "Mencegah konflik SARA", "Membangun kebersamaan"],
-        contoh: "Perayaan hari besar agama bersama tanpa membedakan suku dan agama."
-      },
-      pancasila: {
-        keywords: ['pancasila', 'sila', 'dasar negara', 'ideologi', 'lima sila', 'falsafah'],
-        pengertian: "Pancasila adalah dasar negara dan ideologi bangsa Indonesia yang terdiri dari lima sila sebagai pedoman kehidupan berbangsa dan bernegara.",
-        sila1: "Ketuhanan Yang Maha Esa",
-        sila2: "Kemanusiaan yang Adil dan Beradab",
-        sila3: "Persatuan Indonesia",
-        sila4: "Kerakyatan yang Dipimpin oleh Hikmat Kebijaksanaan dalam Permusyawaratan/Perwakilan",
-        sila5: "Keadilan Sosial bagi Seluruh Rakyat Indonesia"
-      },
-      hikayat: {
-        keywords: ['hikayat', 'cerita lama', 'prosa lama', 'sastra melayu klasik'],
-        pengertian: "Hikayat adalah karya sastra prosa lama Melayu yang menceritakan kehidupan tokoh bangsawan, pahlawan, atau raja-raja di masa lampau.",
-        tujuan: "Menghibur, menyampaikan nilai moral, melestarikan sejarah, dan menanamkan ajaran agama/etika.",
-        struktur: "1. Pembukaan (doa/salawat), 2. Isi (alur cerita), 3. Penutup (nasihat/moral).",
-        kaidahKebahasaan: "Menggunakan bahasa Melayu klasik, kata arkais (kuno), kalimat pasif, repetisi, metafora, dan hiperbola.",
-        contoh: "Hikayat Hang Tuah, Hikayat Si Miskin, Hikayat Abdullah, Hikayat Bayan Budiman."
-      },
-      laporanHasilObservasi: {
-        keywords: ['laporan hasil observasi', 'teks observasi', 'pengamatan', 'objek', 'deskripsi'],
-        pengertian: "Teks laporan hasil observasi adalah teks yang berisi informasi faktual hasil pengamatan sistematis terhadap suatu objek.",
-        tujuan: "Memberikan informasi objektif berdasarkan fakta pengamatan.",
-        struktur: "1. Pernyataan umum (klasifikasi objek), 2. Deskripsi bagian (ciri fisik, perilaku, fungsi, dll).",
-        ciriKebahasaan: "Menggunakan kata teknis, verba material (melihat, mengamati), kalimat definisi, bersifat objektif, dan tidak memakai opini pribadi.",
-        contoh: "Laporan pengamatan kupu-kupu: siklus hidup, warna sayap, habitat, cara makan."
-      },
-      narrativeText: {
-        keywords: ['narrative text', 'cerita naratif', 'english story', 'orientation complication resolution'],
-        pengertian: "Narrative text is a genre of writing that tells a story about past events to entertain readers.",
-        orientation: "Introduces characters, setting, and time. Example: 'Once upon a time, there lived a kind princess in a castle.'",
-        complication: "The main problem or conflict arises. Example: 'One day, an evil witch cursed the princess to sleep forever.'",
-        resolution: "The problem is solved. Example: 'A brave prince kissed her, and the curse was broken.'",
-        ciriKebahasaanInggris: "Uses past tense, action verbs, time connectives (once, then, finally), and direct/indirect speech.",
-        contoh: "Cinderella, Snow White, The Legend of Malin Kundang (adapted)."
-      },
-      majas: {
-        keywords: ['majas', 'gaya bahasa', 'personifikasi', 'metafora', 'ironi', 'hiperbola'],
-        pengertian: "Majas atau gaya bahasa adalah penggunaan kata-kata secara kiasan untuk menciptakan efek tertentu dalam karya sastra.",
-        personifikasi: {
-          pengertian: "Memberikan sifat manusia pada benda mati atau konsep abstrak.",
-          contoh: "Angin berbisik pelan di telingaku."
-        },
-        metafora: {
-          pengertian: "Perbandingan langsung tanpa kata pembanding (seperti, bagai).",
-          contoh: "Dunia adalah panggung sandiwara."
-        },
-        ironi: {
-          pengertian: "Mengatakan sesuatu yang bertentangan dengan maksud sebenarnya untuk menyindir.",
-          contoh: "Wah, hebat sekali kamu sampai lupa ulang tahun ibumu!"
-        },
-        hiperbola: {
-          pengertian: "Pengungkapan berlebihan untuk menekankan sesuatu.",
-          contoh: "Aku sudah menunggumu berabad-abad!"
-        }
-      },
-      keuangan: {
-        keywords: ['keuangan', 'bank', 'non bank', 'lembaga keuangan', 'akuntansi', 'laporan keuangan', 'uang', 'investasi'],
-        pengertian: "Keuangan adalah segala aktivitas yang berkaitan dengan pengelolaan uang, termasuk investasi, pinjaman, dan penganggaran.",
-        perbankan: {
-          pengertian: "Lembaga keuangan yang menghimpun dana dari masyarakat (simpanan) dan menyalurkannya kembali (kredit).",
-          jenis: ["Bank Umum (BCA, BRI, Mandiri)", "Bank Perkreditan Rakyat (BPR)"],
-          fungsi: ["Menciptakan uang giral", "Menyalurkan kredit", "Menyediakan jasa lalu lintas pembayaran"]
-        },
-        nonBank: {
-          pengertian: "Lembaga keuangan yang tidak menghimpun dana dalam bentuk simpanan.",
-          contoh: ["OJK", "Asuransi (Jiwasraya, Prudential)", "Dana Pensiun", "Perusahaan Efek", "Fintech (Pinjaman online)"]
-        },
-        akuntansi: {
-          pengertian: "Proses pencatatan, penggolongan, peringkasan, dan pelaporan transaksi keuangan.",
-          laporanKeuangan: ["Neraca", "Laporan Laba Rugi", "Arus Kas", "Perubahan Ekuitas"],
-          prinsip: ["Relevansi", "Keandalan", "Konsistensi", "Daya Banding"]
-        },
-        istilahKeuangan: {
-          likuiditas: "Kemampuan perusahaan membayar kewajiban jangka pendek.",
-          solvabilitas: "Kemampuan membayar seluruh kewajiban (jangka panjang & pendek).",
-          ROI: "Return on Investment — ukuran keuntungan relatif terhadap investasi.",
-          inflasi: "Kenaikan harga barang/jasa secara umum dalam periode tertentu."
-        }
-      },
-      englishTenses: {
-        keywords: ['present tense', 'past tense', 'simple present', 'simple past', 'rumus present', 'rumus past', 'tenses inggris', 'regular verb', 'irregular verb', 'kata kerja', 'future tense', 'will', 'going to'],
-        pengertian: "Tenses adalah bentuk kata kerja (verb) yang menunjukkan waktu terjadinya suatu peristiwa: masa kini (present), lampau (past), atau akan datang (future).",
-        
-        presentTense: {
-          pengertian: "Digunakan untuk kebiasaan, fakta umum, atau kejadian rutin.",
-          rumus: {
-            positif: "S + V1 (+s/es)\nContoh: She plays violin every day.",
-            negatif: "S + do/does + not + V1\nContoh: They do not like spicy food.",
-            tanya: "Do/Does + S + V1?\nContoh: Do you study English?"
-          },
-          catatan: "Tambahkan -s/-es pada verb jika subjek: he, she, it."
-        },
-        
-        pastTense: {
-          pengertian: "Digunakan untuk kejadian yang sudah selesai di masa lampau.",
-          rumus: {
-            positif: "S + V2\nContoh: I watched a movie yesterday.",
-            negatif: "S + did + not + V1\nContoh: She did not go to school.",
-            tanya: "Did + S + V1?\nContoh: Did they visit Bali last year?"
-          }
-        },
-        },
-        regularVerbs: {
-          pengertian: "Kata kerja beraturan: bentuk kedua & ketiga dibuat dengan menambahkan -ed.",
-          contoh: [
-            "play – played – played",
-            "watch – watched – watched",
-            "clean – cleaned – cleaned",
-            "study – studied – studied"
-          ]
-        },
-        irregularVerbs: {
-          pengertian: "Kata kerja tidak beraturan: bentuk kedua & ketiga tidak mengikuti pola -ed.",
-          contohLengkap: [
-            "go – went – gone",
-            "eat – ate – eaten",
-            "see – saw – seen",
-            "take – took – taken",
-            "write – wrote – written",
-            "sing – sang – sung",
-            "drink – drank – drunk",
-            "break – broke – broken",
-            "do – did – done",
-            "have – had – had"
-          ]
-        }
-      },
-      narrativeStructure: {
-        keywords: ['struktur narrative text', 'orientation complication resolution', 'evaluation coda', 'bagian cerita naratif', 'coda', 'evaluation'],
-        pengertian: "Struktur teks naratif terdiri dari lima bagian utama yang membentuk alur cerita yang utuh.",
-        orientation: "Memperkenalkan tokoh, latar (tempat & waktu), dan suasana awal.\nContoh: Once upon a time, there was a kind girl named Cinderella.",
-        complication: "Munculnya konflik atau masalah dalam cerita.\nContoh: Her stepmother forbade her from attending the royal ball.",
-        resolution: "Pemecahan masalah atau penyelesaian konflik.\nContoh: With the help of her fairy godmother, she went to the ball and met the prince.",
-        evaluation: "Penilaian terhadap peristiwa atau pelajaran moral (opsional, sering menyatu dengan resolution).",
-        coda: "Kesimpulan atau akhir cerita yang menunjukkan perubahan kondisi tokoh.\nContoh: They lived happily ever after."
-      },
-      tabelPeriodik: {
-        keywords: ['tabel periodik', 'unsur kimia', 'simbol unsur', 'unsur', 'campuran kimia', 'rumus kimia', 'H2O', 'NaCl', 'CO2'],
-        pengertian: "Tabel periodik adalah susunan unsur-unsur kimia yang diatur berdasarkan kenaikan nomor atom dan kemiripan sifat kimianya.",
-        simbolUnsur: "Setiap unsur memiliki simbol unik, contoh: H (Hidrogen), O (Oksigen), Fe (Besi), Na (Natrium), Cl (Klorin).",
-        campuranUmum: [
-          "Air (H₂O) — gabungan hidrogen dan oksigen",
-          "Garam dapur (NaCl) — natrium + klorin",
-          "Karbon dioksida (CO₂) — karbon + oksigen",
-          "Amonia (NH₃) — nitrogen + hidrogen"
-        ],
-        manfaat: [
-          "Memprediksi sifat dan reaktivitas unsur",
-          "Dasar pengembangan obat dan material baru",
-          "Digunakan di industri logam, energi, dan pertanian",
-          "Alat pembelajaran wajib di sekolah"
-        ],
-        contohUnsur: [
-          "Oksigen (O₂) — untuk bernapas",
-          "Besi (Fe) — bahan bangunan dan kendaraan",
-          "Tembaga (Cu) — kabel listrik",
-          "Karbon (C) — dasar kehidupan dan bahan bakar"
-        ]
-      },
-      perubahanZatDanLingkungan: {
-        keywords: ['perubahan fisika', 'perubahan kimia', 'biotik', 'abiotik', 'wujud zat', 'mengembun', 'menyublim', 'menguap', 'membeku', 'mencair', 'deposisi', 'perubahan iklim', 'karbon dioksida'],
-        biotikAbiotik: {
-          biotik: "Benda hidup yang bisa tumbuh, berkembang biak, dan mati.\nContoh: manusia, hewan, tumbuhan, bakteri.",
-          abiotik: "Benda mati yang tidak memiliki ciri makhluk hidup.\nContoh: batu, air, udara, kayu (setelah ditebang), tanah."
-        },
-        perubahanFisika: {
-          pengertian: "Perubahan bentuk atau wujud tanpa menghasilkan zat baru (reversibel).",
-          contoh: "Es mencair → air → dibekukan lagi jadi es.",
-          ciri: "Tidak ada zat baru, hanya berubah wujud."
-        },
-        perubahanKimia: {
-          pengertian: "Perubahan yang menghasilkan zat baru (ireversibel).",
-          contoh: "Kayu dibakar → jadi arang dan asap, susu basi, besi berkarat.",
-          ciri: "Terbentuk zat baru, tidak bisa dikembalikan."
-        },
-        perubahanWujud: {
-          mencair: "Padat → cair (es → air)",
-          membeku: "Cair → padat (air → es)",
-          menguap: "Cair → gas (air → uap)",
-          mengembun: "Gas → cair (uap → air)",
-          menyublim: "Padat → gas (kapur barus menguap)",
-          deposisi: "Gas → padat (uap air → salju)"
-        },
-        perubahanIklim: {
-          pengertian: "Perubahan jangka panjang pola cuaca akibat pemanasan global.",
-          penyebab: "Emisi gas rumah kaca (CO₂, metana) dari kendaraan, pabrik, dan deforestasi.",
-          dampak: "Es kutub mencair → permukaan laut naik → banjir di wilayah pesisir.",
-          solusi: "Gunakan energi terbarukan, tanam pohon, kurangi sampah plastik."
-        }
-      },
-      norma: {
-        keywords: ['norma', 'aturan', 'sosial', 'kesopanan', 'agama', 'hukum', 'kebiasaan', 'norma sekolah', 'norma keluarga'],
-        pengertian: "Norma adalah aturan atau pedoman yang mengatur perilaku dalam masyarakat.",
-        jenis: ["Norma agama", "Norma hukum", "Norma kesopanan", "Norma kebiasaan"],
-        contohSehariHari: [
-          "Tidak boleh mencuri (norma hukum & agama)",
-          "Antri saat beli makanan (norma kesopanan)",
-          "Pakai seragam sekolah (norma sekolah)",
-          "Bantu orang tua di rumah (norma keluarga)"
-        ],
-        tempatBerlaku: "Berlaku di rumah, sekolah, tempat ibadah, masyarakat umum, dan negara"
-      },
-      analisisCerita: {
-        keywords: ['latar tempat', 'latar waktu', 'latar suasana', 'tema', 'tokoh', 'penokohan', 'abstraksi', 'orientasi', 'komplikasi', 'evaluasi', 'resolusi', 'koda', 'unsur intrinsik'],
-        latarTempat: "Lokasi terjadinya cerita (misal: sekolah, hutan, kota, istana).",
-        latarWaktu: "Waktu kejadian cerita (pagi, siang, malam, zaman dahulu, masa depan).",
-        latarSuasana: "Suasana emosional dalam cerita (sedih, tegang, bahagia, mencekam, haru).",
-        tema: "Gagasan pokok atau pesan utama yang muncul di seluruh cerita (misal: cinta, pengorbanan, keadilan).",
-        tokoh: "Pelaku atau karakter dalam cerita (tokoh utama, tokoh antagonis, tokoh pendukung).",
-        penokohan: "Cara pengarang menggambarkan sifat tokoh (langsung: 'Si Fulan jujur', tidak langsung: lewat dialog/perilaku).",
-        abstraksi: "Gambaran umum atau ringkasan awal cerita (sering muncul di teks eksposisi atau naratif modern).",
-        orientasi: "Bagian awal cerita yang memperkenalkan tokoh, latar, dan suasana.",
-        komplikasi: "Rangkaian peristiwa yang memunculkan konflik atau masalah.",
-        evaluasi: "Penilaian terhadap perkembangan peristiwa atau konflik (opsional, sering menyatu dengan resolusi).",
-        resolusi: "Penyelesaian dari konflik atau masalah dalam cerita.",
-        koda: "Amanat, pesan moral, atau kesimpulan di akhir cerita (misal: 'Jadilah jujur dalam segala hal.')."
-      },
-      hakDanKewajiban: {
-        keywords: ['hak', 'kewajiban', 'warga negara', 'siswa', 'aturan', 'hukum'],
-        pengertian: "Hak adalah kekuasaan atau sesuatu yang pantas diterima oleh seseorang. Sedangkan kewajiban adalah sesuatu yang wajib dilakukan oleh seseorang.",
-        manfaat: [
-          "Menciptakan keseimbangan dalam kehidupan bermasyarakat",
-          "Menumbuhkan rasa tanggung jawab",
-          "Mendorong keadilan sosial"
-        ],
-        contoh: [
-          "Hak: mendapat pendidikan, menyampaikan pendapat",
-          "Kewajiban: membayar pajak, menaati aturan lalu lintas, belajar di sekolah"
-        ]
-      },
-      kemerdekaanBerpendapat: {
-        keywords: ['berpendapat', 'kemerdekaan', 'menyatakan pikiran', 'rt', 'musyawarah', 'demokrasi'],
-        pengertian: "Kemerdekaan berpendapat adalah hak setiap warga negara untuk menyampaikan pikiran, gagasan, atau pendapat secara bebas dan bertanggung jawab.",
-        manfaat: [
-          "Mendorong partisipasi aktif dalam masyarakat",
-          "Memperkuat sila ke-4 Pancasila: Kerakyatan yang Dipimpin oleh Hikmat Kebijaksanaan",
-          "Meningkatkan kebersamaan dan gotong royong"
-        ],
-        contoh: "Mengusulkan agar Ketua RT mengaktifkan program gotong royong bulanan agar warga lebih rukun dan lingkungan bersih."
-      },
-      literasi: {
-        keywords: ['literasi', 'membaca', 'menulis', 'analisis cerita', 'pemahaman teks'],
-        pengertian: "Literasi adalah kemampuan memahami, menganalisis, dan menginterpretasi teks atau cerita, baik tertulis maupun lisan.",
-        tujuan: "Untuk meningkatkan pemahaman, berpikir kritis, dan mengembangkan kreativitas dalam menanggapi karya sastra atau informasi.",
-        contoh: "Menganalisis latar, tema, dan tokoh dalam cerita pendek untuk memahami pesan moral yang disampaikan."
-      },
-      keuanganDigital: {
-        keywords: ['keuangan digital', 'digital', 'finansial', 'uang digital', 'e-wallet', 'cashless'],
-        pengertian: "Keuangan digital adalah pengelolaan uang secara elektronik melalui perangkat digital dalam era modern.",
-        contoh: [
-          "E-wallet: OVO, GoPay, ShopeePay, DANA",
-          "Kartu debit/kredit",
-          "Transfer antar bank via aplikasi",
-          "Pembayaran QRIS di warung"
-        ],
-        perbedaan: "Berbeda dengan uang kertas dan logam yang bersifat fisik, keuangan digital tidak memerlukan bentuk fisik dan dapat diakses kapan saja secara online."
-      },
-      teknologi: {
-        keywords: [
-          'teknologi', 'perangkat keras', 'hardware', 'perangkat lunak', 'software', 'aplikasi', 'gadget', 'komputer', 'hp',
-          'password', 'keamanan', 'internet', 'dunia maya', 'etika digital', 'budaya digital', 'produk lokal'
-        ],
-        pengertian: "Menurut KBBI, teknologi adalah metode ilmiah untuk mencapai tujuan praktis; ilmu pengetahuan terapan yang digunakan untuk memudahkan interaksi dan aktivitas manusia, termasuk dalam bermedia sosial.",
-        perangkatKeras: ["Handphone (HP)", "Komputer", "Laptop", "Tablet", "Server", "Printer", "Router"],
-        perangkatLunak: ["Aplikasi berhitung (kalkulator)", "Aplikasi pembayaran (GoPay, OVO, DANA)", "Sistem operasi (Windows, Android, iOS)", "Browser (Chrome, Firefox)", "Aplikasi media sosial (Instagram, WhatsApp, TikTok)"],
-        manfaat: ["Mempermudah komunikasi", "Mempercepat akses informasi", "Meningkatkan efisiensi kerja", "Mendukung pembelajaran jarak jauh"],
-        keamananPassword: {
-          pengertian: "Password yang kuat menggunakan kombinasi huruf besar, huruf kecil, angka, dan simbol.",
-          contoh: "Gunakan 'Vio!in2025#Nusantara' bukan 'password123'"
-        },
-        duniaMaya: {
-          pengertian: "Berselancar di dunia maya berarti memanfaatkan internet secara bijak untuk mengembangkan kreativitas, ilmu pengetahuan, dan keterampilan digital.",
-          tips: "Gunakan internet untuk belajar, bukan hanya hiburan; hindari hoaks dan konten negatif."
-        },
-        etikaDigital: {
-          pengertian: "Etika digital adalah berperilaku sopan, menghargai privasi, dan tidak menyebarkan ujaran kebencian di dunia maya.",
-          contoh: "Tidak menyebarkan foto orang tanpa izin, berkomentar dengan sopan di media sosial."
-        },
-        budayaDigital: {
-          pengertian: "Budaya di era digital mencakup kecintaan terhadap produk lokal Indonesia dalam ruang digital.",
-          contoh: "Menggunakan dan mempromosikan batik digital, aplikasi buatan anak bangsa, atau konten lokal di platform online."
-        }
-      },
-      mencegahHoax: {
-        keywords: ['hoax', 'berita palsu', 'cek fakta', 'hoaks', 'informasi palsu', 'mencegah hoax', 'verifikasi'],
-        pengertian: "Hoax adalah berita atau informasi palsu yang disebarkan secara sengaja untuk menyesatkan, memecah belah, atau menipu masyarakat.",
-        caraMencegah: [
-          "Periksa sumber berita: pastikan berasal dari media resmi dan terpercaya seperti Kompas, Antara, BBC Indonesia, atau Detik.",
-          "Gunakan situs pengecekan fakta seperti turnbackhoax.id, cekfakta.com, atau liputan6.com/cek-fakta.",
-          "Jangan langsung menyebarkan informasi sebelum diverifikasi kebenarannya.",
-          "Bandingkan informasi dari minimal 2–3 sumber terpercaya (cross-check)."
-        ],
-        manfaat: [
-          "Mencegah penyebaran ketakutan dan kepanikan di masyarakat",
-          "Menjaga keutuhan informasi dan kepercayaan publik",
-          "Mendukung ekosistem digital yang sehat dan bertanggung jawab"
-        ]
-      },
-      adjectiveAdverb: {
-        keywords: ['adjective', 'adverb', 'kata sifat', 'kata keterangan', 'adverb of manner', 'deskripsi', 'ciri-ciri', 'contoh adjective', 'how to form adverb', 'manner'],
-        pengertianAdjective: "Adjective (kata sifat) adalah kata yang digunakan untuk menggambarkan atau menjelaskan sifat, kondisi, atau ciri dari suatu benda atau orang.",
-        pengertianAdverb: "Adverb (kata keterangan) adalah kata yang menerangkan kata kerja (verb), kata sifat (adjective), atau kata keterangan lain. Adverb of manner secara khusus menjelaskan *bagaimana* suatu tindakan dilakukan (how?).",
-        adjectiveContoh: [
-          "beautiful (cantik)", "happy (bahagia)", "tall (tinggi)", "smart (pintar)",
-          "old (tua)", "new (baru)", "big (besar)", "small (kecil)",
-          "kind (baik hati)", "angry (marah)", "careful (hati-hati)", "dangerous (berbahaya)"
-        ],
-        adverbOfMannerContoh: [
-          "beautifully (dengan cantik)", "happily (dengan bahagia)", "quickly (dengan cepat)",
-          "carefully (dengan hati-hati)", "loudly (dengan keras)", "quietly (dengan diam)",
-          "angrily (dengan marah)", "easily (dengan mudah)", "slowly (dengan lambat)",
-          "well (dengan baik)", "badly (dengan buruk)"
-        ],
-        pembentukanAdverb: {
-          pengertian: "Kebanyakan adverb of manner dibentuk dengan menambahkan -ly pada adjective.",
-          aturan: [
-            "Adjective berakhiran -y → ubah y jadi i lalu tambah -ly: happy → happily",
-            "Adjective berakhiran -le → ubah le jadi ly: gentle → gently",
-            "Adjective berakhiran -ic → tambah -ally: basic → basically",
-            "Beberapa adjective tidak berubah: fast, hard, late, early (sudah berfungsi sebagai adverb)"
-          ],
-          pengecualian: "Good → well (bukan *goodly)"
-        },
-        perbedaan: {
-          adjective: "Digunakan untuk menjelaskan NOUN (kata benda).\nContoh: She is a *careful* driver.",
-          adverb: "Digunakan untuk menjelaskan VERB (kata kerja).\nContoh: She drives *carefully*."
-        }
-      },
-      amPmFutureTense: {
-        keywords: ['am pm', 'waktu', '12 jam', '24 jam', 'simple future tense', 'will', 'going to', 'rumus future', 'pengertian future tense'],
-        amPm: {
-          pengertian: "Sistem waktu 12 jam menggunakan AM (ante meridiem = sebelum tengah hari) dan PM (post meridiem = setelah tengah hari).",
-          aturan: [
-            "12:00 tengah malam = 12:00 AM",
-            "01:00 pagi – 11:59 pagi = 1:00 AM – 11:59 AM",
-            "12:00 siang = 12:00 PM",
-            "01:00 siang – 11:59 malam = 1:00 PM – 11:59 PM"
-          ],
-          contoh: [
-            "06:30 pagi = 6:30 AM",
-            "02:45 siang = 2:45 PM",
-            "11:00 malam = 11:00 PM",
-            "00:15 dini hari = 12:15 AM"
-          ]
-        },
-        simpleFutureTense: {
-          pengertian: "Simple Future Tense digunakan untuk menyatakan tindakan atau kejadian yang akan terjadi di masa depan, keputusan spontan, atau prediksi.",
-          rumus: {
-            positif: "S + will + V1 + ...\nContoh: I will study tomorrow.",
-            negatif: "S + will not (won't) + V1 + ...\nContoh: She will not come to the party.",
-            tanya: "Will + S + V1 + ...?\nContoh: Will you help me?"
-          },
-          willVsGoingTo: {
-            will: "Digunakan untuk keputusan spontan, prediksi tanpa bukti, atau janji.\nContoh: 'I’ll answer the phone!'",
-            goingTo: "Digunakan untuk rencana yang sudah dipikirkan sebelumnya atau prediksi berdasarkan bukti.\nContoh: 'Look at those clouds! It’s going to rain.'"
-          },
-          keteranganWaktuUmum: ["tomorrow", "next week", "in 2030", "soon", "later"]
-        }
-      },
-      teksAnekdot: {
-        keywords: ['anekdot', 'teks anekdot', 'cerita lucu', 'struktur anekdot', 'ciri anekdot', 'fungsi anekdot', 'contoh anekdot'],
-        pengertian: "Teks anekdot adalah cerita singkat yang lucu atau menarik tentang orang penting atau peristiwa tertentu, yang mengandung kritik sosial, nilai moral, atau sindiran halus.",
-        tujuan: [
-          "Menghibur pembaca",
-          "Menyampaikan kritik sosial secara halus",
-          "Memberikan pesan moral atau pelajaran hidup"
-        ],
-        struktur: {
-          abstraksi: "Gambaran umum atau ringkasan cerita yang akan disampaikan (opsional).",
-          orientasi: "Memperkenalkan tokoh, latar, dan suasana awal.",
-          krisis: "Munculnya masalah, kejadian lucu, atau konflik.",
-          reaksi: "Tanggapan atau respons terhadap krisis.",
-          koda: "Amanat, pesan moral, atau kesimpulan (sering berisi sindiran)."
-        },
-        ciriKebahasaan: [
-          "Menggunakan kalimat langsung (dialog)",
-          "Mengandung unsur humor atau kejutan",
-          "Ada sindiran atau kritik sosial",
-          "Menggunakan kata kerja aksi",
-          "Struktur kronologis (urutan waktu)"
-        ],
-        contohRingkas: "Seorang menteri terlambat rapat. Presiden bertanya, 'Kenapa terlambat?' Menteri menjawab, 'Macet, Pak.' Presiden: 'Saya naik angkot dari Depok, tidak macet.' → Mengkritik pejabat yang boros pakai mobil dinas."
-      },
-
-      // === TAMBAHAN BARU: SEJARAH BPUPKI/PPKI & SUMPAH PEMUDA ===
-      sejarahBpupkiPpki: {
-        keywords: ['bpupki', 'ppki', 'sumpah pemuda', 'pelita', 'pemerintah', 'presiden', 'sejarah indonesia', 'proklamasi', 'jakarta', 'bandung'],
-        pengertianBpupki: "BPUPKI (Badan Penyelidik Usaha-usaha Persiapan Kemerdekaan Indonesia) adalah badan yang dibentuk Jepang pada 29 April 1945 untuk menyelidiki usaha-usaha persiapan kemerdekaan Indonesia.",
-        bpupki: {
-          tanggalBerdiri: "29 April 1945",
-          tempat: "Gedung Chuo Sangi In (sekarang Gedung Pancasila, Jakarta)",
-          ketua: "Dr. K.R.T. Radjiman Wedyodiningrat",
-          wakil: "R.P. Soeroso dan Ichibangase (Jepang)",
-          sidang: [
-            "Sidang I (29 Mei – 1 Juni 1945): Pembahasan dasar negara → lahirnya Pancasila.",
-            "Sidang II (10–17 Juli 1945): Pembahasan rancangan UUD dan bentuk negara."
-          ]
-        },
-        ppki: {
-          pengertian: "PPKI (Panitia Persiapan Kemerdekaan Indonesia) adalah badan pengganti BPUPKI yang bertugas mempersiapkan kemerdekaan dan pemerintahan Indonesia.",
-          tanggalBerdiri: "7 Agustus 1945",
-          ketua: "Ir. Soekarno",
-          wakil: "Dr. Moh. Hatta",
-          tugas: [
-            "Mengesahkan UUD 1945 (18 Agustus 1945)",
-            "Memilih Presiden & Wakil Presiden (Soekarno & Hatta)",
-            "Membagi wilayah Indonesia menjadi 8 provinsi"
-          ]
-        },
-        sumpahPemuda: {
-          tanggal: "28 Oktober 1928",
-          tempat: "Kongres Pemuda II di Gedung Oost-Java Bioscoop, Jalan Kramat Raya No. 106, Jakarta",
-          tokoh: ["Soegondo Djojopoespito", "Mohammad Yamin", "WR. Supratman (pencipta lagu Indonesia Raya)"],
-          isiIkrar: [
-            "Kami putra dan putri Indonesia mengaku bertumpah darah yang satu, tanah air Indonesia.",
-            "Kami putra dan putri Indonesia mengaku berbangsa yang satu, bangsa Indonesia.",
-            "Kami putra dan putri Indonesia menjunjung bahasa persatuan, bahasa Indonesia."
-          ],
-          makna: "Menjadi tonggak persatuan Indonesia sebelum kemerdekaan."
-        },
-        pelita: {
-          pengertian: "PELITA (Pembangunan Lima Tahun) adalah rencana pembangunan nasional lima tahunan era Orde Baru (1969–1998).",
-          jumlah: "Ada 6 PELITA: PELITA I (1969–1974) hingga PELITA VI (1994–1998).",
-          tema: [
-            "PELITA I: Pangan, Sandang, Perumahan",
-            "PELITA II: Industri dasar",
-            "PELITA III: Pangan & Energi",
-            "PELITA IV: Pangan, Sandang, Perumahan, Infrastruktur",
-            "PELITA V: Sumber daya manusia",
-            "PELITA VI: Peningkatan kualitas SDM"
-          ]
-        }
-      },
-
-      // === MAKHLUK HIDUP DAN LINGKUNGAN ===
-      makhlukHidupLingkungan: {
-        keywords: ['makhluk hidup', 'lingkungan', 'interaksi', 'metabolisme', 'rantai makanan', 'ekosistem', 'adaptasi', 'simbiosis'],
-        pengertian: "Makhluk hidup berinteraksi dengan lingkungannya untuk mempertahankan kelangsungan hidup melalui metabolisme, adaptasi, dan hubungan timbal balik.",
-        interaksi: {
-          simbiosisMutualisme: "Kedua pihak untung (lebah & bunga).",
-          simbiosisKomensalisme: "Satu untung, lainnya tidak dirugikan (ikan remora & hiu).",
-          simbiosisParasitisme: "Satu untung, lainnya dirugikan (cacing & manusia).",
-          predasi: "Pemangsa memangsa mangsa (harimau memangsa rusa).",
-          kompetisi: "Bersaing untuk sumber daya (tumbuhan berebut cahaya)."
-        },
-        metabolisme: {
-          pengertian: "Proses kimia dalam tubuh makhluk hidup untuk mempertahankan kehidupan.",
-          anabolisme: "Proses penyusunan zat (fotosintesis pada tumbuhan).",
-          katabolisme: "Proses penguraian zat (respirasi seluler)."
-        },
-        rantaiMakanan: {
-          produsen: "Tumbuhan (menghasilkan makanan sendiri).",
-          konsumen1: "Herbivora (memakan tumbuhan).",
-          konsumen2: "Karnivora (memakan herbivora).",
-          dekomposer: "Jamur & bakteri (mengurai sisa makhluk hidup)."
-        },
-        adaptasi: {
-          morfologi: "Bentuk tubuh (paruh burung, daun kaktus).",
-          fisiologi: "Fungsi tubuh (keringat pada manusia).",
-          tingkahLaku: "Perilaku (migrasi burung, hibernasi beruang)."
-        }
-      },
-
-      // === BIOTEKNOLOGI (DEFINISI SESUAI PERMINTAAN) ===
-      bioteknologi: {
-        keywords: ['bioteknologi', 'bio', 'teknologi', 'lingkungan', 'energi terbarukan', 'plta', 'pltb', 'plts', 'alat'],
-        pengertian: "Berdasarkan permintaan: 'Bio' = lingkungan hidup tempat makhluk hidup tinggal. 'Teknologi' = alat atau cara yang digunakan dalam kehidupan sehari-hari. Maka, Bioteknologi = alat atau teknologi yang bermanfaat bagi lingkungan hidup.",
-        contohTeknologiRamahLingkungan: {
-          PLTA: "Pembangkit Listrik Tenaga Air — memanfaatkan aliran sungai tanpa bahan bakar fosil.",
-          PLTB: "Pembangkit Listrik Tenaga Bayu (Angin) — menggunakan kincir angin di daerah berangin.",
-          PLTS: "Pembangkit Listrik Tenaga Surya — memanfaatkan sinar matahari melalui panel surya.",
-          PLTBiogas: "Memanfaatkan gas dari limbah organik (kotoran ternak) untuk bahan bakar atau listrik."
-        },
-        manfaat: [
-          "Mengurangi emisi karbon",
-          "Menghemat sumber daya alam tak terbarukan",
-          "Mendukung pembangunan berkelanjutan",
-          "Ramah ekosistem"
-        ]
-      },
-
-      // === SISTEM PERSAMAAN LINEAR ===
-      sistemPersamaanLinear: {
-        keywords: ['substitusi', 'eliminasi', 'campuran', 'sistem persamaan', 'metode', 'matematika', 'aljabar'],
-        pengertian: "Sistem persamaan linear adalah kumpulan dua atau lebih persamaan linear yang memiliki variabel sama.",
-        substitusi: {
-          pengertian: "Mengganti salah satu variabel dengan nilai dari persamaan lain.",
-          langkah: [
-            "Nyatakan salah satu variabel dari satu persamaan.",
-            "Substitusi ke persamaan kedua.",
-            "Selesaikan untuk mendapatkan nilai variabel.",
-            "Substitusi balik untuk dapatkan variabel lain."
-          ],
-          contoh: "x + y = 5 dan 2x - y = 1 → x = 2, y = 3"
-        },
-        eliminasi: {
-          pengertian: "Menghilangkan salah satu variabel dengan menjumlahkan/mengurangkan persamaan.",
-          langkah: [
-            "Samakan koefisien salah satu variabel.",
-            "Tambah/kurang persamaan agar variabel hilang.",
-            "Selesaikan nilai variabel tersisa.",
-            "Substitusi ke salah satu persamaan."
-          ],
-          contoh: "x + y = 5 dan 2x - y = 1 → tambah → 3x = 6 → x = 2"
-        },
-        campuran: {
-          pengertian: "Gabungan eliminasi dan substitusi.",
-          langkah: "Gunakan eliminasi untuk mendapatkan satu nilai, lalu substitusi untuk nilai lainnya."
-        }
-      },
-
-      // === PERSAMAAN & FUNGSI KUADRAT ===
-      persamaanKuadrat: {
-        keywords: ['kuadrat', 'persamaan kuadrat', 'fungsi kuadrat', 'akar', 'grafik', 'diskriminan', 'rumus abc'],
-        pengertian: "Persamaan kuadrat adalah persamaan berbentuk ax² + bx + c = 0, dengan a ≠ 0.",
-        rumusABC: "x = [-b ± √(b² - 4ac)] / (2a)",
-        diskriminan: "D = b² - 4ac → menentukan jenis akar:",
-        jenisAkar: [
-          "D > 0 → dua akar real berbeda",
-          "D = 0 → dua akar real sama",
-          "D < 0 → akar imajiner"
-        ],
-        fungsiKuadrat: {
-          bentuk: "f(x) = ax² + bx + c",
-          grafik: "Parabola",
-          titikPuncak: "(-b/2a, f(-b/2a))",
-          sumbuSimetri: "x = -b/2a"
-        },
-        penyelesaian: ["Pemfaktoran", "Melengkapkan kuadrat sempurna", "Rumus ABC"]
-      },
-
-      // === EKSPONEN & FUNGSI EKSPONEN ===
-      eksponen: {
-        keywords: ['eksponen', 'pangkat', 'fungsi eksponen', 'sifat eksponen', 'bentuk pangkat', 'matematika'],
-        pengertian: "Eksponen adalah bentuk perpangkatan: aⁿ = a × a × ... × a (n kali).",
-        sifat: [
-          "aᵐ × aⁿ = aᵐ⁺ⁿ",
-          "aᵐ / aⁿ = aᵐ⁻ⁿ",
-          "(aᵐ)ⁿ = aᵐⁿ",
-          "a⁰ = 1 (a ≠ 0)",
-          "a⁻ⁿ = 1/aⁿ"
-        ],
-        fungsiEksponen: {
-          bentuk: "f(x) = aˣ, dengan a > 0 dan a ≠ 1",
-          grafik: "Selalu positif, melalui (0,1), naik jika a > 1, turun jika 0 < a < 1",
-          contohAplikasi: ["Pertumbuhan populasi", "Peluruhan radioaktif", "Bunga majemuk"]
-        },
-        penyelesaianPersamaan: "Jika aᶠ⁽ˣ⁾ = aᵍ⁽ˣ⁾ → f(x) = g(x) (asal a ≠ 0, ±1)"
-      }
+      // === [BARU] STRUKTUR NARATIF TERPISAH ===
+      "tema": `# Tema\n\n**Pengertian:**\nInti pokok atau gagasan utama yang mendasari sebuah cerita.\n\n**Ciri:**\n- Bersifat universal\n- Menjadi dasar pengembangan cerita\n- Tidak selalu disebut eksplisit\n\n**Contoh tema:**\n- Persahabatan\n- Pengorbanan\n- Keadilan\n- Cinta tanah air`,
+      
+      "abstraksi": `# Abstraksi\n\n**Pengertian:**\nGambaran awal atau cuplikan singkat tentang keseluruhan cerita (opsional, tidak selalu ada).\n\n**Fungsi:**\n- Menarik perhatian pembaca\n- Memberi bayangan akhir cerita\n\n**Contoh:**\n"Dengan keberanian dan kejujuran, seorang anak desa berhasil mengungkap kejahatan yang selama ini disembunyikan."`,
+      
+      "orientasi": `# Orientasi\n\n**Pengertian:**\nBagian awal cerita yang berisi pengenalan tokoh, latar (waktu & tempat), dan suasana.\n\n**Tujuan:**\nAgar pembaca memahami "siapa, di mana, kapan, dan bagaimana" cerita berlangsung.\n\n**Contoh:**\n"Pada suatu pagi yang cerah di desa Sukamaju, Rina, seorang siswi kelas 6, berangkat ke sekolah sambil membawa bekal nasi...`,
+      
+      "komplikasi": `# Komplikasi\n\n**Pengertian:**\nRangkaian peristiwa yang menimbulkan konflik atau masalah dalam cerita.\n\n**Ciri:**\n- Terjadi konflik (manusia vs manusia, alam, diri sendiri, dsb)\n- Tegang, penuh ketegangan\n- Menjadi inti cerita\n\n**Contoh:**\n"Tiba-tiba, Rina melihat dompet kepala sekolah jatuh di jalan. Ia ingin mengembalikan, tapi temannya melarang..."`,
+      
+      "evaluasi": `# Evaluasi\n\n**Pengertian:**\nProses penilaian atau refleksi terhadap kejadian dalam cerita, sering muncul sebagai bagian dari resolusi.\n\n**Catatan:** Dalam banyak kurikulum, "evaluasi" digabung dengan **resolusi** atau **koda**.\n\n**Fungsi:**\nMenunjukkan bagaimana tokoh menyikapi masalah dan pelajaran yang didapat.`,
+      
+      "resolusi": `# Resolusi\n\n**Pengertian:**\nPenyelesaian konflik dalam cerita.\n\n**Tujuan:**\nMemberikan solusi atas masalah sehingga cerita mencapai akhir yang logis.\n\n**Catatan:** Resolusi bersifat **praktis** — bagaimana masalah diatasi agar tidak terulang.\n\n**Contoh:**\n"Rina akhirnya melaporkan temuannya ke guru, dan kepala sekolah memuji kejujurannya. Sejak itu, sekolah membuat kotak kejujuran..."`,
+      
+      "koda": `# Koda (Amanat)\n\n**Pengertian:**\nPesan moral yang ingin disampaikan penulis kepada pembaca.\n\n**Jenis:**\n- **Tersurat**: Langsung ditulis (contoh: "Moral dari cerita ini adalah jujur itu baik.")\n- **Tersirat**: Tidak langsung, tersirat dari tindakan tokoh\n\n**Contoh amanat:**\n"Kejujuran membawa berkah."`,
+      
+      // === [UPDATE] SIMPLE PRESENT TENSE LENGKAP ===
+      "present tense": `# Simple Present Tense\n\n**Pengertian:**\nMenyatakan kebiasaan, fakta umum, atau kejadian yang selalu benar.\n\n## ✅ Rumus Lengkap:\n\n### 🔹 Kalimat Positif:\n- I/You/We/They + Verb1 → They **play** football.\n- He/She/It + Verb1 + **s/es** → She **teaches** math.\n\n### 🔹 Kalimat Negatif:\n- I/You/We/They + **do not (don't)** + Verb1 → They **don't play** football.\n- He/She/It + **does not (doesn't)** + Verb1 → She **doesn't teach** math.\n\n### 🔹 Kalimat Tanya (Interrogative):\n- **Do** + I/You/We/They + Verb1? → **Do** they **play** football?\n- **Does** + He/She/It + Verb1? → **Does** she **teach** math?\n\n## 📌 Contoh:\n- The sun **rises** in the east. (fakta)\n- I **drink** coffee every morning. (kebiasaan)\n- **Do** you **like** apples? (pertanyaan)\n- She **doesn't go** to school on Sunday. (negatif)`,
+      
+      // === DATA LAMA TETAP DIPERTAHANKAN ===
+      "simple past tense": `# Simple Past Tense\n\n**Pengertian:** Digunakan untuk menyatakan kejadian yang terjadi di masa lalu.\n\n**Rumus:**\n- Positif: Subject + Verb2 (Contoh: He went to school)\n- Negatif: Subject + did not + Verb1 (Contoh: She did not eat rice)\n- Tanya: Did + Subject + Verb1? (Contoh: Did you play football?)\n\n**Kata keterangan waktu:** yesterday, last week, in 2010, ago.\n\n**Contoh Regular Verb:**\n- play → played\n- clean → cleaned\n\n**Contoh Irregular Verb:**\n- go → went\n- eat → ate\n- write → wrote`,
+      
+      "noun": `# Noun (Kata Benda)\n\n**Pengertian:** Kata yang menyatakan orang, tempat, benda, hewan, atau ide.\n\n**Jenis:**\n- Proper noun: Jakarta, Rina\n- Common noun: city, teacher\n- Concrete noun: book, water\n- Abstract noun: love, freedom`,
+      
+      "adjective": `# Adjective (Kata Sifat)\n\n**Pengertian:** Kata yang menjelaskan noun (benda/orang).\n\n**Contoh:** beautiful, tall, smart, red, old.\n\n**Posisi:** Biasanya sebelum noun (a beautiful flower) atau setelah linking verb (The flower is beautiful).`,
+      
+      "adverb of manner": `# Adverb of Manner\n\n**Pengertian:** Kata keterangan yang menjelaskan CARA suatu tindakan dilakukan.\n\n**Ciri:** Sering berakhiran -ly (tapi tidak selalu).\n\n**Contoh:**\n- She sings beautifully.\n- He drives carefully.\n- They speak softly.`,
+      
+      "imperative sentence": `# Imperative Sentence\n\n**Pengertian:** Kalimat perintah, larangan, atau permintaan.\n\n**Struktur:** Verb1 + ...\n\n**Contoh:**\n- Open the door.\n- Don't run in the hallway!\n- Please be quiet.`,
+      
+      "simple future tense": `# Simple Future Tense\n\n**Pengertian:** Menyatakan rencana atau prediksi di masa depan.\n\n**Rumus:**\n- will + Verb1 (Contoh: I will call you)\n- be going to + Verb1 (Contoh: She is going to travel)\n\n**Perbedaan:**\n- "Will" untuk keputusan spontan atau prediksi.\n- "Be going to" untuk rencana yang sudah dipikirkan.`,
+      
+      "pm dan am": `# Perbedaan AM dan PM\n\n- **AM** (Ante Meridiem): 12:00 malam sampai 11:59 pagi.\n- **PM** (Post Meridiem): 12:00 siang sampai 11:59 malam.\n\n**Contoh:**\n- 8:00 AM = Pukul 08.00 pagi\n- 8:00 PM = Pukul 20.00 malam`,
+      
+      "narrative text": `# Narrative Text\n\n**Tujuan:** Menghibur dan menyampaikan pesan moral.\n\n**Struktur Lengkap:**\n1. **Abstraksi** (opsional)\n2. **Orientasi**\n3. **Komplikasi**\n4. **Resolusi**\n5. **Koda**\n\n**Contoh tema:** "The Lion and the Mouse", "Malin Kundang".`,
+      
+      "teks hikayat": `# Teks Hikayat\n\n**Pengertian:** Cerita prosa lama yang menceritakan kehidupan kerajaan, pahlawan, atau tokoh bangsawan.\n\n**Ciri:**\n- Bersifat anonim\n- Mengandung nilai moral\n- Menggunakan bahasa Melayu klasik\n\n**Jenis:** Hikayat Hang Tuah, Hikayat Si Miskin.\n\n**Unsur Intrinsik:** Tema, alur, tokoh, latar, amanat.\n**Unsur Ekstrinsik:** Nilai budaya, sosial, agama.`,
+      
+      "laporan observasi": `# Teks Laporan Hasil Observasi\n\n**Tujuan:** Melaporkan hasil pengamatan secara objektif.\n\n**Struktur:**\n1. Pernyataan umum\n2. Deskripsi bagian/aspek\n\n**Ciri:**\n- Objektif (tanpa opini)\n- Menggunakan istilah teknis\n- Menggunakan kata definisi ("adalah", "merupakan")\n\n**Contoh tema:** "Laporan Pengamatan Tanaman Kacang Hijau".`,
+      
+      "teks negosiasi": `# Teks Negosiasi\n\n**Tujuan:** Mencapai kesepakatan melalui tawar-menawar.\n\n**Struktur:**\n1. Orientasi\n2. Permintaan\n3. Penawaran\n4. Persetujuan\n5. Penutup\n\n**Ciri:**\n- Menggunakan kalimat persuasif\n- Ada dua pihak yang bernegosiasi\n- Tujuan mencapai win-win solution`,
+      
+      "biotik dan abiotik": `# Biotik dan Abiotik\n\n- **Biotik**: Komponen hidup di ekosistem.\n  Contoh: manusia, hewan, tumbuhan, jamur.\n\n- **Abiotik**: Komponen tak hidup.\n  Contoh: air, tanah, batu, udara, cahaya matahari.`,
+      
+      "perubahan fisika": `# Perubahan Fisika\n\n**Pengertian:** Perubahan wujud tanpa menghasilkan zat baru. Sifatnya **reversibel** (bisa kembali).\n\n**Contoh:**\n- Air → es (membeku)\n- Es → air (mencair)\n- Air → uap (menguap)\n- Uap → air (mengembun)\n- Kapur barus → gas (menyublim)\n- Uap → es (deposisi)`,
+      
+      "perubahan kimia": `# Perubahan Kimia\n\n**Pengertian:** Perubahan yang menghasilkan zat baru. Sifatnya **irreversibel**.\n\n**Ciri:**\n- Perubahan warna\n- Timbul gas\n- Perubahan suhu\n- Terbentuk endapan\n\n**Contoh:**\n- Kayu dibakar → abu\n- Besi berkarat\n- Susu basi`,
+      
+      "ovovipar": `# Cara Berkembang Biak Hewan\n\n- **Ovovivipar**: Telur menetas di dalam tubuh induk, lalu dilahirkan. Contoh: ikan hiu, beberapa ular.\n- **Vivipar**: Melahirkan anak (tanpa telur). Contoh: manusia, kucing.\n- **Ovipar**: Bertelur. Contoh: ayam, burung.`,
+      
+      "simbiosis": `# Jenis Simbiosis\n\n1. **Mutualisme**: Saling menguntungkan. Contoh: lebah dan bunga.\n2. **Komensalisme**: Satu untung, lainnya tidak rugi/untung. Contoh: ikan remora dan hiu.\n3. **Parasitisme**: Satu untung, lainnya rugi. Contoh: cacing pita dalam usus manusia.`,
+      
+      "pancasila": `# Pancasila – Dasar Negara RI\n\n1. Ketuhanan Yang Maha Esa\n2. Kemanusiaan yang adil dan beradab\n3. Persatuan Indonesia\n4. Kerakyatan yang dipimpin oleh hikmat kebijaksanaan dalam permusyawaratan/perwakilan\n5. Keadilan sosial bagi seluruh rakyat Indonesia\n\nPancasila adalah sumber dari segala sumber hukum di Indonesia.`,
+      
+      "hak dan kewajiban": `# Hak dan Kewajiban\n\n- **Hak**: Sesuatu yang pantas diterima. Contoh: hak mendapat pendidikan, hak mengemukakan pendapat.\n- **Kewajiban**: Sesuatu yang harus dilakukan. Contoh: membayar pajak, menjaga kebersihan lingkungan.\n\n**Contoh konkret:**\n- Hak: Bisa mengambil kembali pulpen yang dipinjam teman.\n- Kewajiban: Melaksanakan piket kelas.`,
+      
+      "sil ke 4": `# Sila ke-4 Pancasila\n\n**Bunyi:** "Kerakyatan yang dipimpin oleh hikmat kebijaksanaan dalam permusyawaratan/perwakilan"\n\n**Contoh penerapan:**\n- Memberikan pendapat saat rapat RT\n- Memilih ketua kelas secara musyawarah\n- Menghargai suara mayoritas`,
+      
+      "sistem persamaan": `# Sistem Persamaan Linear\n\n1. **Eliminasi**: Menghilangkan salah satu variabel.\n2. **Substitusi**: Mengganti satu variabel dengan ekspresi lain.\n3. **Gabungan**: Eliminasi + Substitusi.\n\n**Contoh:**\n2x + y = 5\nx - y = 1\n\n→ x = 2, y = 1`,
+      
+      "logaritma": `# Logaritma\n\n**Pengertian:** Invers dari eksponen.\nJika a^b = c, maka log_a(c) = b.\n\n**Sifat:**\n- log(a×b) = log a + log b\n- log(a/b) = log a - log b\n- log(a^n) = n log a\n\n**Contoh:**\nlog₁₀(100) = 2 karena 10² = 100`,
+      
+      "persamaan kuadrat": `# Persamaan Kuadrat\n\n**Bentuk umum:** ax² + bx + c = 0\n\n**Rumus akar:**\nx = [-b ± √(b² - 4ac)] / (2a)\n\n**Diskriminan (D):** D = b² - 4ac\n- D > 0 → 2 akar real\n- D = 0 → 1 akar real\n- D < 0 → akar imajiner`,
+      
+      "fungsi eksponen": `# Fungsi Eksponen\n\n**Bentuk:** f(x) = a^x, a > 0, a ≠ 1\n\n**Sifat:**\n- a^m × a^n = a^(m+n)\n- (a^m)^n = a^(m×n)\n- a^(-n) = 1/a^n\n\n**Contoh grafik:** Selalu positif, melalui (0,1).`,
+      
+      "keuangan": `# Literasi Keuangan Dasar\n\n1. **Pendapatan**: Uang yang masuk (gaji, usaha).\n2. **Pengeluaran**: Uang yang keluar (belanja, tagihan).\n3. **Tabungan**: Pendapatan - Pengeluaran.\n4. **Investasi**: Menanam uang untuk keuntungan jangka panjang.\n5. **Anggaran**: Rencana pemasukan & pengeluaran.\n\n**Tips:**\n- 50% kebutuhan, 30% keinginan, 20% tabungan/investasi.`,
+      
+      "teknologi": `# Pengertian Teknologi\n\nMenurut KBBI: **Sarana atau alat untuk memecahkan masalah, memudahkan pekerjaan, atau berkomunikasi.**\n\n**Contoh:** Smartphone, internet, mesin cuci, AI.`,
+      
+      "budaya digital": `# Budaya Digital\n\n**Pengertian:** Cara berperilaku di dunia digital yang mencerminkan nilai budaya.\n\n**Contoh positif:**\n- Mencintai produk lokal (batik, tenun)\n- Membeli UMKM lewat e-commerce\n- Mempromosikan budaya Indonesia di media sosial`,
+      
+      "etika digital": `# Etika Digital\n\n1. Bersikap sopan di media sosial.\n2. Tidak menyebarkan hoax.\n3. Tidak memberikan komentar jahat (body shaming, hate speech).\n4. Menghargai privasi orang lain.\n5. Tidak plagiat karya digital.`,
+      
+      "mencegah hoax": `# Cara Mencegah Hoax\n\n1. Cek sumber berita (resmi/tidak).\n2. Verifikasi ke fakta (turnbackhoax.id).\n3. Jangan asal share.\n4. Gunakan fitur "laporkan" di media sosial.\n5. Edukasi keluarga tentang literasi digital.`,
+      
+      "keamanan digital": `# Keamanan Digital\n\n1. Gunakan password kuat (8+ karakter, gabung huruf besar/kecil, angka, simbol).\n2. Aktifkan 2FA (Two-Factor Authentication).\n3. Jangan gunakan WiFi publik untuk transaksi.\n4. Perbarui software secara berkala.\n5. Jangan klik link mencurigakan.`,
+      
+      "budaya": `# Budaya Secara Umum\n\n**Pengertian:**\nBudaya adalah seluruh cara hidup yang berkembang dan dimiliki bersama oleh suatu masyarakat, yang diwariskan dari generasi ke generasi.\n\n**Unsur Budaya (Koentjaraningrat):**\n1. Sistem religi\n2. Sistem kemasyarakatan\n3. Ilmu pengetahuan\n4. Bahasa\n5. Kesenian\n6. Sistem mata pencaharian\n7. Sistem teknologi & peralatan\n\n**Fungsi Budaya:**\n- Pedoman hidup\n- Identitas bangsa\n- Pemersatu masyarakat\n- Sarana ekspresi`,
+      
+      "provinsi indonesia": `# Beberapa Provinsi di Indonesia\n\n## 1. Jawa Barat\n- Ibu kota: Bandung\n- Suku: Sunda\n- Bahasa: Sunda\n- Pakaian adat: Pangsi & Kebaya Sunda\n- Tarian: Jaipong\n- Rumah adat: Imah (Joglo Sunda)\n\n## 2. Sumatera Barat\n- Ibu kota: Padang\n- Suku: Minangkabau\n- Bahasa: Minang\n- Pakaian adat: Baju Kurung Basiba\n- Tarian: Tari Piring\n- Rumah adat: Rumah Gadang\n\n## 3. Bali\n- Ibu kota: Denpasar\n- Suku: Bali\n- Bahasa: Bali\n- Pakaian adat: Kebaya Bali & Kamen\n- Tarian: Legong, Kecak\n- Rumah adat: Rumah Bali (Uma Lumbung)\n\n## 4. Papua\n- Ibu kota: Jayapura\n- Suku: Asmat, Dani\n- Bahasa: Papua (beragam)\n- Pakaian adat: Koteka (pria), Sali (wanita)\n- Tarian: Tari Perang\n- Rumah adat: Honai\n\n## 5. Kalimantan Selatan\n- Ibu kota: Banjarmasin\n- Suku: Banjar\n- Bahasa: Banjar\n- Pakaian adat: Baaju Kurung\n- Tarian: Tari Baksa Kembang\n- Rumah adat: Rumah Bubungan Tinggi`,
+      
+      "perangkat lunak": `# Perangkat Lunak (Software)\n\n**Pengertian:**\nKumpulan instruksi atau program yang mengatur komputer agar dapat menjalankan tugas tertentu.\n\n**Jenis:**\n- Sistem operasi: Windows, macOS, Linux, Android\n- Aplikasi: Microsoft Word, Google Chrome, WhatsApp, Zoom\n- Bahasa pemrograman: Python, JavaScript, Java\n\n**Fungsi:** Memberikan perintah kepada perangkat keras agar bekerja.`,
+      
+      "perangkat keras": `# Perangkat Keras (Hardware)\n\n**Pengertian:**\nKomponen fisik komputer atau perangkat elektronik yang dapat disentuh.\n\n**Contoh:**\n- Komputer: CPU, RAM, hard disk, keyboard, mouse, monitor\n- Smartphone: layar, baterai, kamera, prosesor\n- Laptop: touchpad, webcam, speaker, port USB\n\n**Fungsi:** Menjalankan perintah dari perangkat lunak secara fisik.`,
+      
+      "bola voli": `# Bola Voli\n\n- Jumlah pemain: 6 per tim\n- Lama pertandingan: Best of 5 set\n- Set dimenangkan oleh tim yang mencapai **25 poin** (selisih 2 poin)\n- Teknik dasar: servis, passing, smash, block, defense`,
+      
+      "sepak bola": `# Sepak Bola\n\n- Jumlah pemain: 11 per tim\n- Lama pertandingan: 2×45 menit\n- Tujuan: Memasukkan bola ke gawang lawan\n- Posisi: kiper, bek, gelandang, striker\n- Wasit: 1 wasit utama + 2 asisten`,
+      
+      "bulu tangkis": `# Bulu Tangkis\n\n- Lapangan: 13.40 m × 6.10 m (tunggal)\n- Sistem: Rally point (21 poin)\n- Servis harus di bawah pinggang\n- Peralatan: raket, kok (shuttlecock)\n- Ganda: 2 pemain per tim`,
+      
+      "renang": `# Renang\n\n- Gaya utama: bebas, punggung, dada, kupu-kupu\n- Start: dari balok start\n- Aturan: tidak boleh berjalan di dasar kolam\n- Teknik: streamline, kick, pull\n- Event: gaya bebas 50m, 100m, estafet, dll`,
+      
+      "default": `Terima kasih atas pertanyaannya!\n\nSaya memiliki data lengkap tentang:\n- Bahasa Inggris (tenses lengkap)\n- Struktur teks naratif (tema, orientasi, koda, dll)\n- IPA, Pancasila, Budaya, Provinsi\n- Perangkat Lunak & Keras\n- Matematika, Keuangan, Digital, Olahraga\n\nSilakan tanyakan:\n"rumus present tense negatif"\n"apa itu orientasi"\n"contoh koda"\n"provinsi bali"`
     };
 
-    function getAnswer(query, mode = 'all') {
-      const cleanQuery = query.toLowerCase().trim().replace(/[^\w\s]/g, ' ');
-      const words = cleanQuery.split(/\s+/).filter(w => w.length > 0);
-
-      const categoriesToSearch = mode === 'tech' ? ['teknologi'] : Object.keys(knowledgeBase);
-
-      for (const kategori of categoriesToSearch) {
-        const data = knowledgeBase[kategori];
-        if (!data) continue;
-
-        const keywords = data.keywords || [];
-        let hasMatch = false;
-
-        for (const kw of keywords) {
-          const cleanKw = kw.toLowerCase();
-          if (words.some(word => cleanKw.includes(word) || word.includes(cleanKw))) {
-            hasMatch = true;
-            break;
-          }
-        }
-
-        if (hasMatch) {
-          let hasil = '';
-          for (const [kunci, nilai] of Object.entries(data)) {
-            if (kunci === 'keywords') continue;
-
-            let label = kunci
-              .replace(/([A-Z])/g, ' $1')
-              .replace(/^./, str => str.toUpperCase());
-
-            if (typeof nilai === 'string') {
-              hasil += `• ${label}: ${nilai}\n`;
-            } else if (Array.isArray(nilai)) {
-              hasil += `• ${label}: ${nilai.join(', ')}\n`;
-            } else if (typeof nilai === 'object') {
-              hasil += `• ${label}:\n`;
-              for (const [subKunci, subNilai] of Object.entries(nilai)) {
-                const subLabel = subKunci.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-                if (typeof subNilai === 'string') {
-                  hasil += `  - ${subLabel}: ${subNilai}\n`;
-                } else if (Array.isArray(subNilai)) {
-                  hasil += `  - ${subLabel}: ${subNilai.join(', ')}\n`;
-                }
-              }
-            }
-          }
-          return hasil.trim() || "Informasi tersedia, tapi belum ada detail.";
+    // === FUNGSI PENCARIAN ===
+    function getAnswer(query) {
+      const clean = query.toLowerCase().trim();
+      
+      for (const key in knowledgeBase) {
+        if (clean.includes(key)) {
+          return knowledgeBase[key];
         }
       }
 
-      if (mode === 'tech') {
-        return "Maaf, aku hanya bisa menjawab tentang teknologi (perangkat keras/lunak, aplikasi, dll). Coba tanyakan: 'apa itu perangkat lunak?' 🌐";
-      }
-      return "Maaf, aku belum punya informasi tentang itu. Coba tanyakan hal lain ya 🎻";
+      // Kata kunci umum
+      if (clean.includes("tenses") || clean.includes("grammar")) return knowledgeBase["present tense"];
+      if (clean.includes("cerita") || clean.includes("narasi")) return knowledgeBase["narrative text"];
+      if (clean.includes("struktur teks")) return knowledgeBase["narrative text"];
+      if (clean.includes("tema") && !clean.includes("pancasila")) return knowledgeBase["tema"];
+      if (clean.includes("orientasi")) return knowledgeBase["orientasi"];
+      if (clean.includes("komplikasi")) return knowledgeBase["komplikasi"];
+      if (clean.includes("resolusi")) return knowledgeBase["resolusi"];
+      if (clean.includes("koda") || clean.includes("amanat")) return knowledgeBase["koda"];
+      if (clean.includes("pancasila")) return knowledgeBase["pancasila"];
+      if (clean.includes("matematika") || clean.includes("rumus")) return knowledgeBase["persamaan kuadrat"];
+      if (clean.includes("digital")) return knowledgeBase["etika digital"];
+      if (clean.includes("olahraga")) return knowledgeBase["bola voli"];
+
+      return knowledgeBase["default"];
     }
 
+    function getWelcomeMessage() {
+      return "Hai! Saya Digital Nusantara AI 🤖\n\nSaya punya **data lengkap**:\n- Simple Present Tense (positif, negatif, tanya)\n- Struktur naratif: tema, orientasi, koda, dll\n- Budaya, Provinsi, Pancasila\n- Perangkat Lunak & Keras\n- Matematika, IPA, Digital, Olahraga\n\nCoba tanyakan:\n\"rumus present tense negatif\"\n\"apa itu resolusi\"\n\"contoh koda\"\n\"provinsi sumatera barat\"";
+    }
+
+    // === EVENT HANDLER ===
     const input = document.getElementById('userInput');
     const responseDiv = document.getElementById('response');
     const sendBtn = document.getElementById('sendBtn');
     const techBtn = document.getElementById('techBtn');
+    const magicBubble = document.getElementById('magicBubble');
     let isProcessing = false;
 
-    function processQuestion(mode = 'all') {
+    function processQuestion() {
       if (isProcessing) return;
       const query = input.value.trim();
       if (!query) return;
-
       isProcessing = true;
-      const answer = getAnswer(query, mode);
       
+      const answer = getAnswer(query);
       responseDiv.style.display = 'block';
-      responseDiv.textContent = (mode === 'tech' ? "🌐 " : "🤖 ") + answer;
+      responseDiv.innerHTML = "🤖 " + answer
+        .replace(/\n/g, "<br>")
+        .replace(/# ([^\n]+)/g, '<strong>$1</strong>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
       input.value = "";
       
-      setTimeout(() => {
-        isProcessing = false;
-      }, 300);
+      setTimeout(() => { isProcessing = false; }, 300);
     }
 
     input.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        processQuestion('all');
+        processQuestion();
       }
     });
 
-    sendBtn.addEventListener('click', () => processQuestion('all'));
-    techBtn.addEventListener('click', () => processQuestion('tech'));
+    sendBtn.addEventListener('click', processQuestion);
+    techBtn.addEventListener('click', processQuestion);
+
+    magicBubble.addEventListener('click', () => {
+      magicBubble.style.transform = 'scale(1.1) rotate(10deg)';
+      setTimeout(() => { magicBubble.style.transform = 'scale(1) rotate(0deg)'; }, 300);
+    });
 
     window.addEventListener('load', () => {
       input.focus();
       setTimeout(() => {
         responseDiv.style.display = 'block';
-        responseDiv.textContent = "🤖 Hai! Saya adalah AI digital-mu 🎻\nSaya siap menjelajahi dunia digital, budaya Nusantara, sains, bahasa, matematika, sejarah, dan banyak lagi!\nCoba tanya: 'apa itu BPUPKI?' atau 'bagaimana cara menyelesaikan persamaan kuadrat?' 💫";
+        responseDiv.innerHTML = "🤖 " + getWelcomeMessage().replace(/\n/g, "<br>");
       }, 800);
     });
   </script>
