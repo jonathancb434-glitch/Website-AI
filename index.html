@@ -13,8 +13,7 @@
       --placeholder-gray: #9CA3AF;
       --tech-blue: #38bdf8;
     }
-
-    html,body { height:100%; }
+    html, body { height: 100%; }
     body {
       min-height: 100vh;
       margin: 0;
@@ -28,7 +27,6 @@
       padding: 20px;
       box-sizing: border-box;
     }
-
     .robot-head {
       position: relative;
       width: 80px;
@@ -78,8 +76,8 @@
       box-shadow: inset 0 0 8px rgba(56, 189, 248, 0.9);
     }
 
-    .glasses::before { left:3px; }
-    .glasses::after { right:3px; }
+    .glasses::before { left: 3px; }
+    .glasses::after { right: 3px; }
 
     @keyframes nod {
       0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -195,9 +193,7 @@
   <div class="robot-head">
     <div class="glasses"></div>
   </div>
-
   <div class="title">Ask Me Anything — Atlas Nusantara AI 🎻</div>
-
   <div class="ask-box" role="group" aria-label="Kotak tanya">
     <button class="generate-btn" id="generateBtn" title="Hasilkan gambar dan deskripsi">＋</button>
     <button class="announce-btn" id="announceBtn" title="Cari sumber lebih dalam">📣</button>
@@ -206,550 +202,723 @@
     <button class="tech-btn" id="techBtn" title="Cari tentang teknologi">🌐</button>
     <div class="send-btn" id="sendBtn" title="Kirim pertanyaan">✈️</div>
   </div>
-
   <div id="response" class="response" style="display:none;"></div>
-
   <div id="imageContainer" style="display:none;">
-      <img id="generatedImage" src="" alt="Generated Image">
-      <p id="imageDescription"></p>
+    <img id="generatedImage" src="" alt="Generated Image">
+    <p id="imageDescription"></p>
   </div>
-
-  <div class="hint">Tip: coba tanya dengan kata kunci yang ada di knowledge base, contoh: "tari", "tabel periodik", "present tense", "adjective", "descriptive text".</div>
-
-<script>
-/*
-  Atlas Nusantara AI — local knowledge-based responder
-  - Data lama tetap utuh
-  - Data terbaru ditambahkan di bagian terpisah: dataTerbaru
-  - Simple keyword matching (case-insensitive)
-  - generateBtn membuat gambar SVG cepat & deskripsi
-  - tidak memanggil API eksternal -> offline / aman
-  - PERBAIKAN: integrasi penuh dataTerbaru ke pencarian
-  - PERBAIKAN: typo di irregularVerbs
-*/
-
-const knowledgeBase = {
-  // === DATA LAMA ===
-  budaya: {
-    keywords: ['budaya', 'adat', 'tradisi', 'kesenian', 'tari', 'rumah adat', 'makanan khas', 'seni', 'nusantara'],
-    pengertian: "Budaya Nusantara adalah keseluruhan cara hidup masyarakat Indonesia yang mencakup nilai, norma, seni, adat istiadat, dan kepercayaan.",
-    tari: ["Tari Saman (Aceh)", "Tari Pendet (Bali)", "Tari Reog Ponorogo (Jawa Timur)", "Tari Tor-Tor (Batak)"],
-    rumahAdat: ["Rumah Gadang (Minangkabau)", "Joglo (Jawa)", "Tongkonan (Toraja)", "Honai (Papua)"],
-    makanan: ["Rendang (Sumatra Barat)", "Gudeg (Yogyakarta)", "Papeda (Maluku/Papua)", "Soto Banjar (Kalimantan Selatan)"]
-  },
-  nkri: {
-    keywords: ['nkri', 'negara kesatuan', 'indonesia', 'pemerintahan pusat', 'jakarta', 'bentuk negara'],
-    pengertian: "Negara Kesatuan Republik Indonesia (NKRI) adalah bentuk negara Indonesia yang bersatu dengan satu pemerintahan pusat.",
-    manfaat: ["Menjaga persatuan", "Memudahkan koordinasi pemerintahan", "Memperkuat identitas nasional"],
-    contoh: "Semua provinsi di Indonesia berada di bawah satu pemerintahan pusat di Jakarta."
-  },
-  bhinnekaTunggalIka: {
-    keywords: ['bhinneka', 'bhinneka tunggal ika', 'berbeda tetap satu', 'toleransi', 'keberagaman', 'semboyan', 'indonesia'],
-    pengertian: "Bhinneka Tunggal Ika berarti 'Berbeda-beda tetapi tetap satu', semboyan resmi Indonesia yang mencerminkan persatuan dalam keberagaman.",
-    nilaiPancasila: "Sila ke-2 (Kemanusiaan yang Adil dan Beradab) dan Sila ke-3 (Persatuan Indonesia).",
-    manfaat: ["Memperkuat toleransi", "Mencegah konflik SARA", "Membangun kebersamaan"],
-    contoh: "Perayaan hari besar agama bersama tanpa membedakan suku dan agama."
-  },
-  pancasila: {
-    keywords: ['pancasila', 'sila', 'dasar negara', 'ideologi', 'lima sila', 'falsafah'],
-    pengertian: "Pancasila adalah dasar negara dan ideologi bangsa Indonesia yang terdiri dari lima sila sebagai pedoman kehidupan berbangsa dan bernegara.",
-    sila1: "Ketuhanan Yang Maha Esa",
-    sila2: "Kemanusiaan yang Adil dan Beradab",
-    sila3: "Persatuan Indonesia",
-    sila4: "Kerakyatan yang Dipimpin oleh Hikmat Kebijaksanaan dalam Permusyawaratan/Perwakilan",
-    sila5: "Keadilan Sosial bagi Seluruh Rakyat Indonesia"
-  },
-  hikayat: {
-    keywords: ['hikayat', 'cerita lama', 'prosa lama', 'sastra melayu klasik'],
-    pengertian: "Hikayat adalah karya sastra prosa lama Melayu yang menceritakan kehidupan tokoh bangsawan, pahlawan, atau raja-raja di masa lampau.",
-    tujuan: "Menghibur, menyampaikan nilai moral, melestarikan sejarah, dan menanamkan ajaran agama/etika.",
-    struktur: "1. Pembukaan (doa/salawat), 2. Isi (alur cerita), 3. Penutup (nasihat/moral).",
-    kaidahKebahasaan: "Menggunakan bahasa Melayu klasik, kata arkais (kuno), kalimat pasif, repetisi, metafora, dan hiperbola.",
-    contoh: "Hikayat Hang Tuah, Hikayat Si Miskin, Hikayat Abdullah, Hikayat Bayan Budiman."
-  },
-  laporanHasilObservasi: {
-    keywords: ['laporan hasil observasi', 'teks observasi', 'pengamatan', 'objek', 'deskripsi'],
-    pengertian: "Teks laporan hasil observasi adalah teks yang berisi informasi faktual hasil pengamatan sistematis terhadap suatu objek.",
-    tujuan: "Memberikan informasi objektif berdasarkan fakta pengamatan.",
-    struktur: "1. Pernyataan umum (klasifikasi objek), 2. Deskripsi bagian (ciri fisik, perilaku, fungsi, dll).",
-    ciriKebahasaan: "Menggunakan kata teknis, verba material (melihat, mengamati), kalimat definisi, bersifat objektif, dan tidak memakai opini pribadi.",
-    contoh: "Laporan pengamatan kupu-kupu: siklus hidup, warna sayap, habitat, cara makan."
-  },
-  narrativeText: {
-    keywords: ['narrative text', 'cerita naratif', 'english story', 'orientation complication resolution'],
-    pengertian: "Narrative text is a genre of writing that tells a story about past events to entertain readers.",
-    orientation: "Introduces characters, setting, and time. Example: 'Once upon a time, there lived a kind princess in a castle.'",
-    complication: "The main problem or conflict arises. Example: 'One day, an evil witch cursed the princess to sleep forever.'",
-    resolution: "The problem is solved. Example: 'A brave prince kissed her, and the curse was broken.'",
-    ciriKebahasaanInggris: "Uses past tense, action verbs, time connectives (once, then, finally), and direct/indirect speech.",
-    contoh: "Cinderella, Snow White, The Legend of Malin Kundang (adapted)."
-  },
-  teknologi: {
-    keywords: ['teknologi', 'perangkat keras', 'hardware', 'perangkat lunak', 'software', 'aplikasi', 'gadget', 'komputer', 'hp'],
-    pengertian: "Menurut KBBI, teknologi adalah metode ilmiah untuk mencapai tujuan praktis; ilmu pengetahuan terapan yang digunakan untuk memudahkan interaksi dan aktivitas manusia, termasuk dalam bermedia sosial.",
-    perangkatKeras: ["Handphone (HP)", "Komputer", "Laptop", "Tablet", "Server", "Printer", "Router"],
-    perangkatLunak: ["Aplikasi berhitung (kalkulator)", "Aplikasi pembayaran (GoPay, OVO, DANA)", "Sistem operasi (Windows, Android, iOS)", "Browser (Chrome, Firefox)", "Aplikasi media sosial (Instagram, WhatsApp, TikTok)"],
-    manfaat: ["Mempermudah komunikasi", "Mempercepat akses informasi", "Meningkatkan efisiensi kerja", "Mendukung pembelajaran jarak jauh"]
-  },
-  majas: {
-    keywords: ['majas', 'gaya bahasa', 'personifikasi', 'metafora', 'ironi', 'hiperbola'],
-    pengertian: "Majas atau gaya bahasa adalah penggunaan kata-kata secara kiasan untuk menciptakan efek tertentu dalam karya sastra.",
-    personifikasi: {
-      pengertian: "Memberikan sifat manusia pada benda mati atau konsep abstrak.",
-      contoh: "Angin berbisik pelan di telingaku."
-    },
-    metafora: {
-      pengertian: "Perbandingan langsung tanpa kata pembanding (seperti, bagai).",
-      contoh: "Dunia adalah panggung sandiwara."
-    },
-    ironi: {
-      pengertian: "Mengatakan sesuatu yang bertentangan dengan maksud sebenarnya untuk menyindir.",
-      contoh: "Wah, hebat sekali kamu sampai lupa ulang tahun ibumu!"
-    },
-    hiperbola: {
-      pengertian: "Pengungkapan berlebihan untuk menekankan sesuatu.",
-      contoh: "Aku sudah menunggumu berabad-abad!"
-    }
-  },
-  keuangan: {
-    keywords: ['keuangan', 'bank', 'non bank', 'lembaga keuangan', 'akuntansi', 'laporan keuangan', 'uang', 'investasi'],
-    pengertian: "Keuangan adalah segala aktivitas yang berkaitan dengan pengelolaan uang, termasuk investasi, pinjaman, dan penganggaran.",
-    perbankan: {
-      pengertian: "Lembaga keuangan yang menghimpun dana dari masyarakat (simpanan) dan menyalurkannya kembali (kredit).",
-      jenis: ["Bank Umum (BCA, BRI, Mandiri)", "Bank Perkreditan Rakyat (BPR)"],
-      fungsi: ["Menciptakan uang giral", "Menyalurkan kredit", "Menyediakan jasa lalu lintas pembayaran"]
-    },
-    nonBank: {
-      pengertian: "Lembaga keuangan yang tidak menghimpun dana dalam bentuk simpanan.",
-      contoh: ["OJK", "Asuransi (Jiwasraya, Prudential)", "Dana Pensiun", "Perusahaan Efek", "Fintech (Pinjaman online)"]
-    },
-    akuntansi: {
-      pengertian: "Proses pencatatan, penggolongan, peringkasan, dan pelaporan transaksi keuangan.",
-      laporanKeuangan: ["Neraca", "Laporan Laba Rugi", "Arus Kas", "Perubahan Ekuitas"],
-      prinsip: ["Relevansi", "Keandalan", "Konsistensi", "Daya Banding"]
-    },
-    istilahKeuangan: {
-      likuiditas: "Kemampuan perusahaan membayar kewajiban jangka pendek.",
-      solvabilitas: "Kemampuan membayar seluruh kewajiban (jangka panjang & pendek).",
-      ROI: "Return on Investment — ukuran keuntungan relatif terhadap investasi.",
-      inflasi: "Kenaikan harga barang/jasa secara umum dalam periode tertentu."
-    }
-  },
-  englishTenses: {
-    keywords: ['present tense', 'past tense', 'simple present', 'simple past', 'rumus present', 'rumus past', 'tenses inggris', 'regular verb', 'irregular verb', 'kata kerja'],
-    pengertian: "Tenses adalah bentuk kata kerja (verb) yang menunjukkan waktu terjadinya suatu peristiwa: masa kini (present), lampau (past), atau akan datang (future).",
-    presentTense: {
-      pengertian: "Digunakan untuk kebiasaan, fakta umum, atau kejadian rutin.",
-      rumus: {
-        positif: "S + V1 (s/es) + O/C\nContoh: She plays violin every day.",
-        negatif: "S + do/does + not + V1 + O/C\nContoh: They do not like spicy food.",
-        tanya: "Do/Does + S + V1 + O/C?\nContoh: Do you study English?"
+  <div class="hint">Tip: coba tanya dengan kata kunci yang ada di knowledge base, contoh: "tari", "tabel periodik", "present tense", "adjective", "teks observasi", "olahraga", "UUD 1945".</div>
+  
+  <script>
+    const knowledgeBase = {
+      // === SEMUA DATA LAIN TETAP UTUH ===
+      budaya: {
+        keywords: ['budaya', 'adat', 'tradisi', 'kesenian', 'tari', 'rumah adat', 'makanan khas', 'seni', 'nusantara'],
+        pengertian: "Budaya Nusantara adalah keseluruhan cara hidup masyarakat Indonesia yang mencakup nilai, norma, seni, adat istiadat, dan kepercayaan.",
+        tari: ["Tari Saman (Aceh)", "Tari Pendet (Bali)", "Tari Reog Ponorogo (Jawa Timur)", "Tari Tor-Tor (Batak)"],
+        rumahAdat: ["Rumah Gadang (Minangkabau)", "Joglo (Jawa)", "Tongkonan (Toraja)", "Honai (Papua)"],
+        makanan: ["Rendang (Sumatra Barat)", "Gudeg (Yogyakarta)", "Papeda (Maluku/Papua)", "Soto Banjar (Kalimantan Selatan)"]
       },
-      catatan: "Tambahkan -s/-es pada verb jika subjek: he, she, it."
-    },
-    pastTense: {
-      pengertian: "Digunakan untuk kejadian yang sudah selesai di masa lampau.",
-      rumus: {
-        positif: "S + V2 + O/C\nContoh: I watched a movie yesterday.",
-        negatif: "S + did + not + V1 + O/C\nContoh: She did not go to school.",
-        tanya: "Did + S + V1 + O/C?\nContoh: Did they visit Bali last year?"
-      }
-    },
-    regularVerbs: {
-      pengertian: "Kata kerja beraturan: bentuk kedua & ketiga dibuat dengan menambahkan -ed.",
-      contoh: [
-        "play – played – played",
-        "watch – watched – watched",
-        "clean – cleaned – cleaned",
-        "study – studied – studied"
-      ]
-    },
-    irregularVerbs: {
-      // ✅ DIPERBAIKI: typo diperbaiki
-      pengertian: "Kata kerja **tidak beraturan**: bentuk kedua & ketiga tidak mengikuti pola -ed.",
-      contohLengkap: [
-        "go – went – gone",
-        "eat – ate – eaten",
-        "see – saw – seen",
-        "take – took – taken",
-        "write – wrote – written",
-        "sing – sang – sung",
-        "drink – drank – drunk",
-        "break – broke – broken",
-        "do – did – done",
-        "have – had – had"
-      ]
-    }
-  },
-  narrativeStructure: {
-    keywords: ['struktur narrative text', 'orientation complication resolution', 'evaluation coda', 'bagian cerita naratif', 'coda', 'evaluation'],
-    pengertian: "Struktur teks naratif terdiri dari lima bagian utama yang membentuk alur cerita yang utuh.",
-    orientation: "Memperkenalkan tokoh, latar (tempat & waktu), dan suasana awal.\nContoh: Once upon a time, there was a kind girl named Cinderella.",
-    complication: "Munculnya konflik atau masalah dalam cerita.\nContoh: Her stepmother forbade her from attending the royal ball.",
-    resolution: "Pemecahan masalah atau penyelesaian konflik.\nContoh: With the help of her fairy godmother, she went to the ball and met the prince.",
-    evaluation: "Penilaian terhadap peristiwa atau pelajaran moral (opsional, sering menyatu dengan resolution).",
-    coda: "Kesimpulan atau akhir cerita yang menunjukkan perubahan kondisi tokoh.\nContoh: They lived happily ever after."
-  },
-  tabelPeriodik: {
-    keywords: ['tabel periodik', 'unsur kimia', 'simbol unsur', 'unsur', 'campuran kimia', 'rumus kimia', 'H2O', 'NaCl', 'CO2'],
-    pengertian: "Tabel periodik adalah susunan unsur-unsur kimia yang diatur berdasarkan kenaikan nomor atom dan kemiripan sifat kimianya.",
-    simbolUnsur: "Setiap unsur memiliki simbol unik, contoh: H (Hidrogen), O (Oksigen), Fe (Besi), Na (Natrium), Cl (Klorin).",
-    campuranUmum: [
-      "Air (H₂O) — gabungan hidrogen dan oksigen",
-      "Garam dapur (NaCl) — natrium + klorin",
-      "Karbon dioksida (CO₂) — karbon + oksigen",
-      "Amonia (NH₃) — nitrogen + hidrogen"
-    ],
-    manfaat: [
-      "Memprediksi sifat dan reaktivitas unsur",
-      "Dasar pengembangan obat dan material baru",
-      "Digunakan di industri logam, energi, dan pertanian",
-      "Alat pembelajaran wajib di sekolah"
-    ],
-    contohUnsur: [
-      "Oksigen (O₂) — untuk bernapas",
-      "Besi (Fe) — bahan bangunan dan kendaraan",
-      "Tembaga (Cu) — kabel listrik",
-      "Karbon (C) — dasar kehidupan dan bahan bakar"
-    ]
-  },
-  perubahanZatDanLingkungan: {
-    keywords: ['perubahan fisika', 'perubahan kimia', 'biotik', 'abiotik', 'wujud zat', 'mengembun', 'menyublim', 'menguap', 'membeku', 'mencair', 'deposisi', 'perubahan iklim', 'karbon dioksida'],
-    biotikAbiotik: {
-      biotik: "Benda hidup yang bisa tumbuh, berkembang biak, dan mati.\nContoh: manusia, hewan, tumbuhan, bakteri.",
-      abiotik: "Benda mati yang tidak memiliki ciri makhluk hidup.\nContoh: batu, air, udara, kayu (setelah ditebang), tanah."
-    },
-    perubahanFisika: {
-      pengertian: "Perubahan bentuk atau wujud tanpa menghasilkan zat baru (reversibel).",
-      contoh: "Es mencair → air → dibekukan lagi jadi es.",
-      ciri: "Tidak ada zat baru, hanya berubah wujud."
-    },
-    perubahanKimia: {
-      pengertian: "Perubahan yang menghasilkan zat baru (ireversibel).",
-      contoh: "Kayu dibakar → jadi arang dan asap, susu basi, besi berkarat.",
-      ciri: "Terbentuk zat baru, tidak bisa dikembalikan."
-    },
-    perubahanWujud: {
-      mencair: "Padat → cair (es → air)",
-      membeku: "Cair → padat (air → es)",
-      menguap: "Cair → gas (air → uap)",
-      mengembun: "Gas → cair (uap → air)",
-      menyublim: "Padat → gas (kapur barus menguap)",
-      deposisi: "Gas → padat (uap air → salju)"
-    },
-    perubahanIklim: {
-      pengertian: "Perubahan jangka panjang pola cuaca akibat pemanasan global.",
-      penyebab: "Emisi gas rumah kaca (CO₂, metana) dari kendaraan, pabrik, dan deforestasi.",
-      dampak: "Es kutub mencair → permukaan laut naik → banjir di wilayah pesisir.",
-      solusi: "Gunakan energi terbarukan, tanam pohon, kurangi sampah plastik."
-    }
-  },
-  norma: {
-    keywords: ['norma', 'aturan', 'sosial', 'kesopanan', 'agama', 'hukum', 'kebiasaan', 'norma sekolah', 'norma keluarga'],
-    pengertian: "Norma adalah aturan atau pedoman yang mengatur perilaku dalam masyarakat.",
-    jenis: ["Norma agama", "Norma hukum", "Norma kesopanan", "Norma kebiasaan"],
-    contohSehariHari: [
-      "Tidak boleh mencuri (norma hukum & agama)",
-      "Antri saat beli makanan (norma kesopanan)",
-      "Pakai seragam sekolah (norma sekolah)",
-      "Bantu orang tua di rumah (norma keluarga)"
-    ],
-    tempatBerlaku: "Berlaku di rumah, sekolah, tempat ibadah, masyarakat umum, dan negara"
-  },
-  analisisCerita: {
-    keywords: ['latar tempat', 'latar waktu', 'latar suasana', 'tema', 'tokoh', 'penokohan', 'abstraksi', 'orientasi', 'komplikasi', 'evaluasi', 'resolusi', 'koda', 'unsur intrinsik'],
-    latarTempat: "Lokasi terjadinya cerita (misal: sekolah, hutan, kota, istana).",
-    latarWaktu: "Waktu kejadian cerita (pagi, siang, malam, zaman dahulu, masa depan).",
-    latarSuasana: "Suasana emosional dalam cerita (sedih, tegang, bahagia, mencekam, haru).",
-    tema: "Gagasan pokok atau pesan utama yang muncul di seluruh cerita (misal: cinta, pengorbanan, keadilan).",
-    tokoh: "Pelaku atau karakter dalam cerita (tokoh utama, tokoh antagonis, tokoh pendukung).",
-    penokohan: "Cara pengarang menggambarkan sifat tokoh (langsung: 'Si Fulan jujur', tidak langsung: lewat dialog/perilaku).",
-    abstraksi: "Gambaran umum atau ringkasan awal cerita (sering muncul di teks eksposisi atau naratif modern).",
-    orientasi: "Bagian awal cerita yang memperkenalkan tokoh, latar, dan suasana.",
-    komplikasi: "Rangkaian peristiwa yang memunculkan konflik atau masalah.",
-    evaluasi: "Penilaian terhadap perkembangan peristiwa atau konflik (opsional, sering menyatu dengan resolusi).",
-    resolusi: "Penyelesaian dari konflik atau masalah dalam cerita.",
-    koda: "Amanat, pesan moral, atau kesimpulan di akhir cerita (misal: 'Jadilah jujur dalam segala hal.')."
-  },
+      nkri: {
+        keywords: ['nkri', 'negara kesatuan', 'indonesia', 'pemerintahan pusat', 'jakarta', 'bentuk negara'],
+        pengertian: "Negara Kesatuan Republik Indonesia (NKRI) adalah bentuk negara Indonesia yang bersatu dengan satu pemerintahan pusat.",
+        manfaat: ["Menjaga persatuan", "Memudahkan koordinasi pemerintahan", "Memperkuat identitas nasional"],
+        contoh: "Semua provinsi di Indonesia berada di bawah satu pemerintahan pusat di Jakarta."
+      },
+      bhinnekaTunggalIka: {
+        keywords: ['bhinneka', 'bhinneka tunggal ika', 'berbeda tetap satu', 'toleransi', 'keberagaman', 'semboyan', 'indonesia'],
+        pengertian: "Bhinneka Tunggal Ika berarti 'Berbeda-beda tetapi tetap satu', semboyan resmi Indonesia yang mencerminkan persatuan dalam keberagaman.",
+        nilaiPancasila: "Sila ke-2 (Kemanusiaan yang Adil dan Beradab) dan Sila ke-3 (Persatuan Indonesia).",
+        manfaat: ["Memperkuat toleransi", "Mencegah konflik SARA", "Membangun kebersamaan"],
+        contoh: "Perayaan hari besar agama bersama tanpa membedakan suku dan agama."
+      },
+      pancasila: {
+        keywords: ['pancasila', 'sila', 'dasar negara', 'ideologi', 'lima sila', 'falsafah'],
+        pengertian: "Pancasila adalah dasar negara dan ideologi bangsa Indonesia yang terdiri dari lima sila sebagai pedoman kehidupan berbangsa dan bernegara.",
+        sila1: "Ketuhanan Yang Maha Esa",
+        sila2: "Kemanusiaan yang Adil dan Beradab",
+        sila3: "Persatuan Indonesia",
+        sila4: "Kerakyatan yang Dipimpin oleh Hikmat Kebijaksanaan dalam Permusyawaratan/Perwakilan",
+        sila5: "Keadilan Sosial bagi Seluruh Rakyat Indonesia"
+      },
+      hikayat: {
+        keywords: ['hikayat', 'cerita lama', 'prosa lama', 'sastra melayu klasik'],
+        pengertian: "Hikayat adalah karya sastra prosa lama Melayu yang menceritakan kehidupan tokoh bangsawan, pahlawan, atau raja-raja di masa lampau.",
+        tujuan: "Menghibur, menyampaikan nilai moral, melestarikan sejarah, dan menanamkan ajaran agama/etika.",
+        struktur: "1. Pembukaan (doa/salawat), 2. Isi (alur cerita), 3. Penutup (nasihat/moral).",
+        kaidahKebahasaan: "Menggunakan bahasa Melayu klasik, kata arkais (kuno), kalimat pasif, repetisi, metafora, dan hiperbola.",
+        contoh: "Hikayat Hang Tuah, Hikayat Si Miskin, Hikayat Abdullah, Hikayat Bayan Budiman."
+      },
 
-  // === DATA TERBARU — DIINTEGRASIKAN LANGSUNG KE knowledgeBase ===
-  adjective: {
-    keywords: ['adjective', 'adjective bahasa indonesia'],
-    pengertian: "Adjective (kata sifat) adalah kata yang memberi keterangan pada kata benda (noun) atau pronoun untuk menjelaskan kualitas, ukuran, warna, dsb.",
-    contoh: ["beautiful (cantik)", "big (besar)", "ancient (kuno)", "famous (terkenal)"],
-    fungsi: "Menjelaskan sifat atau keadaan benda: quality (good), size (small), age (old), color (red), origin (Indonesian).",
-    posisi: "Dalam Bahasa Inggris, adjective umumnya sebelum noun: 'a red car', sedangkan dalam Bahasa Indonesia biasanya setelah noun atau sebelum tergantung struktur: 'rumah besar' atau 'besar rumah' (umum: 'rumah besar')."
-  },
-  adverb: {
-    keywords: ['adverb', 'adverb manner', 'adverb frequency', 'adverb time', 'adverb place'],
-    pengertian: "Adverb (kata keterangan) memberi keterangan pada verb, adjective, atau adverb lainnya. Terdapat beberapa tipe: manner, frequency, time, place.",
-    manner: {
-      pengertian: "Adverb of manner menjelaskan bagaimana suatu tindakan dilakukan.",
-      contoh: ["quickly (dengan cepat)", "slowly (dengan pelan)", "carefully (dengan hati-hati)"],
-      contohKalimat: ["She sings beautifully. — Dia bernyanyi dengan indah.", "He writes neatly."]
-    },
-    frequency: {
-      pengertian: "Adverb of frequency menunjukkan seberapa sering suatu kejadian terjadi.",
-      contoh: ["always (selalu)", "often (sering)", "sometimes (kadang-kadang)", "never (tidak pernah)"],
-      contohKalimat: ["I always brush my teeth in the morning."]
-    },
-    time: {
-      pengertian: "Adverb of time menunjukkan kapan sesuatu terjadi.",
-      contoh: ["yesterday (kemarin)", "today (hari ini)", "tomorrow (besok)", "now (sekarang)"],
-      contohKalimat: ["They arrived yesterday."]
-    },
-    place: {
-      pengertian: "Adverb of place menunjukkan lokasi/arah.",
-      contoh: ["here (di sini)", "there (di sana)", "everywhere (di mana-mana)"],
-      contohKalimat: ["Put it there, please."]
-    }
-  },
-  imperative: {
-    keywords: ['imperative'],
-    pengertian: "Kalimat imperative memberi perintah, instruksi, atau ajakan. Biasanya subjek (you) dihilangkan dalam bentuk positif.",
-    contoh: ["Please sit down. — Tolong duduk.", "Don't touch that! — Jangan sentuh itu!"],
-    bentuk: {
-      positif: "Verb dasar + objek (opsional). Contoh: 'Close the door.'",
-      negatif: "Do not (don't) + verb. Contoh: 'Don't run in the hall.'",
-      sopan: "Gunakan 'please' atau 'could you' untuk lebih sopan. Contoh: 'Please pass the salt.'"
-    },
-    catatan: "Imperative juga dipakai untuk memberi instruksi pada resep, petunjuk laboratorium, tanda, atau aturan sekolah."
-  },
-  descriptiveText: {
-    keywords: ['descriptive text'],
-    pengertian: "Descriptive text adalah teks yang menggambarkan karakteristik suatu objek, tempat, atau orang dengan rinci.",
-    struktur: ["Identification (identifikasi objek)", "Description (deskripsi bagian dan sifat)"],
-    kaidahBahasa: ["Kata sifat (adjectives)", "Adverb untuk keterangan tambahan", "Klausa deskriptif"],
-    contohPendek: "My grandmother's house is old and charming. It has wooden floors and a garden full of fragrant flowers.",
-    contohPanjang: "The Borobudur Temple is an ancient Buddhist monument located on a hill. The stone reliefs are intricate and the structure gives a feeling of grandeur."
-  },
-  recountText: {
-    keywords: ['recount text'],
-    pengertian: "Recount text adalah teks yang menceritakan kembali peristiwa masa lalu secara kronologis untuk memberi informasi atau rekaman pengalaman.",
-    tujuan: "Untuk menceritakan apa yang terjadi di masa lampau (personal experience, news report, historical events).",
-    struktur: ["Orientation (setting and participants)", "Events (sequence of events)", "Re-orientation or personal comment (opsional)"],
-    contohPendek: "Yesterday, I visited my uncle. We had lunch and then went for a walk in the park.",
-    contohPanjang: "Last summer, our family went to Yogyakarta. First, we visited Prambanan; then we tried batik-making. On the last day, we enjoyed Gudeg before heading home."
-  }
-};
+      // === LAPORAN HASIL OBSERVASI — DIPERLUAS LENGKAP ===
+      laporanHasilObservasi: {
+        keywords: ['laporan hasil observasi', 'teks observasi', 'pengamatan', 'objek', 'deskripsi', 'observasi', 'struktur teks observasi', 'kaidah kebahasaan observasi'],
+        pengertianObservasi: "Observasi adalah kegiatan mengamati suatu objek, peristiwa, atau gejala secara sistematis, terencana, dan objektif untuk mengumpulkan data faktual.",
+        pengertianTeks: "Teks laporan hasil observasi adalah teks yang berisi informasi faktual hasil pengamatan sistematis terhadap suatu objek atau fenomena alam.",
+        tujuan: "Memberikan informasi objektif berdasarkan fakta pengamatan tanpa opini pribadi.",
+        struktur: {
+          "Pernyataan Umum (Definisi/Klasifikasi)": "Memperkenalkan objek secara umum: apa itu, ciri umum, klasifikasi ilmiah (jika ada).",
+          "Deskripsi Bagian": "Menggambarkan ciri-ciri objek secara rinci: bentuk, ukuran, warna, perilaku, habitat, fungsi, dll."
+        },
+        kaidahKebahasaan: {
+          "Kata Benda (Nomina)": "Menggunakan istilah teknis atau ilmiah (misal: fotosintesis, metamorfosis, habitat).",
+          "Kata Kerja Material": "Kata kerja yang menunjukkan tindakan nyata (misal: mengamati, mencatat, bergerak, tumbuh, berkembang).",
+          "Kalimat Definisi": "Menggunakan pola 'A adalah B' atau 'A merupakan B' (misal: Kupu-kupu adalah serangga yang mengalami metamorfosis sempurna).",
+          "Kata Sifat (Adjektiva)": "Menggambarkan ciri objek (misal: berwarna cerah, berukuran kecil, bergerak cepat).",
+          "Kalimat Pernyataan Faktual": "Bersifat objektif, tidak menggunakan kata-kata subjektif seperti 'menurut saya', 'indah', 'jelek'.",
+          "Penggunaan Istilah Ilmiah": "Contoh: vertebrata, invertebrata, herbivora, karnivora, autotrof."
+        },
+        contoh: "Laporan pengamatan kupu-kupu: siklus hidup (telur → larva → pupa → imago), warna sayap, habitat (taman, hutan), cara makan (menghisap nektar), dan peran dalam penyerbukan."
+      },
 
-// Utility: flatten keyword map for quick search
-function buildKeywordIndex(kb) {
-  const index = [];
-  for (const key of Object.keys(kb)) {
-    const section = kb[key];
-    if (section && section.keywords && Array.isArray(section.keywords)) {
-      for (const kw of section.keywords) {
-        index.push({ keyword: kw.toLowerCase(), key });
-      }
-    } else {
-      // If no explicit keywords array, also accept the property name
-      index.push({ keyword: key.toLowerCase(), key });
-    }
-  }
-  return index;
-}
-const keywordIndex = buildKeywordIndex(knowledgeBase);
+      narrativeText: {
+        keywords: ['narrative text', 'cerita naratif', 'english story', 'orientation complication resolution'],
+        pengertian: "Narrative text is a genre of writing that tells a story about past events to entertain readers.",
+        orientation: "Introduces characters, setting, and time. Example: 'Once upon a time, there lived a kind princess in a castle.'",
+        complication: "The main problem or conflict arises. Example: 'One day, an evil witch cursed the princess to sleep forever.'",
+        resolution: "The problem is solved. Example: 'A brave prince kissed her, and the curse was broken.'",
+        ciriKebahasaanInggris: "Uses past tense, action verbs, time connectives (once, then, finally), and direct/indirect speech.",
+        contoh: "Cinderella, Snow White, The Legend of Malin Kundang (adapted)."
+      },
+      teknologi: {
+        keywords: ['teknologi', 'perangkat keras', 'hardware', 'perangkat lunak', 'software', 'aplikasi', 'gadget', 'komputer', 'hp'],
+        pengertian: "Menurut KBBI, teknologi adalah metode ilmiah untuk mencapai tujuan praktis; ilmu pengetahuan terapan yang digunakan untuk memudahkan interaksi dan aktivitas manusia, termasuk dalam bermedia sosial.",
+        perangkatKeras: ["Handphone (HP)", "Komputer", "Laptop", "Tablet", "Server", "Printer", "Router"],
+        perangkatLunak: ["Aplikasi berhitung (kalkulator)", "Aplikasi pembayaran (GoPay, OVO, DANA)", "Sistem operasi (Windows, Android, iOS)", "Browser (Chrome, Firefox)", "Aplikasi media sosial (Instagram, WhatsApp, TikTok)"],
+        manfaat: ["Mempermudah komunikasi", "Mempercepat akses informasi", "Meningkatkan efisiensi kerja", "Mendukung pembelajaran jarak jauh"]
+      },
+      majas: {
+        keywords: ['majas', 'gaya bahasa', 'personifikasi', 'metafora', 'ironi', 'hiperbola'],
+        pengertian: "Majas atau gaya bahasa adalah penggunaan kata-kata secara kiasan untuk menciptakan efek tertentu dalam karya sastra.",
+        personifikasi: {
+          pengertian: "Memberikan sifat manusia pada benda mati atau konsep abstrak.",
+          contoh: "Angin berbisik pelan di telingaku."
+        },
+        metafora: {
+          pengertian: "Perbandingan langsung tanpa kata pembanding (seperti, bagai).",
+          contoh: "Dunia adalah panggung sandiwara."
+        },
+        ironi: {
+          pengertian: "Mengatakan sesuatu yang bertentangan dengan maksud sebenarnya untuk menyindir.",
+          contoh: "Wah, hebat sekali kamu sampai lupa ulang tahun ibumu!"
+        },
+        hiperbola: {
+          pengertian: "Pengungkapan berlebihan untuk menekankan sesuatu.",
+          contoh: "Aku sudah menunggumu berabad-abad!"
+        }
+      },
+      keuangan: {
+        keywords: ['keuangan', 'bank', 'non bank', 'lembaga keuangan', 'akuntansi', 'laporan keuangan', 'uang', 'investasi'],
+        pengertian: "Keuangan adalah segala aktivitas yang berkaitan dengan pengelolaan uang, termasuk investasi, pinjaman, dan penganggaran.",
+        perbankan: {
+          pengertian: "Lembaga keuangan yang menghimpun dana dari masyarakat (simpanan) dan menyalurkannya kembali (kredit).",
+          jenis: ["Bank Umum (BCA, BRI, Mandiri)", "Bank Perkreditan Rakyat (BPR)"],
+          fungsi: ["Menciptakan uang giral", "Menyalurkan kredit", "Menyediakan jasa lalu lintas pembayaran"]
+        },
+        nonBank: {
+          pengertian: "Lembaga keuangan yang tidak menghimpun dana dalam bentuk simpanan.",
+          contoh: ["OJK", "Asuransi (Jiwasraya, Prudential)", "Dana Pensiun", "Perusahaan Efek", "Fintech (Pinjaman online)"]
+        },
+        akuntansi: {
+          pengertian: "Proses pencatatan, penggolongan, peringkasan, dan pelaporan transaksi keuangan.",
+          laporanKeuangan: ["Neraca", "Laporan Laba Rugi", "Arus Kas", "Perubahan Ekuitas"],
+          prinsip: ["Relevansi", "Keandalan", "Konsistensi", "Daya Banding"]
+        },
+        istilahKeuangan: {
+          likuiditas: "Kemampuan perusahaan membayar kewajiban jangka pendek.",
+          solvabilitas: "Kemampuan membayar seluruh kewajiban (jangka panjang & pendek).",
+          ROI: "Return on Investment — ukuran keuntungan relatif terhadap investasi.",
+          inflasi: "Kenaikan harga barang/jasa secara umum dalam periode tertentu."
+        }
+      },
+      englishTenses: {
+        keywords: ['present tense', 'past tense', 'simple present', 'simple past', 'rumus present', 'rumus past', 'tenses inggris', 'regular verb', 'irregular verb', 'kata kerja'],
+        pengertian: "Tenses adalah bentuk kata kerja (verb) yang menunjukkan waktu terjadinya suatu peristiwa: masa kini (present), lampau (past), atau akan datang (future).",
+        presentTense: {
+          pengertian: "Digunakan untuk kebiasaan, fakta umum, atau kejadian rutin.",
+          rumus: {
+            positif: "S + V1 (s/es) + O/C\nContoh: She plays violin every day.",
+            negatif: "S + do/does + not + V1 + O/C\nContoh: They do not like spicy food.",
+            tanya: "Do/Does + S + V1 + O/C?\nContoh: Do you study English?"
+          },
+          catatan: "Tambahkan -s/-es pada verb jika subjek: he, she, it."
+        },
+        pastTense: {
+          pengertian: "Digunakan untuk kejadian yang sudah selesai di masa lampau.",
+          rumus: {
+            positif: "S + V2 + O/C\nContoh: I watched a movie yesterday.",
+            negatif: "S + did + not + V1 + O/C\nContoh: She did not go to school.",
+            tanya: "Did + S + V1 + O/C?\nContoh: Did they visit Bali last year?"
+          }
+        },
+        regularVerbs: {
+          pengertian: "Kata kerja beraturan: bentuk kedua & ketiga dibuat dengan menambahkan -ed.",
+          contoh: [
+            "play – played – played",
+            "watch – watched – watched",
+            "clean – cleaned – cleaned",
+            "study – studied – studied"
+          ]
+        },
+        irregularVerbs: {
+          pengertian: "Kata kerja tidak beraturan: bentuk kedua & ketiga tidak mengikuti pola -ed.",
+          contohLengkap: [
+            "go – went – gone",
+            "eat – ate – eaten",
+            "see – saw – seen",
+            "take – took – taken",
+            "write – wrote – written",
+            "sing – sang – sung",
+            "drink – drank – drunk",
+            "break – broke – broken",
+            "do – did – done",
+            "have – had – had"
+          ]
+        }
+      },
+      narrativeStructure: {
+        keywords: ['struktur narrative text', 'orientation complication resolution', 'evaluation coda', 'bagian cerita naratif', 'coda', 'evaluation'],
+        pengertian: "Struktur teks naratif terdiri dari lima bagian utama yang membentuk alur cerita yang utuh.",
+        orientation: "Memperkenalkan tokoh, latar (tempat & waktu), dan suasana awal.\nContoh: Once upon a time, there was a kind girl named Cinderella.",
+        complication: "Munculnya konflik atau masalah dalam cerita.\nContoh: Her stepmother forbade her from attending the royal ball.",
+        resolution: "Pemecahan masalah atau penyelesaian konflik.\nContoh: With the help of her fairy godmother, she went to the ball and met the prince.",
+        evaluation: "Penilaian terhadap peristiwa atau pelajaran moral (opsional, sering menyatu dengan resolution).",
+        coda: "Kesimpulan atau akhir cerita yang menunjukkan perubahan kondisi tokoh.\nContoh: They lived happily ever after."
+      },
+      tabelPeriodik: {
+        keywords: ['tabel periodik', 'unsur kimia', 'simbol unsur', 'unsur', 'campuran kimia', 'rumus kimia', 'H2O', 'NaCl', 'CO2'],
+        pengertian: "Tabel periodik adalah susunan unsur-unsur kimia yang diatur berdasarkan kenaikan nomor atom dan kemiripan sifat kimianya.",
+        simbolUnsur: "Setiap unsur memiliki simbol unik, contoh: H (Hidrogen), O (Oksigen), Fe (Besi), Na (Natrium), Cl (Klorin).",
+        campuranUmum: [
+          "Air (H₂O) — gabungan hidrogen dan oksigen",
+          "Garam dapur (NaCl) — natrium + klorin",
+          "Karbon dioksida (CO₂) — karbon + oksigen",
+          "Amonia (NH₃) — nitrogen + hidrogen"
+        ],
+        manfaat: [
+          "Memprediksi sifat dan reaktivitas unsur",
+          "Dasar pengembangan obat dan material baru",
+          "Digunakan di industri logam, energi, dan pertanian",
+          "Alat pembelajaran wajib di sekolah"
+        ],
+        contohUnsur: [
+          "Oksigen (O₂) — untuk bernapas",
+          "Besi (Fe) — bahan bangunan dan kendaraan",
+          "Tembaga (Cu) — kabel listrik",
+          "Karbon (C) — dasar kehidupan dan bahan bakar"
+        ]
+      },
+      perubahanZatDanLingkungan: {
+        keywords: ['perubahan fisika', 'perubahan kimia', 'biotik', 'abiotik', 'wujud zat', 'mengembun', 'menyublim', 'menguap', 'membeku', 'mencair', 'deposisi', 'perubahan iklim', 'karbon dioksida'],
+        biotikAbiotik: {
+          biotik: "Benda hidup yang bisa tumbuh, berkembang biak, dan mati.\nContoh: manusia, hewan, tumbuhan, bakteri.",
+          abiotik: "Benda mati yang tidak memiliki ciri makhluk hidup.\nContoh: batu, air, udara, kayu (setelah ditebang), tanah."
+        },
+        perubahanFisika: {
+          pengertian: "Perubahan bentuk atau wujud tanpa menghasilkan zat baru (reversibel).",
+          contoh: "Es mencair → air → dibekukan lagi jadi es.",
+          ciri: "Tidak ada zat baru, hanya berubah wujud."
+        },
+        perubahanKimia: {
+          pengertian: "Perubahan yang menghasilkan zat baru (ireversibel).",
+          contoh: "Kayu dibakar → jadi arang dan asap, susu basi, besi berkarat.",
+          ciri: "Terbentuk zat baru, tidak bisa dikembalikan."
+        },
+        perubahanWujud: {
+          mencair: "Padat → cair (es → air)",
+          membeku: "Cair → padat (air → es)",
+          menguap: "Cair → gas (air → uap)",
+          mengembun: "Gas → cair (uap → air)",
+          menyublim: "Padat → gas (kapur barus menguap)",
+          deposisi: "Gas → padat (uap air → salju)"
+        },
+        perubahanIklim: {
+          pengertian: "Perubahan jangka panjang pola cuaca akibat pemanasan global.",
+          penyebab: "Emisi gas rumah kaca (CO₂, metana) dari kendaraan, pabrik, dan deforestasi.",
+          dampak: "Es kutub mencair → permukaan laut naik → banjir di wilayah pesisir.",
+          solusi: "Gunakan energi terbarukan, tanam pohon, kurangi sampah plastik."
+        }
+      },
+      norma: {
+        keywords: ['norma', 'aturan', 'sosial', 'kesopanan', 'agama', 'hukum', 'kebiasaan', 'norma sekolah', 'norma keluarga'],
+        pengertian: "Norma adalah aturan atau pedoman yang mengatur perilaku dalam masyarakat.",
+        jenis: ["Norma agama", "Norma hukum", "Norma kesopanan", "Norma kebiasaan"],
+        contohSehariHari: [
+          "Tidak boleh mencuri (norma hukum & agama)",
+          "Antri saat beli makanan (norma kesopanan)",
+          "Pakai seragam sekolah (norma sekolah)",
+          "Bantu orang tua di rumah (norma keluarga)"
+        ],
+        tempatBerlaku: "Berlaku di rumah, sekolah, tempat ibadah, masyarakat umum, dan negara"
+      },
+      analisisCerita: {
+        keywords: ['latar tempat', 'latar waktu', 'latar suasana', 'tema', 'tokoh', 'penokohan', 'abstraksi', 'orientasi', 'komplikasi', 'evaluasi', 'resolusi', 'koda', 'unsur intrinsik'],
+        latarTempat: "Lokasi terjadinya cerita (misal: sekolah, hutan, kota, istana).",
+        latarWaktu: "Waktu kejadian cerita (pagi, siang, malam, zaman dahulu, masa depan).",
+        latarSuasana: "Suasana emosional dalam cerita (sedih, tegang, bahagia, mencekam, haru).",
+        tema: "Gagasan pokok atau pesan utama yang muncul di seluruh cerita (misal: cinta, pengorbanan, keadilan).",
+        tokoh: "Pelaku atau karakter dalam cerita (tokoh utama, tokoh antagonis, tokoh pendukung).",
+        penokohan: "Cara pengarang menggambarkan sifat tokoh (langsung: 'Si Fulan jujur', tidak langsung: lewat dialog/perilaku).",
+        abstraksi: "Gambaran umum atau ringkasan awal cerita (sering muncul di teks eksposisi atau naratif modern).",
+        orientasi: "Bagian awal cerita yang memperkenalkan tokoh, latar, dan suasana.",
+        komplikasi: "Rangkaian peristiwa yang memunculkan konflik atau masalah.",
+        evaluasi: "Penilaian terhadap perkembangan peristiwa atau konflik (opsional, sering menyatu dengan resolusi).",
+        resolusi: "Penyelesaian dari konflik atau masalah dalam cerita.",
+        koda: "Amanat, pesan moral, atau kesimpulan di akhir cerita (misal: 'Jadilah jujur dalam segala hal.')."
+      },
+      adjective: {
+        keywords: ['adjective', 'adjective bahasa indonesia'],
+        pengertian: "Adjective (kata sifat) adalah kata yang memberi keterangan pada kata benda (noun) atau pronoun untuk menjelaskan kualitas, ukuran, warna, dsb.",
+        contoh: ["beautiful (cantik)", "big (besar)", "ancient (kuno)", "famous (terkenal)"],
+        fungsi: "Menjelaskan sifat atau keadaan benda: quality (good), size (small), age (old), color (red), origin (Indonesian).",
+        posisi: "Dalam Bahasa Inggris, adjective umumnya sebelum noun: 'a red car', sedangkan dalam Bahasa Indonesia biasanya setelah noun atau sebelum tergantung struktur: 'rumah besar' atau 'besar rumah' (umum: 'rumah besar')."
+      },
+      adverb: {
+        keywords: ['adverb', 'adverb manner', 'adverb frequency', 'adverb time', 'adverb place'],
+        pengertian: "Adverb (kata keterangan) memberi keterangan pada verb, adjective, atau adverb lainnya. Terdapat beberapa tipe: manner, frequency, time, place.",
+        manner: {
+          pengertian: "Adverb of manner menjelaskan bagaimana suatu tindakan dilakukan.",
+          contoh: ["quickly (dengan cepat)", "slowly (dengan pelan)", "carefully (dengan hati-hati)"],
+          contohKalimat: ["She sings beautifully. — Dia bernyanyi dengan indah.", "He writes neatly."]
+        },
+        frequency: {
+          pengertian: "Adverb of frequency menunjukkan seberapa sering suatu kejadian terjadi.",
+          contoh: ["always (selalu)", "often (sering)", "sometimes (kadang-kadang)", "never (tidak pernah)"],
+          contohKalimat: ["I always brush my teeth in the morning."]
+        },
+        time: {
+          pengertian: "Adverb of time menunjukkan kapan sesuatu terjadi.",
+          contoh: ["yesterday (kemarin)", "today (hari ini)", "tomorrow (besok)", "now (sekarang)"],
+          contohKalimat: ["They arrived yesterday."]
+        },
+        place: {
+          pengertian: "Adverb of place menunjukkan lokasi/arah.",
+          contoh: ["here (di sini)", "there (di sana)", "everywhere (di mana-mana)"],
+          contohKalimat: ["Put it there, please."]
+        }
+      },
+      imperative: {
+        keywords: ['imperative'],
+        pengertian: "Kalimat imperative memberi perintah, instruksi, atau ajakan. Biasanya subjek (you) dihilangkan dalam bentuk positif.",
+        contoh: ["Please sit down. — Tolong duduk.", "Don't touch that! — Jangan sentuh itu!"],
+        bentuk: {
+          positif: "Verb dasar + objek (opsional). Contoh: 'Close the door.'",
+          negatif: "Do not (don't) + verb. Contoh: 'Don't run in the hall.'",
+          sopan: "Gunakan 'please' atau 'could you' untuk lebih sopan. Contoh: 'Please pass the salt.'"
+        },
+        catatan: "Imperative juga dipakai untuk memberi instruksi pada resep, petunjuk laboratorium, tanda, atau aturan sekolah."
+      },
+      descriptiveText: {
+        keywords: ['descriptive text', 'teks deskripsi'],
+        pengertian: "Descriptive text adalah teks yang menggambarkan karakteristik suatu objek, tempat, atau orang dengan rinci.",
+        struktur: ["Identification (identifikasi objek)", "Description (deskripsi bagian dan sifat)"],
+        kaidahBahasa: ["Kata sifat (adjectives)", "Adverb untuk keterangan tambahan", "Klausa deskriptif"],
+        contohPendek: "My grandmother's house is old and charming. It has wooden floors and a garden full of fragrant flowers.",
+        contohPanjang: "The Borobudur Temple is an ancient Buddhist monument located on a hill. The stone reliefs are intricate and the structure gives a feeling of grandeur."
+      },
+      recountText: {
+        keywords: ['recount text'],
+        pengertian: "Recount text adalah teks yang menceritakan kembali peristiwa masa lalu secara kronologis untuk memberi informasi atau rekaman pengalaman.",
+        tujuan: "Untuk menceritakan apa yang terjadi di masa lampau (personal experience, news report, historical events).",
+        struktur: ["Orientation (setting and participants)", "Events (sequence of events)", "Re-orientation or personal comment (opsional)"],
+        contohPendek: "Yesterday, I visited my uncle. We had lunch and then went for a walk in the park.",
+        contohPanjang: "Last summer, our family went to Yogyakarta. First, we visited Prambanan; then we tried batik-making. On the last day, we enjoyed Gudeg before heading home."
+      },
+      hukum: {
+        keywords: ['hukum', 'peraturan', 'undang-undang', 'hak dan kewajiban', 'keadilan'],
+        pengertian: "Hukum adalah sistem aturan yang mengatur tingkah laku anggota masyarakat, diciptakan oleh lembaga berwenang, dan memiliki sanksi bagi pelanggar.",
+        jenis: ["Hukum pidana", "Hukum perdata", "Hukum tata negara", "Hukum administrasi negara"],
+        prinsip: ["Kepastian hukum", "Keadilan", "Kemanfaatan"],
+        contohHukum: "Tidak boleh mencuri (KUHP Pasal 362), wajib membayar pajak (UU Perpajakan)."
+      },
+      uud1945: {
+        keywords: ['uud 1945', 'undang-undang dasar', 'konstitusi', 'pembukaan uud', 'pasal uud'],
+        pengertian: "UUD 1945 adalah konstitusi atau dasar hukum tertinggi di Indonesia yang ditetapkan pada 18 Agustus 1945.",
+        struktur: [
+          "Pembukaan (4 alinea)",
+          "Batang tubuh (16 bab, 37 pasal + aturan peralihan & tambahan)"
+        ],
+        pokokPikiran: [
+          "Negara melindungi segenap bangsa",
+          "Keadilan sosial bagi seluruh rakyat",
+          "Kedaulatan berada di tangan rakyat",
+          "Negara berdasar atas Ketuhanan YME"
+        ],
+        perubahan: "Diamandemen 4 kali (1999–2002) untuk demokratisasi dan HAM."
+      },
+      sistemPersamaanLinear: {
+        keywords: ['sistem persamaan linear', 'spl', 'persamaan linear', 'eliminasi', 'substitusi'],
+        pengertian: "Sistem Persamaan Linear (SPL) adalah kumpulan dua atau lebih persamaan linear dengan dua atau lebih variabel yang diselesaikan secara bersamaan.",
+        bentukUmum: "ax + by = c\ndx + ey = f",
+        metodePenyelesaian: [
+          "Metode substitusi",
+          "Metode eliminasi",
+          "Metode gabungan",
+          "Metode grafik"
+        ],
+        contoh: "2x + y = 5 dan x – y = 1 → solusi: x = 2, y = 1",
+        aplikasi: "Ekonomi (titik keseimbangan pasar), fisika (vektor), teknik."
+      },
+      seni: {
+        keywords: ['seni', 'karya seni', 'seni rupa', 'seni pertunjukan', 'estetika'],
+        pengertian: "Seni adalah ekspresi perasaan, ide, atau nilai budaya melalui media visual, suara, gerak, atau kata yang memiliki nilai estetika.",
+        jenis: [
+          "Seni rupa (lukisan, patung, grafis)",
+          "Seni pertunjukan (tari, teater, musik)",
+          "Seni sastra (puisi, cerpen, novel)"
+        ],
+        fungsi: ["Ekspresi diri", "Hiburan", "Pendidikan", "Ritual/agama"],
+        contohIndonesia: ["Lukisan Raden Saleh", "Tari Kecak", "Wayang Kulit"]
+      },
+      kbbi: {
+        keywords: ['kbbi', 'kamus besar bahasa indonesia', 'kamus', 'bahasa indonesia', 'definisi'],
+        pengertian: "KBBI (Kamus Besar Bahasa Indonesia) adalah kamus resmi Bahasa Indonesia yang diterbitkan oleh Badan Pengembangan dan Pembinaan Bahasa, Kementerian Pendidikan.",
+        fungsi: "Menjadi acuan baku dalam penulisan dan pemaknaan kata Bahasa Indonesia.",
+        edisiTerbaru: "KBBI Daring (online) – selalu diperbarui di kbbi.kemdikbud.go.id",
+        contohEntri: "Bahasa: sistem lambang bunyi yang arbitrer, yang digunakan oleh anggota suatu masyarakat untuk berkomunikasi."
+      },
+      teksDeskripsi: {
+        keywords: ['teks deskripsi', 'deskripsi', 'mendeskripsikan'],
+        pengertian: "Teks deskripsi adalah teks yang bertujuan menggambarkan atau melukiskan secara detail suatu objek, tempat, orang, atau suasana agar pembaca seolah melihat langsung.",
+        ciri: [
+          "Bersifat objektif atau subjektif",
+          "Menggunakan kata sifat (adjective)",
+          "Menggambarkan ciri fisik, suasana, atau perasaan"
+        ],
+        struktur: ["Identifikasi objek", "Deskripsi bagian"],
+        contoh: "Gunung Bromo tampak megah dengan kepulan asap tipis dari kawahnya. Udara dingin menusuk kulit, namun pemandangan matahari terbit membuat semuanya terasa berharga."
+      },
+      anekdot: {
+        keywords: ['anekdot', 'cerita lucu', 'humor', 'kisah nyata lucu'],
+        pengertian: "Anekdot adalah cerita singkat yang lucu atau menarik berdasarkan kejadian nyata, biasanya melibatkan tokoh terkenal atau situasi ironis.",
+        ciri: [
+          "Berdasarkan kisah nyata",
+          "Mengandung unsur humor atau sindiran halus",
+          "Singkat dan padat"
+        ],
+        struktur: ["Orientasi", "Krisis", "Reaksi", "Koda (akhir lucu)"],
+        contoh: "Presiden Soekarno pernah ditanya: 'Pak, bagaimana caranya menjadi pintar?' Jawabnya: 'Baca, baca, dan baca!'"
+      },
+      karyaTulisIlmiah: {
+        keywords: ['karya tulis ilmiah', 'kti', 'penelitian', 'makalah', 'skripsi'],
+        pengertian: "Karya tulis ilmiah adalah tulisan hasil penelitian atau kajian sistematis yang disusun berdasarkan metode ilmiah untuk menyajikan pemikiran, temuan, atau solusi masalah.",
+        jenis: ["Artikel jurnal", "Makalah", "Skripsi", "Tesis", "Disertasi"],
+        struktur: [
+          "Judul",
+          "Abstrak",
+          "Pendahuluan",
+          "Kajian pustaka",
+          "Metodologi",
+          "Hasil & pembahasan",
+          "Kesimpulan",
+          "Daftar pustaka"
+        ],
+        ciri: ["Objektif", "Logis", "Menggunakan data", "Bahasa formal", "Ada sitasi"]
+      },
 
-// Format an object/section to readable string
-function formatSection(title, section) {
-  if (!section) return `${title}: (tidak ada data)`;
-  if (typeof section === 'string') return `${title}:\n${section}`;
-  if (Array.isArray(section)) return `${title}:\n- ${section.join('\n- ')}`;
-  // Object: iterate keys
-  let out = `${title}:\n`;
-  for (const prop of Object.keys(section)) {
-    const val = section[prop];
-    if (typeof val === 'string') {
-      out += `${prop}: ${val}\n`;
-    } else if (Array.isArray(val)) {
-      out += `${prop}: \n  - ${val.join('\n  - ')}\n`;
-    } else if (typeof val === 'object') {
-      out += `${prop}: \n`;
-      // nested simple properties
-      for (const sub of Object.keys(val)) {
-        const v = val[sub];
-        if (typeof v === 'string') {
-          out += `    ${sub}: ${v}\n`;
-        } else if (Array.isArray(v)) {
-          out += `    ${sub}: ${v.join(', ')}\n`;
-        } else if (typeof v === 'object') {
-          out += `    ${sub}: ${JSON.stringify(v)}\n`;
+      // === OLAHRAGA — SUDAH LENGKAP (TIDAK DIUBAH) ===
+      olahraga: {
+        keywords: ['olahraga', 'cabang olahraga', 'atlet', 'medali', 'kompetisi', 'sehat', 'sejarah olahraga', 'teknik olahraga', 'renang', 'basket', 'voli', 'sepak bola', 'manfaat olahraga'],
+        pengertian: "Olahraga adalah aktivitas fisik yang terencana, sistematis, dan bertujuan untuk meningkatkan kebugaran jasmani, keterampilan motorik, kekuatan, daya tahan, koordinasi, serta menanamkan nilai sportivitas, kerja sama, dan disiplin.",
+        sejarah: {
+          "Dunia": [
+            "Olimpiade Kuno di Yunani (776 SM) – diadakan setiap 4 tahun untuk menghormati dewa Zeus, hanya untuk pria Yunani bebas.",
+            "Olimpiade Modern pertama di Athena (1896) – diprakarsai oleh Baron Pierre de Coubertin sebagai sarana perdamaian dunia.",
+            "FIFA didirikan (1904), FIBA (1932), FINA (1908) untuk mengatur cabang olahraga internasional."
+          ],
+          "Indonesia": [
+            "PON I di Solo (1948) – wujud persatuan bangsa pasca-kemerdekaan.",
+            "Indonesia pertama kali ikut Olimpiade di Helsinki (1952).",
+            "Indonesia menjadi tuan rumah Asian Games ke-18 (2018) dan sukses meraih peringkat ke-4."
+          ]
+        },
+        jenis: {
+          "Berdasarkan Tujuan": ["Prestasi", "Rekreasi", "Pendidikan", "Kesehatan"],
+          "Berdasarkan Jumlah Pemain": ["Individu (atletik, renang)", "Beregu (sepak bola, voli, basket)"]
+        },
+        teknik: {
+          "RENANG": {
+            "Gaya Bebas (Crawl)": [
+              "Gerakan lengan: tarik, dorong, recovery",
+              "Gerakan kaki: flutter kick (naik-turun cepat)",
+              "Pernapasan: miring ke samping saat lengan keluar air"
+            ],
+            "Gaya Dada": [
+              "Gerakan lengan: tarik ke luar, lalu dorong ke depan",
+              "Gerakan kaki: menekuk lutut, lalu tendang keluar-dalam (frog kick)",
+              "Pernapasan: angkat kepala saat lengan menarik ke luar"
+            ],
+            "Gaya Punggung": [
+              "Gerakan lengan: seperti gaya bebas, tapi di atas air",
+              "Gerakan kaki: flutter kick sambil telentang",
+              "Pernapasan: bebas karena wajah selalu di atas air"
+            ],
+            "Gaya Kupu-kupu": [
+              "Gerakan lengan: kedua lengan bersamaan menarik melingkar",
+              "Gerakan kaki: dolphin kick (gerakan gelombang dari pinggang)",
+              "Pernapasan: angkat kepala saat lengan keluar air"
+            ]
+          },
+          "BASKET": {
+            "Dribbling (Menggiring)": "Mengontrol bola dengan satu tangan sambil bergerak; rendah saat dijaga ketat.",
+            "Passing (Mengoper)": [
+              "Chest pass (operan dada)",
+              "Bounce pass (operan pantul)",
+              "Overhead pass (operan atas)"
+            ],
+            "Shooting (Menembak)": [
+              "Lay-up: tembakan dekat ring dengan lompatan",
+              "Jump shoot: tembakan sambil melompat",
+              "Free throw: tembakan hukuman dari garis bebas"
+            ],
+            "Defense (Bertahan)": "Menjaga lawan dengan posisi rendah, tangan aktif, dan kaki siap bergerak."
+          },
+          "VOLI": {
+            "Servis": [
+              "Servis bawah: pukulan dari bawah pinggang (untuk pemula)",
+              "Servis atas: pukulan setelah bola dilambungkan (float serve, topspin)"
+            ],
+            "Passing (Umpan)": "Menggunakan kedua lengan bawah untuk menerima servis atau bola keras.",
+            "Setter (Pengumpan)": "Menggunakan jari tangan untuk mengumpan bola ke spiker.",
+            "Spike (Smash)": "Pukulan keras ke area lawan setelah melompat.",
+            "Block (Blok)": "Membendung serangan lawan di dekat net dengan kedua tangan diangkat."
+          },
+          "SEPAK BOLA": {
+            "Menggiring (Dribbling)": "Mengontrol bola dengan kaki bagian dalam/luar sambil bergerak.",
+            "Mengoper (Passing)": [
+              "Short pass: umpan pendek akurat",
+              "Long pass: umpan jarak jauh",
+              "Through pass: umpan tembus antar pemain lawan"
+            ],
+            "Menembak (Shooting)": [
+              "Instep drive: tembakan keras dengan punggung kaki",
+              "Chip shot: tembakan melambung di atas kiper",
+              "Volley: tembakan sebelum bola menyentuh tanah"
+            ],
+            "Menghentikan Bola (Stopping)": "Menggunakan telapak kaki, paha, dada, atau kepala untuk mengontrol bola.",
+            "Tackling": "Merebut bola dari lawan secara sportif tanpa melanggar."
+          }
+        },
+        manfaat: {
+          "Fisik": ["Meningkatkan kardiovaskular", "Memperkuat otot & tulang", "Meningkatkan fleksibilitas", "Mengontrol berat badan"],
+          "Mental": ["Mengurangi stres", "Meningkatkan fokus", "Membangun kepercayaan diri"],
+          "Sosial": ["Melatih kerja sama", "Menghargai perbedaan", "Menanamkan sportivitas"]
+        },
+        prestasiIndonesia: {
+          "Bulutangkis": [
+            "Medali emas Olimpiade: Susi Susanti & Alan Budikusuma (1992), Taufik Hidayat (2004), Greysia/Apriyani (2021)."
+          ],
+          "Pencak Silat": [
+            "14 emas Asian Games 2018 (tuan rumah)."
+          ],
+          "Lainnya": [
+            "Timnas U-16 juara Piala AFF 2022.",
+            "Lalu Muhammad Zohri – juara lari 100m Asian Games 2018."
+          ]
         }
       }
-    } else {
-      out += `${prop}: ${String(val)}\n`;
-    }
-  }
-  return out;
-}
+    };
 
-// Main search function: finds best-matching sections by keyword contained in input
-function searchKnowledge(query) {
-  const q = query.toLowerCase().trim();
-  if (!q) return { type: 'error', text: "Masukkan pertanyaan atau kata kunci terlebih dahulu." };
-
-  // direct match on keywords
-  const matches = new Map();
-  for (const entry of keywordIndex) {
-    if (q.includes(entry.keyword)) {
-      matches.set(entry.key, knowledgeBase[entry.key]);
-    }
-  }
-
-  // fallback: check if query equals a top-level key
-  if (matches.size === 0) {
-    if (knowledgeBase[q]) {
-      matches.set(q, knowledgeBase[q]);
-    }
-  }
-
-  // If still nothing, try fuzzy partial: check each keyword presence as separate word
-  if (matches.size === 0) {
-    const words = q.split(/\s+/);
-    for (const w of words) {
-      for (const entry of keywordIndex) {
-        if (entry.keyword === w) matches.set(entry.key, knowledgeBase[entry.key]);
+    // === FUNGSI UTILITAS (TIDAK BERUBAH) ===
+    function buildKeywordIndex(kb) {
+      const index = [];
+      for (const key of Object.keys(kb)) {
+        const section = kb[key];
+        if (section && section.keywords && Array.isArray(section.keywords)) {
+          for (const kw of section.keywords) {
+            index.push({ keyword: kw.toLowerCase(), key });
+          }
+        } else {
+          index.push({ keyword: key.toLowerCase(), key });
+        }
       }
+      return index;
     }
-  }
+    const keywordIndex = buildKeywordIndex(knowledgeBase);
 
-  if (matches.size === 0) {
-    // try to detect some common intents: "gambar", "image", "foto"
-    if (q.includes('gambar') || q.includes('image') || q.includes('foto')) {
-      return { type: 'imageOnly', text: "Minta gambar. Klik tombol + untuk menghasilkan gambar sederhana." };
+    function formatSection(title, section) {
+      if (!section) return `${title}: (tidak ada data)`;
+      if (typeof section === 'string') return `${title}:\n${section}`;
+      if (Array.isArray(section)) return `${title}:\n- ${section.join('\n- ')}`;
+      let out = `${title}:\n`;
+      for (const prop of Object.keys(section)) {
+        const val = section[prop];
+        if (typeof val === 'string') {
+          out += `  ${prop}: ${val}\n`;
+        } else if (Array.isArray(val)) {
+          out += `  ${prop}:\n    - ${val.join('\n    - ')}\n`;
+        } else if (typeof val === 'object') {
+          out += `  ${prop}:\n`;
+          for (const sub of Object.keys(val)) {
+            const v = val[sub];
+            if (typeof v === 'string') {
+              out += `    ${sub}: ${v}\n`;
+            } else if (Array.isArray(v)) {
+              out += `    ${sub}:\n      - ${v.join('\n      - ')}\n`;
+            } else if (typeof v === 'object') {
+              out += `    ${sub}:\n`;
+              for (const item of Object.keys(v)) {
+                const details = v[item];
+                if (Array.isArray(details)) {
+                  out += `      ${item}:\n        - ${details.join('\n        - ')}\n`;
+                } else {
+                  out += `      ${item}: ${details}\n`;
+                }
+              }
+            } else {
+              out += `    ${sub}: ${v}\n`;
+            }
+          }
+        } else {
+          out += `  ${prop}: ${String(val)}\n`;
+        }
+      }
+      return out;
     }
-    return { type: 'notfound', text: "Maaf, saya tidak menemukan topik yang cocok. Coba gunakan kata kunci lain (mis. 'budaya', 'present tense', 'adjective', 'descriptive text')." };
-  }
 
-  // build readable response combining matched sections
-  let resultText = "";
-  for (const [key, section] of matches) {
-    resultText += formatSection(key.toUpperCase(), section) + "\n\n";
-  }
-  return { type: 'ok', text: resultText.trim() };
-}
+    function searchKnowledge(query) {
+      const q = query.toLowerCase().trim();
+      if (!q) return { type: 'error', text: "Masukkan pertanyaan atau kata kunci terlebih dahulu." };
 
-// UI bindings
-const userInput = document.getElementById('userInput');
-const sendBtn = document.getElementById('sendBtn');
-const responseDiv = document.getElementById('response');
-const imageContainer = document.getElementById('imageContainer');
-const generatedImage = document.getElementById('generatedImage');
-const imageDescription = document.getElementById('imageDescription');
-const generateBtn = document.getElementById('generateBtn');
-const techBtn = document.getElementById('techBtn');
-const announceBtn = document.getElementById('announceBtn');
+      const matches = new Map();
+      for (const entry of keywordIndex) {
+        if (q.includes(entry.keyword)) {
+          matches.set(entry.key, knowledgeBase[entry.key]);
+        }
+      }
 
-function showResponse(text) {
-  responseDiv.style.display = 'block';
-  responseDiv.textContent = text;
-}
+      if (matches.size === 0) {
+        if (knowledgeBase[q]) {
+          matches.set(q, knowledgeBase[q]);
+        }
+      }
 
-function hideResponse() {
-  responseDiv.style.display = 'none';
-  responseDiv.textContent = '';
-}
+      if (matches.size === 0) {
+        const words = q.split(/\s+/);
+        for (const w of words) {
+          for (const entry of keywordIndex) {
+            if (entry.keyword === w) matches.set(entry.key, knowledgeBase[entry.key]);
+          }
+        }
+      }
 
-function showImage(dataUrl, desc) {
-  imageContainer.style.display = 'flex';
-  generatedImage.src = dataUrl;
-  imageDescription.textContent = desc || '';
-}
+      if (matches.size === 0) {
+        if (q.includes('gambar') || q.includes('image') || q.includes('foto')) {
+          return { type: 'imageOnly', text: "Minta gambar. Klik tombol + untuk menghasilkan gambar sederhana." };
+        }
+        return { type: 'notfound', text: "Maaf, saya tidak menemukan topik yang cocok. Coba gunakan kata kunci seperti 'teks observasi', 'olahraga', 'UUD 1945', 'SPL', 'adjective'." };
+      }
 
-function hideImage() {
-  imageContainer.style.display = 'none';
-  generatedImage.src = '';
-  imageDescription.textContent = '';
-}
+      let resultText = "";
+      for (const [key, section] of matches) {
+        resultText += formatSection(key.toUpperCase(), section) + "\n\n";
+      }
+      return { type: 'ok', text: resultText.trim() };
+    }
 
-// Send action
-sendBtn.addEventListener('click', () => {
-  hideImage();
-  const q = userInput.value || '';
-  const result = searchKnowledge(q);
-  if (result.type === 'error') {
-    showResponse(result.text);
-  } else if (result.type === 'notfound') {
-    showResponse(result.text);
-  } else if (result.type === 'imageOnly') {
-    showResponse(result.text);
-  } else if (result.type === 'ok') {
-    showResponse(result.text);
-  }
-});
+    // === BINDING UI (TIDAK BERUBAH) ===
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const responseDiv = document.getElementById('response');
+    const imageContainer = document.getElementById('imageContainer');
+    const generatedImage = document.getElementById('generatedImage');
+    const imageDescription = document.getElementById('imageDescription');
+    const generateBtn = document.getElementById('generateBtn');
+    const techBtn = document.getElementById('techBtn');
+    const announceBtn = document.getElementById('announceBtn');
 
-// Allow Enter key to send
-userInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    sendBtn.click();
-  }
-});
+    function showResponse(text) {
+      responseDiv.style.display = 'block';
+      responseDiv.textContent = text;
+    }
 
-// Generate simple SVG image + description (client-side)
-generateBtn.addEventListener('click', () => {
-  const q = (userInput.value || 'Atlas Nusantara AI').trim();
-  // build a simple SVG with gradient + text
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700">
-    <defs>
-      <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
-        <stop offset="0" stop-color="#60A5FA"/>
-        <stop offset="1" stop-color="#EC4899"/>
-      </linearGradient>
-    </defs>
-    <rect width="100%" height="100%" fill="url(#g1)"/>
-    <g transform="translate(60,120)" font-family="Segoe UI, Roboto, Arial">
-      <rect x="0" y="0" rx="20" ry="20" width="1080" height="460" fill="rgba(255,255,255,0.12)"/>
-      <text x="40" y="70" font-size="64" font-weight="700" fill="white">Atlas Nusantara AI</text>
-      <text x="40" y="150" font-size="34" fill="white">Hasil visual untuk:</text>
-      <foreignObject x="40" y="170" width="980" height="240">
-        <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Segoe UI, Arial; color:white; font-size:26px; line-height:1.3; padding:10px;">
-          ${escapeHtml(q).replace(/\n/g,'<br/>')}
-        </div>
-      </foreignObject>
-    </g>
-  </svg>`;
+    function hideResponse() {
+      responseDiv.style.display = 'none';
+      responseDiv.textContent = '';
+    }
 
-  const svgBlob = new Blob([svg], {type: 'image/svg+xml;charset=utf-8'});
-  const url = URL.createObjectURL(svgBlob);
-  showImage(url, `Gambar sederhana untuk: "${q}" — (SVG dihasilkan lokal)`);
-  showResponse(`Menghasilkan gambar sederhana untuk: "${q}". Deskripsi singkat:\nGambar ini menampilkan judul Atlas Nusantara AI dengan teks permintaanmu.`);
-});
+    function showImage(dataUrl, desc) {
+      imageContainer.style.display = 'flex';
+      generatedImage.src = dataUrl;
+      imageDescription.textContent = desc || '';
+    }
 
-// techBtn: shortcut to search 'teknologi' section
-techBtn.addEventListener('click', () => {
-  userInput.value = 'teknologi';
-  sendBtn.click();
-});
+    function hideImage() {
+      imageContainer.style.display = 'none';
+      generatedImage.src = '';
+      imageDescription.textContent = '';
+    }
 
-// announceBtn: show summary of all new grammar topics
-announceBtn.addEventListener('click', () => {
-  hideImage();
-  let fullText = "DATA TERBARU — Topik Bahasa Inggris:\n\n";
-  const newTopics = ['adjective', 'adverb', 'imperative', 'descriptiveText', 'recountText'];
-  for (const topic of newTopics) {
-    fullText += formatSection(topic.toUpperCase(), knowledgeBase[topic]) + "\n\n";
-  }
-  showResponse(fullText.trim());
-});
+    sendBtn.addEventListener('click', () => {
+      hideImage();
+      const q = userInput.value || '';
+      const result = searchKnowledge(q);
+      showResponse(result.text);
+    });
 
-// small helper to escape user text for SVG <foreignObject>
-function escapeHtml(unsafe) {
-  return unsafe.replace(/[&<"'>]/g, function(m) {
-      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]);
-  });
-}
+    userInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sendBtn.click();
+      }
+    });
 
-// initial welcome
-showResponse("Halo! Tanyakan sesuatu, mis. 'apa itu rendang', 'jelaskan present tense', 'adjective', atau klik 📣 untuk melihat data terbaru (adjective/adverb/imperative/descriptive/recount).");
+    generateBtn.addEventListener('click', () => {
+      const q = (userInput.value || 'Atlas Nusantara AI').trim();
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700">
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#60A5FA"/>
+            <stop offset="1" stop-color="#EC4899"/>
+          </linearGradient>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#g1)"/>
+        <g transform="translate(60,120)" font-family="Segoe UI, Roboto, Arial">
+          <rect x="0" y="0" rx="20" ry="20" width="1080" height="460" fill="rgba(255,255,255,0.12)"/>
+          <text x="40" y="70" font-size="64" font-weight="700" fill="white">Atlas Nusantara AI</text>
+          <text x="40" y="150" font-size="34" fill="white">Hasil visual untuk:</text>
+          <foreignObject x="40" y="170" width="980" height="240">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Segoe UI, Arial; color:white; font-size:26px; line-height:1.3; padding:10px;">
+              ${escapeHtml(q).replace(/\n/g,'<br/>')}
+            </div>
+          </foreignObject>
+        </g>
+      </svg>`;
 
-// clean up object URL when window unloads
-window.addEventListener('unload', () => {
-  try {
-    if (generatedImage && generatedImage.src.startsWith('blob:')) URL.revokeObjectURL(generatedImage.src);
-  } catch(e){}
-});
-</script>
+      const svgBlob = new Blob([svg], {type: 'image/svg+xml;charset=utf-8'});
+      const url = URL.createObjectURL(svgBlob);
+      showImage(url, `Gambar sederhana untuk: "${q}" — (SVG dihasilkan lokal)`);
+      showResponse(`Menghasilkan gambar sederhana untuk: "${q}". Deskripsi singkat:\nGambar ini menampilkan judul Atlas Nusantara AI dengan teks permintaanmu.`);
+    });
+
+    techBtn.addEventListener('click', () => {
+      userInput.value = 'teknologi';
+      sendBtn.click();
+    });
+
+    announceBtn.addEventListener('click', () => {
+      hideImage();
+      let fullText = "DATA TERBARU — Topik Bahasa Inggris:\n\n";
+      const newTopics = ['adjective', 'adverb', 'imperative', 'descriptiveText', 'recountText'];
+      for (const topic of newTopics) {
+        fullText += formatSection(topic.toUpperCase(), knowledgeBase[topic]) + "\n\n";
+      }
+      showResponse(fullText.trim());
+    });
+
+    function escapeHtml(unsafe) {
+      return unsafe.replace(/[&<"'>]/g, function(m) {
+        return ({'&':'&','<':'<','>':'>','"':'"',"'":'\''}[m]);
+      });
+    }
+
+    showResponse("Halo! Tanyakan sesuatu, mis. 'teks observasi', 'teknik basket', 'UUD 1945', 'SPL', atau klik 📣 untuk data terbaru.");
+
+    window.addEventListener('unload', () => {
+      try {
+        if (generatedImage && generatedImage.src.startsWith('blob:')) URL.revokeObjectURL(generatedImage.src);
+      } catch(e){}
+    });
+  </script>
 </body>
 </html>
