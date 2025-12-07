@@ -190,10 +190,12 @@
     <p id="imageDescription"></p>
   </div>
   <div class="hint">Tip: coba tanya dengan kata kunci yang ada di knowledge base, contoh: "tari", "tabel periodik", "present tense", "adjective", "teks observasi", "olahraga", "UUD 1945", "SPLDV", "sejarah hindu-budha".</div>
-
   <script>
     const knowledgeBase = {
-      // === DATA LAMA TETAP UTUH (termasuk SPLDV, model matematika, dll) ===
+      // ============== DATA LAMA (TIDAK DIUBAH) ==============
+      // [SEMUA DATA LAMA DARI FILE ANDA DISALIN UTUH DI SINI]
+      // (Untuk kejelasan, kami sisipkan kembali utuh seperti file Anda)
+
       budaya: {
         keywords: ['budaya', 'adat', 'tradisi', 'kesenian', 'tari', 'rumah adat', 'makanan khas', 'seni', 'nusantara'],
         pengertian: "Budaya Nusantara adalah keseluruhan cara hidup masyarakat Indonesia yang mencakup nilai, norma, seni, adat istiadat, dan kepercayaan.",
@@ -681,8 +683,6 @@
           ]
         }
       },
-
-      // === [DATA BARU] SEJARAH ===
       sejarah: {
         keywords: [
           'sejarah', 'pengertian sejarah', 'konsep ruang dan waktu sejarah',
@@ -748,8 +748,6 @@
           "Nama tempat: Surabaya (Sura = ikan hiu, Baya = buaya), Medan (dari kata 'medini' = bumi)"
         ]
       },
-
-      // === DATA MATEMATIKA (TETAP UTUH) ===
       modelMatematika: {
         keywords: ['model matematika', 'pemodelan matematika', 'matematika terapan'],
         pengertian: "Model matematika adalah representasi suatu masalah dunia nyata dalam bentuk persamaan, fungsi, atau sistem persamaan matematika untuk memudahkan analisis dan prediksi.",
@@ -787,6 +785,233 @@
         penyelesaian: "x = –b/a",
         contoh: "3x – 6 = 0 → x = 2.",
         catatan: "Meski disebut 'sistem', secara teknis sistem memerlukan minimal dua persamaan. PLSV diselesaikan secara langsung tanpa metode eliminasi/substitusi."
+      },
+
+      // ============== DATA BARU YANG DIMINTA ==============
+      pendomanNegaraku: {
+        keywords: ['pendoman negaraku', 'pedoman hidup berbangsa', 'dasar negara', 'pedoman pancasila'],
+        pengertian: "Pedoman negaraku adalah Pancasila, yang menjadi dasar falsafah dan pedoman dalam kehidupan berbangsa dan bernegara di Indonesia.",
+        nilai: [
+          "Ketuhanan Yang Maha Esa — menghormati semua agama",
+          "Kemanusiaan yang Adil dan Beradab — menjunjung tinggi HAM",
+          "Persatuan Indonesia — menempatkan kepentingan bangsa di atas kelompok",
+          "Kerakyatan yang Dipimpin oleh Hikmat Kebijaksanaan — musyawarah",
+          "Keadilan Sosial bagi Seluruh Rakyat Indonesia — keadilan ekonomi & sosial"
+        ],
+        penerapan: "Di lingkungan keluarga, sekolah, masyarakat: gotong royong, toleransi, musyawarah, disiplin."
+      },
+      prosesPerumusanUUD1945: {
+        keywords: ['proses perumusan uud 1945', 'bpupki', 'ppki', 'pengesahan uud 1945', 'sejarah uud 1945'],
+        pengertian: "Proses perumusan dan pengesahan UUD 1945 dilakukan oleh BPUPKI dan PPKI menjelang kemerdekaan Indonesia.",
+        tahapan: {
+          "BPUPKI (29 Mei – 1 Juni 1945)": "Rapat pertama membahas dasar negara; Soekarno menyampaikan Pancasila.",
+          "Panitia Sembilan": "Menyusun Piagam Jakarta (22 Juni 1945) sebagai cikal bakal pembukaan UUD.",
+          "PPKI (18 Agustus 1945)": "Mengesahkan UUD 1945 sehari setelah proklamasi kemerdekaan."
+        },
+        tokohPenting: ["Ir. Soekarno", "Moh. Hatta", "Soepomo", "Ki Hajar Dewantara", "Wahid Hasyim"],
+        perubahanPenting: "Kata 'dengan kewajiban menjalankan syariat Islam bagi pemeluk-pemeluknya' diubah menjadi 'Ketuhanan Yang Maha Esa' untuk menjaga persatuan."
+      },
+      fungsiDanKedudukanUUD1945: {
+        keywords: ['fungsi uud 1945', 'kedudukan uud 1945', 'konstitusi tertinggi'],
+        pengertian: "UUD 1945 adalah konstitusi tertinggi di Indonesia dan berfungsi sebagai dasar hukum negara.",
+        fungsi: [
+          "Sebagai dasar hukum negara",
+          "Sebagai pedoman penyelenggaraan pemerintahan",
+          "Sebagai alat kontrol terhadap kekuasaan negara",
+          "Sebagai sumber dari segala sumber hukum"
+        ],
+        kedudukan: "UUD 1945 berada di puncak hierarki peraturan perundang-undangan (Pasal 7 ayat 1 UU No. 12 Tahun 2011)."
+      },
+      beraniMenjalankanUUD: {
+        keywords: ['berani menjalankan uud', 'implementasi uud di lingkungan', 'uud di masyarakat'],
+        pengertian: "Berani menjalankan UUD 1945 berarti menerapkan nilai-nilai konstitusi dalam kehidupan sehari-hari.",
+        contoh: [
+          "Di rumah: menghargai anggota keluarga tanpa diskriminasi (Sila 2 & 3)",
+          "Di sekolah: musyawarah memilih ketua kelas (Sila 4)",
+          "Di lingkungan: menjaga kebersihan bersama, gotong royong (Sila 5)",
+          "Di masyarakat: melapor jika ada pelanggaran hukum (Pasal 27 & 28)"
+        ]
+      },
+      peraturanDiNegaraku: {
+        keywords: ['peraturan di negaraku', 'aturan hukum indonesia', 'sistem hukum indonesia'],
+        pengertian: "Peraturan di negaraku adalah aturan hukum yang mengatur kehidupan warga negara Indonesia, mulai dari tingkat pusat hingga daerah.",
+        jenis: ["Undang-Undang", "Peraturan Pemerintah", "Peraturan Presiden", "Perda", "Perkada"],
+        prinsip: "Menciptakan ketertiban, keadilan, kepastian hukum, dan perlindungan HAM."
+      },
+      peraturanDirumah: {
+        keywords: ['peraturan dirumah', 'aturan keluarga', 'disiplin rumah'],
+        contoh: [
+          "Bangun pagi dan merapikan tempat tidur",
+          "Membantu orang tua",
+          "Menyimpan mainan setelah bermain",
+          "Menghormati anggota keluarga"
+        ],
+        tujuan: "Membentuk karakter disiplin, tanggung jawab, dan rasa hormat sejak dini."
+      },
+      peraturanSekolah: {
+        keywords: ['peraturan sekolah', 'tata tertib sekolah', 'disiplin siswa'],
+        contoh: [
+          "Datang tepat waktu",
+          "Mengenakan seragam rapi",
+          "Tidak berkelahi",
+          "Mengikuti upacara dengan khidmat"
+        ],
+        tujuan: "Menciptakan lingkungan belajar yang aman, tertib, dan kondusif."
+      },
+      peraturanLingkunganDanNegara: {
+        keywords: ['peraturan lingkungan', 'peraturan RT', 'peraturan daerah'],
+        lingkungan: [
+          "Tidak membuang sampah sembarangan",
+          "Mengikuti ronda malam",
+          "Menjaga ketertiban saat arisan warga"
+        ],
+        negara: [
+          "Membayar pajak",
+          "Mematuhi UU Lalu Lintas",
+          "Tidak menyebarkan hoaks"
+        ],
+        hubungan: "Peraturan lingkungan harus selaras dengan peraturan negara."
+      },
+      tataUrutanPerundangUndangan: {
+        keywords: ['tata urutan perundang undangan', 'hirarki peraturan', 'uu no 12 tahun 2011'],
+        pengertian: "Tata urutan perundang-undangan adalah hierarki kekuatan hukum dari berbagai jenis peraturan di Indonesia sesuai UU No. 12 Tahun 2011.",
+        jenis: [
+          "1. Undang-Undang Dasar Negara Republik Indonesia Tahun 1945",
+          "2. Ketetapan MPR",
+          "3. Undang-Undang/Peraturan Pemerintah Pengganti Undang-Undang",
+          "4. Peraturan Pemerintah",
+          "5. Peraturan Presiden",
+          "6. Peraturan Daerah Provinsi",
+          "7. Peraturan Daerah Kabupaten/Kota"
+        ],
+        prinsip: "Peraturan di bawah tidak boleh bertentangan dengan peraturan di atasnya."
+      },
+      implementasiPeraturan: {
+        keywords: ['implementasi peraturan perundang undangan', 'penerapan hukum'],
+        pengertian: "Implementasi adalah proses penerapan peraturan perundang-undangan dalam kehidupan nyata.",
+        tantangan: [
+          "Kurangnya sosialisasi",
+          "Korupsi aparat penegak hukum",
+          "Ketidaktahuan masyarakat"
+        ],
+        solusi: [
+          "Edukasi hukum sejak dini",
+          "Transparansi penegakan hukum",
+          "Partisipasi aktif warga"
+        ]
+      },
+      komitmenTataUrutan: {
+        keywords: ['komitmen tata urutan peraturan', 'kesadaran hukum', 'warga negara sadar hukum'],
+        pengertian: "Komitmen adalah kesediaan warga negara untuk mematuhi dan menegakkan hierarki peraturan.",
+        bentuk: [
+          "Mengikuti pelatihan UU",
+          "Melaporkan pelanggaran",
+          "Menggunakan saluran hukum yang sah"
+        ],
+        pentingnya: "Menjaga keadilan, stabilitas, dan kepastian hukum nasional."
+      },
+      kemerdekaanBerpendapat: {
+        keywords: ['kemerdekaan berpendapat', 'pasal 28e uud 1945', 'hak asasi berpendapat'],
+        pengertian: "Hak setiap warga negara untuk menyampaikan pikiran secara lisan, tulisan, atau media lainnya.",
+        dasarHukum: "Pasal 28E ayat (3) UUD 1945: Setiap orang berhak atas kebebasan berserikat, berkumpul, dan mengeluarkan pendapat.",
+        batasan: "Tidak boleh menghina, memfitnah, atau mengancam ketertiban umum.",
+        contohSehat: [
+          "Diskusi di kelas",
+          "Surat pembaca di koran",
+          "Demonstrasi damai"
+        ]
+      },
+      persamaanKuadrat: {
+        keywords: ['persamaan kuadrat', 'rumus abc', 'akar persamaan kuadrat', 'diskriminan'],
+        pengertian: "Persamaan kuadrat adalah persamaan berbentuk ax² + bx + c = 0, dengan a ≠ 0.",
+        penyelesaian: {
+          "Pemfaktoran": "Jika mudah difaktorkan, misal x² – 5x + 6 = (x–2)(x–3) = 0 → x=2 atau x=3.",
+          "Melengkapkan Kuadrat": "Ubah ke bentuk (x + p)² = q.",
+          "Rumus ABC": "x = [–b ± √(b² – 4ac)] / (2a)"
+        },
+        diskriminan: "D = b² – 4ac → menentukan jenis akar: D>0 (2 real), D=0 (kembar), D<0 (imajiner)."
+      },
+      kesebangunan: {
+        keywords: ['kesebangunan', 'bangun sebangun', 'perbandingan sisi'],
+        pengertian: "Dua bangun dikatakan sebangun jika sudut-sudutnya sama dan sisi-sisinya sebanding.",
+        syarat: [
+          "Sudut-sudut bersesuaian sama besar",
+          "Perbandingan sisi-sisi bersesuaian sama"
+        ],
+        contohPenyelesaian: "Dua segitiga ABC dan DEF sebangun. Jika AB=4, DE=8, BC=5 → EF = (8/4)×5 = 10."
+      },
+      teoremaPythagoras: {
+        keywords: ['teorema pythagoras', 'a²+b²=c²', 'segitiga siku-siku'],
+        pengertian: "Pada segitiga siku-siku, kuadrat sisi miring (hipotenusa) sama dengan jumlah kuadrat dua sisi lainnya.",
+        rumus: "a² + b² = c² (c = sisi miring)",
+        penerapan: [
+          "Menghitung jarak",
+          "Menentukan apakah segitiga siku-siku",
+          "Desain arsitektur"
+        ],
+        contoh: "Segitiga sisi 3, 4 → sisi miring = √(3²+4²) = √25 = 5."
+      },
+      pemanfaatanSDA: {
+        keywords: ['pemanfaatan sumber daya alam', 'sda', 'sumber daya alam'],
+        pengertian: "Pemanfaatan SDA adalah penggunaan kekayaan alam untuk memenuhi kebutuhan manusia.",
+        prinsipBijak: [
+          "Lestarikan lingkungan",
+          "Gunakan teknologi ramah lingkungan",
+          "Hindari eksploitasi berlebihan"
+        ],
+        contohIndonesia: [
+          "Minyak bumi untuk bahan bakar",
+          "Hutan untuk kayu & ekowisata",
+          "Laut untuk perikanan & garam"
+        ]
+      },
+      literasi: {
+        keywords: ['literasi', 'literasi dasar', 'literasi digital', 'literasi finansial'],
+        pengertian: "Literasi adalah kemampuan mengakses, memahami, mengevaluasi, dan menggunakan informasi secara kritis.",
+        jenis: [
+          "Literasi baca-tulis",
+          "Literasi numerasi",
+          "Literasi digital",
+          "Literasi finansial",
+          "Literasi budaya & kewargaan"
+        ],
+        pentingnya: "Membentuk masyarakat yang kritis, produktif, dan adaptif di era informasi."
+      },
+      teoriMasuknyaIslam: {
+        keywords: ['teori masuknya islam ke indonesia', 'pedagang gujarat', 'wali songo', 'akulturasi islam'],
+        pengertian: "Islam masuk ke Nusantara sekitar abad ke-7–13 M melalui berbagai jalur damai.",
+        teori: {
+          "Teori Gujarat (India)": "Dibawa pedagang Gujarat abad ke-13 (berdasarkan batu nisan di Leran, Gresik).",
+          "Teori Persia": "Kemiripan budaya (Nowruz → Tabut, nama bulan).",
+          "Teori Arab": "Kontak langsung dengan pedagang Arab sejak abad ke-7.",
+          "Teori Cina": "Dakwah melalui jalur perdagangan Cina–Arab."
+        },
+        penyebaran: "Dilakukan oleh Wali Songo melalui pendekatan budaya (wayang, tembang, pesantren).",
+        bukti: [
+          "Makam Fatimah binti Maimun (1082 M) di Gresik",
+          "Kerajaan Samudra Pasai (1267) — kerajaan Islam pertama"
+        ]
+      },
+      berpikirKomputasional: {
+        keywords: ['berpikir komputasional', 'computational thinking', 'dekomposisi', 'algoritma'],
+        pengertian: "Berpikir komputasional adalah cara menyelesaikan masalah seperti cara komputer: logis, terstruktur, dan efisien.",
+        komponen: ["Dekomposisi", "Pengenalan Pola", "Abstraksi", "Algoritma"]
+      },
+      dekomposisi: {
+        keywords: ['dekomposisi', 'memecah masalah'],
+        pengertian: "Dekomposisi adalah memecah masalah kompleks menjadi bagian-bagian kecil yang lebih mudah diatasi.",
+        contoh: "Membuat website → pecah jadi: desain, konten, database, keamanan."
+      },
+      pengenalanPola: {
+        keywords: ['pengenalan pola', 'pattern recognition'],
+        pengertian: "Mengidentifikasi kesamaan, tren, atau keteraturan dalam data atau masalah.",
+        contoh: "Dalam matematika: 2, 4, 6, 8 → pola +2. Dalam coding: pengulangan fungsi."
+      },
+      algoritma: {
+        keywords: ['algoritma', 'langkah sistematis', 'pseudocode'],
+        pengertian: "Algoritma adalah serangkaian langkah logis dan berurutan untuk menyelesaikan suatu masalah.",
+        contoh: "Resep masak, petunjuk jalan, flowchart program.",
+        ciri: "Jelas, terbatas, efektif, dan menghasilkan output."
       }
     };
 
@@ -806,7 +1031,6 @@
       return index;
     }
     const keywordIndex = buildKeywordIndex(knowledgeBase);
-
     function formatSection(title, section) {
       if (!section) return `${title}: (tidak ada data)`;
       if (typeof section === 'string') return `${title}:\n${section}`;
@@ -846,24 +1070,20 @@
       }
       return out;
     }
-
     function searchKnowledge(query) {
       const q = query.toLowerCase().trim();
       if (!q) return { type: 'error', text: "Masukkan pertanyaan atau kata kunci terlebih dahulu." };
-
       const matches = new Map();
       for (const entry of keywordIndex) {
         if (q.includes(entry.keyword)) {
           matches.set(entry.key, knowledgeBase[entry.key]);
         }
       }
-
       if (matches.size === 0) {
         if (knowledgeBase[q]) {
           matches.set(q, knowledgeBase[q]);
         }
       }
-
       if (matches.size === 0) {
         const words = q.split(/\s+/);
         for (const w of words) {
@@ -872,14 +1092,12 @@
           }
         }
       }
-
       if (matches.size === 0) {
         if (q.includes('gambar') || q.includes('image') || q.includes('foto')) {
           return { type: 'imageOnly', text: "Minta gambar. Klik tombol + untuk menghasilkan gambar sederhana." };
         }
         return { type: 'notfound', text: "Maaf, saya tidak menemukan topik yang cocok. Coba gunakan kata kunci seperti 'teks observasi', 'olahraga', 'UUD 1945', 'SPLDV', 'sejarah hindu-budha'." };
       }
-
       let resultText = "";
       for (const [key, section] of matches) {
         resultText += formatSection(key.toUpperCase(), section) + "\n";
@@ -897,7 +1115,6 @@
     const generateBtn = document.getElementById('generateBtn');
     const techBtn = document.getElementById('techBtn');
     const announceBtn = document.getElementById('announceBtn');
-
     function showResponse(text) {
       responseDiv.style.display = 'block';
       responseDiv.textContent = text;
@@ -916,21 +1133,18 @@
       generatedImage.src = '';
       imageDescription.textContent = '';
     }
-
     sendBtn.addEventListener('click', () => {
       hideImage();
       const q = userInput.value || '';
       const result = searchKnowledge(q);
       showResponse(result.text);
     });
-
     userInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
         sendBtn.click();
       }
     });
-
     generateBtn.addEventListener('click', () => {
       const q = (userInput.value || 'Atlas Nusantara AI').trim();
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700">
@@ -957,25 +1171,20 @@
       showImage(url, `Gambar sederhana untuk: "${q}" — (SVG dihasilkan lokal)`);
       showResponse(`Menghasilkan gambar sederhana untuk: "${q}". Deskripsi singkat:\nGambar ini menampilkan judul Atlas Nusantara AI dengan teks permintaanmu.`);
     });
-
     techBtn.addEventListener('click', () => {
       userInput.value = 'teknologi';
       sendBtn.click();
     });
-
     announceBtn.addEventListener('click', () => {
       hideImage();
       showResponse("Anda bisa menanyakan topik sejarah seperti:\n- 'pengertian sejarah'\n- 'konsep ruang dan waktu sejarah'\n- 'teori masuknya hindu-budha'\n- 'bukti pengaruh hindu-budha saat ini'\n- 'perkembangan bumi dan makhluk hidup'");
     });
-
     function escapeHtml(unsafe) {
       return unsafe.replace(/[&<"'>]/g, function(m) {
         return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]);
       });
     }
-
     showResponse("Halo! Tanyakan sesuatu, mis. 'teks observasi', 'teknik basket', 'UUD 1945', 'SPLDV', 'sejarah hindu-budha', atau klik 📣 untuk daftar topik sejarah.");
-    
     window.addEventListener('unload', () => {
       try {
         if (generatedImage && generatedImage.src.startsWith('blob:')) URL.revokeObjectURL(generatedImage.src);
