@@ -39,7 +39,6 @@
       animation: nod 6s infinite ease-in-out;
       z-index: 10;
     }
-
     .robot-head::before {
       content: "";
       position: absolute;
@@ -51,7 +50,6 @@
       border-radius: 50%;
       box-shadow: 25px 0 0 white;
     }
-
     .glasses {
       position: absolute;
       top: 18px;
@@ -63,7 +61,6 @@
       border: 2px solid #cbd5e1;
       box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
     }
-
     .glasses::before,
     .glasses::after {
       content: "";
@@ -75,17 +72,14 @@
       border-radius: 50%;
       box-shadow: inset 0 0 8px rgba(56, 189, 248, 0.9);
     }
-
     .glasses::before { left: 3px; }
     .glasses::after { right: 3px; }
-
     @keyframes nod {
       0%, 100% { transform: translateY(0) rotate(0deg); }
       25% { transform: translateY(-4px) rotate(-1deg); }
       50% { transform: translateY(0) rotate(0deg); }
       75% { transform: translateY(-2px) rotate(1deg); }
     }
-
     .title {
       color: white;
       font-size: 22px;
@@ -96,7 +90,6 @@
       text-shadow: 0 1px 2px rgba(0,0,0,0.15);
       margin-top: -18px;
     }
-
     .ask-box {
       display: flex;
       align-items: center;
@@ -109,9 +102,7 @@
       max-width: 98%;
       transition: all 0.25s ease;
     }
-
     .ask-box:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.18); }
-
     .ask-box .icon, .generate-btn {
       font-size: 18px;
       color: var(--gray-text);
@@ -125,9 +116,7 @@
       transition: background 0.2s;
       user-select: none;
     }
-
     .ask-box .icon:hover, .generate-btn:hover { background: #f3f4f6; }
-
     .ask-box input {
       flex: 1;
       border: none;
@@ -137,9 +126,7 @@
       background: transparent;
       min-width: 0;
     }
-
     .ask-box input::placeholder { color: var(--placeholder-gray); }
-
     .send-btn, .tech-btn, .announce-btn {
       background: linear-gradient(90deg, var(--primary-blue), var(--secondary-pink));
       color: white;
@@ -154,12 +141,10 @@
       transition: transform 0.2s, box-shadow 0.2s;
       border: none;
     }
-
     .send-btn:hover, .tech-btn:hover, .announce-btn:hover {
       transform: scale(1.08);
       box-shadow: 0 6px 14px rgba(96, 165, 250, 0.28);
     }
-
     .response {
       background: white;
       padding: 16px 20px;
@@ -174,13 +159,10 @@
       white-space: pre-wrap;
       min-height: 48px;
     }
-
     #imageContainer { margin-top: 6px; max-width:640px; width:98%; display:flex; flex-direction:column; gap:8px; align-items:flex-start; }
     #imageContainer img { max-width:100%; height:auto; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.12); }
     #imageContainer p { margin:0; font-size:14px; color:#374151; }
-
     .hint { color: rgba(255,255,255,0.9); font-size:13px; margin-top:6px; }
-
     @media (max-width: 560px) {
       .ask-box { padding: 10px 12px; gap:8px; }
       .send-btn, .tech-btn, .announce-btn { width:36px; height:36px; font-size:14px; }
@@ -207,11 +189,11 @@
     <img id="generatedImage" src="" alt="Generated Image">
     <p id="imageDescription"></p>
   </div>
-  <div class="hint">Tip: coba tanya dengan kata kunci yang ada di knowledge base, contoh: "tari", "tabel periodik", "present tense", "adjective", "teks observasi", "olahraga", "UUD 1945".</div>
-  
+  <div class="hint">Tip: coba tanya dengan kata kunci yang ada di knowledge base, contoh: "tari", "tabel periodik", "present tense", "adjective", "teks observasi", "olahraga", "UUD 1945", "SPLDV", "sejarah hindu-budha".</div>
+
   <script>
     const knowledgeBase = {
-      // === SEMUA DATA LAIN TETAP UTUH ===
+      // === DATA LAMA TETAP UTUH (termasuk SPLDV, model matematika, dll) ===
       budaya: {
         keywords: ['budaya', 'adat', 'tradisi', 'kesenian', 'tari', 'rumah adat', 'makanan khas', 'seni', 'nusantara'],
         pengertian: "Budaya Nusantara adalah keseluruhan cara hidup masyarakat Indonesia yang mencakup nilai, norma, seni, adat istiadat, dan kepercayaan.",
@@ -249,8 +231,6 @@
         kaidahKebahasaan: "Menggunakan bahasa Melayu klasik, kata arkais (kuno), kalimat pasif, repetisi, metafora, dan hiperbola.",
         contoh: "Hikayat Hang Tuah, Hikayat Si Miskin, Hikayat Abdullah, Hikayat Bayan Budiman."
       },
-
-      // === LAPORAN HASIL OBSERVASI — DIPERLUAS LENGKAP ===
       laporanHasilObservasi: {
         keywords: ['laporan hasil observasi', 'teks observasi', 'pengamatan', 'objek', 'deskripsi', 'observasi', 'struktur teks observasi', 'kaidah kebahasaan observasi'],
         pengertianObservasi: "Observasi adalah kegiatan mengamati suatu objek, peristiwa, atau gejala secara sistematis, terencana, dan objektif untuk mengumpulkan data faktual.",
@@ -270,7 +250,6 @@
         },
         contoh: "Laporan pengamatan kupu-kupu: siklus hidup (telur → larva → pupa → imago), warna sayap, habitat (taman, hutan), cara makan (menghisap nektar), dan peran dalam penyerbukan."
       },
-
       narrativeText: {
         keywords: ['narrative text', 'cerita naratif', 'english story', 'orientation complication resolution'],
         pengertian: "Narrative text is a genre of writing that tells a story about past events to entertain readers.",
@@ -546,19 +525,6 @@
         ],
         perubahan: "Diamandemen 4 kali (1999–2002) untuk demokratisasi dan HAM."
       },
-      sistemPersamaanLinear: {
-        keywords: ['sistem persamaan linear', 'spl', 'persamaan linear', 'eliminasi', 'substitusi'],
-        pengertian: "Sistem Persamaan Linear (SPL) adalah kumpulan dua atau lebih persamaan linear dengan dua atau lebih variabel yang diselesaikan secara bersamaan.",
-        bentukUmum: "ax + by = c\ndx + ey = f",
-        metodePenyelesaian: [
-          "Metode substitusi",
-          "Metode eliminasi",
-          "Metode gabungan",
-          "Metode grafik"
-        ],
-        contoh: "2x + y = 5 dan x – y = 1 → solusi: x = 2, y = 1",
-        aplikasi: "Ekonomi (titik keseimbangan pasar), fisika (vektor), teknik."
-      },
       seni: {
         keywords: ['seni', 'karya seni', 'seni rupa', 'seni pertunjukan', 'estetika'],
         pengertian: "Seni adalah ekspresi perasaan, ide, atau nilai budaya melalui media visual, suara, gerak, atau kata yang memiliki nilai estetika.",
@@ -615,8 +581,6 @@
         ],
         ciri: ["Objektif", "Logis", "Menggunakan data", "Bahasa formal", "Ada sitasi"]
       },
-
-      // === OLAHRAGA — SUDAH LENGKAP (TIDAK DIUBAH) ===
       olahraga: {
         keywords: ['olahraga', 'cabang olahraga', 'atlet', 'medali', 'kompetisi', 'sehat', 'sejarah olahraga', 'teknik olahraga', 'renang', 'basket', 'voli', 'sepak bola', 'manfaat olahraga'],
         pengertian: "Olahraga adalah aktivitas fisik yang terencana, sistematis, dan bertujuan untuk meningkatkan kebugaran jasmani, keterampilan motorik, kekuatan, daya tahan, koordinasi, serta menanamkan nilai sportivitas, kerja sama, dan disiplin.",
@@ -716,6 +680,113 @@
             "Lalu Muhammad Zohri – juara lari 100m Asian Games 2018."
           ]
         }
+      },
+
+      // === [DATA BARU] SEJARAH ===
+      sejarah: {
+        keywords: [
+          'sejarah', 'pengertian sejarah', 'konsep ruang dan waktu sejarah',
+          'berpikir kronologis', 'perubahan dan keberlanjutan sejarah',
+          'perkembangan bumi', 'makhluk hidup', 'hindu-budha',
+          'kerajaan hindu budha', 'masuknya hindu budha',
+          'bukti pengaruh hindu budha'
+        ],
+        pengertianSejarah: "Sejarah adalah ilmu yang mempelajari peristiwa masa lalu yang terjadi pada manusia, disusun secara ilmiah berdasarkan fakta dan interpretasi objektif.",
+        peranPentingSejarah: [
+          "Menjadi cermin untuk memahami masa kini",
+          "Membentuk identitas nasional",
+          "Mengembangkan kemampuan berpikir kritis",
+          "Menginspirasi generasi mendatang"
+        ],
+        konsepRuangDanWaktu: {
+          pengertian: "Sejarah selalu terjadi pada ruang (lokasi geografis) dan waktu (masa tertentu). Tanpa keduanya, peristiwa tidak bisa dikontekstualisasi.",
+          contoh: "Kerajaan Majapahit berada di Jawa Timur (ruang) pada abad ke-13 hingga ke-15 (waktu)."
+        },
+        berpikirKronologis: {
+          pengertian: "Cara berpikir sejarah yang menempatkan peristiwa secara berurutan menurut waktu terjadinya.",
+          manfaat: "Membantu memahami sebab-akibat, menelusuri perubahan, dan menghindari penafsiran yang keliru.",
+          contoh: "Urutan: Kedatangan Hindu-Budha → Kerajaan Kutai → Kerajaan Tarumanegara → Kerajaan Sriwijaya → Kerajaan Majapahit."
+        },
+        perubahanDanBerkelanjutan: {
+          pengertian: "Sejarah tidak hanya tentang perubahan, tetapi juga hal-hal yang tetap bertahan dari masa ke masa.",
+          contohPerubahan: "Sistem pemerintahan dari kerajaan ke republik.",
+          contohKontinuitas: "Tradisi upacara adat, nilai gotong royong, sistem irigasi subak di Bali."
+        },
+        perkembanganBumiDanMakhlukHidup: {
+          zamanGeologi: [
+            "Arkaikum: bumi terbentuk, belum ada kehidupan",
+            "Paleozoikum: muncul kehidupan sederhana (amfibi, ikan)",
+            "Mesozoikum: zaman dinosaurus, muncul tumbuhan berbunga",
+            "Neozoikum (Kuarter): muncul manusia purba dan peradaban"
+          ]
+        },
+        sejarahHinduBudha: "Periode sejarah Nusantara antara abad ke-1 hingga ke-15 M, ditandai dengan pengaruh peradaban India melalui perdagangan dan penyebaran agama Hindu serta Budha.",
+        teoriMasuknyaHinduBudha: {
+          "Teori Brahmana": "Dibawa oleh kaum Brahmana yang diundang oleh raja lokal untuk upacara.",
+          "Teori Ksatria": "Dibawa oleh prajurit atau bangsawan India yang menaklukkan wilayah Nusantara.",
+          "Teori Waisya": "Dibawa oleh pedagang India melalui jalur perdagangan.",
+          "Teori Sudra": "Dibawa oleh rakyat jelata India yang ikut dalam kapal perdagangan dan menetap."
+        },
+        kerajaanHinduBudha: {
+          hindu: [
+            "Kutai (Kalimantan Timur, abad ke-4)",
+            "Tarumanegara (Jawa Barat, abad ke-5)",
+            "Mataram Kuno (Jawa Tengah, abad ke-8–10)",
+            "Majapahit (Jawa Timur, abad ke-13–15)"
+          ],
+          budha: [
+            "Sriwijaya (Sumatra, abad ke-7–13) – pusat ajaran Budha Mahayana",
+            "Singhasari (Jawa Timur, abad ke-13)"
+          ]
+        },
+        akhirKerajaanHinduBudha: "Berkahir sekitar abad ke-15–16 M seiring masuknya agama Islam yang dibawa pedagang Gujarat, Persia, dan Arab, serta kejatuhan Majapahit akibat perang saudara (Perang Paregreg).",
+        buktiPengaruhHinduBudhaSaatIni: [
+          "Candi Borobudur (Budha) dan Prambanan (Hindu)",
+          "Struktur bahasa: kata 'raja', 'negara', 'bumi', 'dewa'",
+          "Tradisi: upacara Nyepi, Galungan, upacara adat Jawa",
+          "Kesenian: wayang kulit (Mahabharata, Ramayana), tari Kecak",
+          "Nama tempat: Surabaya (Sura = ikan hiu, Baya = buaya), Medan (dari kata 'medini' = bumi)"
+        ]
+      },
+
+      // === DATA MATEMATIKA (TETAP UTUH) ===
+      modelMatematika: {
+        keywords: ['model matematika', 'pemodelan matematika', 'matematika terapan'],
+        pengertian: "Model matematika adalah representasi suatu masalah dunia nyata dalam bentuk persamaan, fungsi, atau sistem persamaan matematika untuk memudahkan analisis dan prediksi.",
+        langkah: [
+          "Identifikasi variabel dan parameter yang relevan",
+          "Menyusun hubungan matematis antar variabel",
+          "Menyelesaikan model (analitis atau numerik)",
+          "Menginterpretasi hasil dalam konteks masalah asli"
+        ],
+        contoh: "Misalnya: Sebuah toko menjual pensil (x) dan penghapus (y). Total pendapatan Rp50.000. Jika harga pensil Rp2.000 dan penghapus Rp1.000, maka modelnya: 2000x + 1000y = 50000."
+      },
+      SPLDV: {
+        keywords: ['spldv', 'sistem persamaan linear dua variabel', 'persamaan linear 2 variabel'],
+        pengertian: "SPLDV adalah sistem dua persamaan linear dengan dua variabel (misal x dan y) yang memiliki satu, tak hingga, atau tidak ada solusi.",
+        bentukUmum: "a₁x + b₁y = c₁\na₂x + b₂y = c₂",
+        metodePenyelesaian: ["Metode grafik", "Metode substitusi", "Metode eliminasi", "Metode gabungan"],
+        contohPenyelesaian: "2x + y = 7 dan x – y = 2 → dengan substitusi: x=3, y=1.",
+        syaratSolusi: {
+          "Tepat satu solusi": "Garis berpotongan (koefisien tidak sebanding)",
+          "Tak hingga solusi": "Garis berimpit (persamaan ekuivalen)",
+          "Tidak ada solusi": "Garis sejajar (koefisien x dan y sebanding, tapi konstanta tidak)"
+        }
+      },
+      SPLTV: {
+        keywords: ['spltv', 'sistem persamaan linear tiga variabel', 'persamaan linear 3 variabel'],
+        pengertian: "SPLTV adalah sistem tiga persamaan linear dengan tiga variabel (misal x, y, z) yang umumnya memiliki satu solusi unik.",
+        bentukUmum: "a₁x + b₁y + c₁z = d₁\na₂x + b₂y + c₂z = d₂\na₃x + b₃y + c₃z = d₃",
+        metodePenyelesaian: ["Substitusi bertahap", "Eliminasi bertahap", "Matriks (Cramer, Gauss)"],
+        contoh: "x + y + z = 6\n2x – y + z = 3\nx + 2y – z = 2 → solusi: x=1, y=2, z=3."
+      },
+      SPLSV: {
+        keywords: ['splsv', 'sistem persamaan linear satu variabel', 'persamaan linear 1 variabel'],
+        pengertian: "SPLSV sebenarnya bukan 'sistem', melainkan persamaan linear satu variabel (PLSV), yaitu persamaan berbentuk ax + b = 0 (a ≠ 0).",
+        bentukUmum: "ax + b = 0",
+        penyelesaian: "x = –b/a",
+        contoh: "3x – 6 = 0 → x = 2.",
+        catatan: "Meski disebut 'sistem', secara teknis sistem memerlukan minimal dua persamaan. PLSV diselesaikan secara langsung tanpa metode eliminasi/substitusi."
       }
     };
 
@@ -806,12 +877,12 @@
         if (q.includes('gambar') || q.includes('image') || q.includes('foto')) {
           return { type: 'imageOnly', text: "Minta gambar. Klik tombol + untuk menghasilkan gambar sederhana." };
         }
-        return { type: 'notfound', text: "Maaf, saya tidak menemukan topik yang cocok. Coba gunakan kata kunci seperti 'teks observasi', 'olahraga', 'UUD 1945', 'SPL', 'adjective'." };
+        return { type: 'notfound', text: "Maaf, saya tidak menemukan topik yang cocok. Coba gunakan kata kunci seperti 'teks observasi', 'olahraga', 'UUD 1945', 'SPLDV', 'sejarah hindu-budha'." };
       }
 
       let resultText = "";
       for (const [key, section] of matches) {
-        resultText += formatSection(key.toUpperCase(), section) + "\n\n";
+        resultText += formatSection(key.toUpperCase(), section) + "\n";
       }
       return { type: 'ok', text: resultText.trim() };
     }
@@ -831,18 +902,15 @@
       responseDiv.style.display = 'block';
       responseDiv.textContent = text;
     }
-
     function hideResponse() {
       responseDiv.style.display = 'none';
       responseDiv.textContent = '';
     }
-
     function showImage(dataUrl, desc) {
       imageContainer.style.display = 'flex';
       generatedImage.src = dataUrl;
       imageDescription.textContent = desc || '';
     }
-
     function hideImage() {
       imageContainer.style.display = 'none';
       generatedImage.src = '';
@@ -884,7 +952,6 @@
           </foreignObject>
         </g>
       </svg>`;
-
       const svgBlob = new Blob([svg], {type: 'image/svg+xml;charset=utf-8'});
       const url = URL.createObjectURL(svgBlob);
       showImage(url, `Gambar sederhana untuk: "${q}" — (SVG dihasilkan lokal)`);
@@ -898,22 +965,17 @@
 
     announceBtn.addEventListener('click', () => {
       hideImage();
-      let fullText = "DATA TERBARU — Topik Bahasa Inggris:\n\n";
-      const newTopics = ['adjective', 'adverb', 'imperative', 'descriptiveText', 'recountText'];
-      for (const topic of newTopics) {
-        fullText += formatSection(topic.toUpperCase(), knowledgeBase[topic]) + "\n\n";
-      }
-      showResponse(fullText.trim());
+      showResponse("Anda bisa menanyakan topik sejarah seperti:\n- 'pengertian sejarah'\n- 'konsep ruang dan waktu sejarah'\n- 'teori masuknya hindu-budha'\n- 'bukti pengaruh hindu-budha saat ini'\n- 'perkembangan bumi dan makhluk hidup'");
     });
 
     function escapeHtml(unsafe) {
       return unsafe.replace(/[&<"'>]/g, function(m) {
-        return ({'&':'&','<':'<','>':'>','"':'"',"'":'\''}[m]);
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]);
       });
     }
 
-    showResponse("Halo! Tanyakan sesuatu, mis. 'teks observasi', 'teknik basket', 'UUD 1945', 'SPL', atau klik 📣 untuk data terbaru.");
-
+    showResponse("Halo! Tanyakan sesuatu, mis. 'teks observasi', 'teknik basket', 'UUD 1945', 'SPLDV', 'sejarah hindu-budha', atau klik 📣 untuk daftar topik sejarah.");
+    
     window.addEventListener('unload', () => {
       try {
         if (generatedImage && generatedImage.src.startsWith('blob:')) URL.revokeObjectURL(generatedImage.src);
