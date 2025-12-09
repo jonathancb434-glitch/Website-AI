@@ -189,11 +189,10 @@
     <img id="generatedImage" src="" alt="Generated Image">
     <p id="imageDescription"></p>
   </div>
-  <div class="hint">Tip: coba tanya dengan kata kunci seperti "teorema pythagoras", "pedoman negaraku", "tata urutan perundang-undangan", "peraturan di rumahku", "UUD 1945", "persamaan kuadrat", "masuknya islam ke indonesia".</div>
+  <div class="hint">Tip: coba tanya dengan kata kunci seperti "teorema pythagoras", "pedoman negaraku", "tata urutan perundang-undangan", "peraturan di rumahku", "UUD 1945", "persamaan kuadrat", "masuknya islam ke indonesia", atau "berpikir komputasional".</div>
   <script>
     const knowledgeBase = {
       // ============== SEMUA DATA LAMA DARI FILE ANDA ==============
-      // (Dipertahankan utuh seperti Pasted_Text_1765176414198.txt)
       budaya: {
         keywords: ['budaya', 'adat', 'tradisi', 'kesenian', 'tari', 'rumah adat', 'makanan khas', 'seni', 'nusantara'],
         pengertian: "Budaya Nusantara adalah keseluruhan cara hidup masyarakat Indonesia yang mencakup nilai, norma, seni, adat istiadat, dan kepercayaan.",
@@ -957,8 +956,7 @@
         ],
         tujuan: "Mewujudkan negara hukum yang tertib, adil, dan demokratis."
       },
-
-      // ============== DATA BARU DITAMBAHKAN DI BAWAH INI ==============
+      // ============== DATA BARU ==============
       persamaanKuadrat: {
         keywords: ['persamaan kuadrat', 'kuadrat', 'ax2+bx+c', 'rumus kuadrat'],
         pengertian: "Persamaan kuadrat adalah persamaan polinomial berderajat dua yang memiliki bentuk umum ax² + bx + c = 0, dengan a ≠ 0.",
@@ -991,11 +989,45 @@
         ],
         tokohPenyebar: "Wali Songo (Sunan Kalijaga, Sunan Giri, dst.), Sultan Malik al-Saleh, Sultan Trenggono",
         dampakBudaya: "Arsitektur masjid (tumpeng, menara), seni wayang, aksara Arab-Jawa (Pegon), tradisi ziarah, dan sistem pendidikan pesantren."
+      },
+      berpikirKomputasional: {
+        keywords: ['berpikir komputasional', 'computational thinking', 'dekomposisi', 'abstraksi', 'pola', 'algoritma', 'pemecahan masalah'],
+        pengertian: "Berpikir komputasional adalah proses berpikir sistematis untuk memecahkan masalah kompleks dengan cara yang dapat dipahami dan dieksekusi oleh manusia maupun mesin. Ini bukan tentang coding, melainkan tentang cara berpikir.",
+        pilarUtama: {
+          dekomposisi: {
+            pengertian: "Membagi masalah besar menjadi bagian-bagian kecil yang lebih mudah dikelola.",
+            contoh: "Membuat makanan: memisahkan tahap (belanja bahan, memasak, menyajikan)."
+          },
+          abstraksi: {
+            pengertian: "Mengabaikan detail yang tidak penting dan fokus pada informasi yang esensial untuk memecahkan masalah.",
+            contoh: "Membuat peta: hanya menampilkan jalan dan lokasi penting, bukan setiap rumah atau pohon."
+          },
+          pengenalanPola: {
+            pengertian: "Mencari kemiripan atau pola dalam masalah atau data untuk menemukan solusi yang dapat digunakan kembali.",
+            contoh: "Mengenali pola dalam soal matematika atau pola dalam perilaku pengguna aplikasi."
+          },
+          algoritma: {
+            pengertian: "Merancang langkah-langkah sistematis atau prosedur yang jelas untuk menyelesaikan suatu masalah.",
+            contoh: "Resep masakan: langkah demi langkah mulai dari bahan, proses, hingga penyajian."
+          }
+        },
+        manfaat: [
+          "Meningkatkan kemampuan pemecahan masalah",
+          "Mendorong kreativitas dan inovasi",
+          "Melatih logika dan sistematis",
+          "Membantu dalam berbagai bidang, bukan hanya teknologi (misal: bisnis, seni, ilmu sosial)"
+        ],
+        penerapan: [
+          "Dalam pendidikan: untuk memecahkan soal matematika, menulis esai, atau melakukan eksperimen sains.",
+          "Dalam kehidupan sehari-hari: merencanakan perjalanan, mengatur keuangan, atau menyelesaikan konflik.",
+          "Dalam dunia kerja: untuk merancang proses bisnis, menganalisis data, atau mengembangkan produk."
+        ],
+        hubunganDenganTeknologi: "Berpikir komputasional adalah fondasi untuk belajar ilmu komputer dan teknologi, namun dapat diterapkan di semua bidang tanpa harus menggunakan komputer."
       }
       // ============== AKHIR DATA BARU ==============
     };
 
-    // === FUNGSI UTILITAS (TIDAK BERUBAH) ===
+    // === FUNGSI UTILITAS ===
     function buildKeywordIndex(kb) {
       const index = [];
       for (const key of Object.keys(kb)) {
@@ -1078,7 +1110,7 @@
         if (q.includes('gambar') || q.includes('image') || q.includes('foto')) {
           return { type: 'imageOnly', text: "Minta gambar. Klik tombol + untuk menghasilkan gambar sederhana." };
         }
-        return { type: 'notfound', text: "Maaf, saya tidak menemukan topik yang cocok. Coba gunakan kata kunci seperti 'teorema pythagoras', 'pedoman negaraku', 'tata urutan perundang-undangan', 'peraturan di rumahku', atau 'UUD 1945'." };
+        return { type: 'notfound', text: "Maaf, saya tidak menemukan topik yang cocok. Coba gunakan kata kunci seperti 'teorema pythagoras', 'pedoman negaraku', 'tata urutan perundang-undangan', 'peraturan di rumahku', 'UUD 1945', 'persamaan kuadrat', 'masuknya islam ke indonesia', atau 'berpikir komputasional'." };
       }
       let resultText = "";
       for (const [key, section] of matches) {
@@ -1087,7 +1119,7 @@
       return { type: 'ok', text: resultText.trim() };
     }
 
-    // === BINDING UI (TIDAK BERUBAH) ===
+    // === BINDING UI ===
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
     const responseDiv = document.getElementById('response');
@@ -1102,18 +1134,15 @@
       responseDiv.style.display = 'block';
       responseDiv.textContent = text;
     }
-
     function hideResponse() {
       responseDiv.style.display = 'none';
       responseDiv.textContent = '';
     }
-
     function showImage(dataUrl, desc) {
       imageContainer.style.display = 'flex';
       generatedImage.src = dataUrl;
       imageDescription.textContent = desc || '';
     }
-
     function hideImage() {
       imageContainer.style.display = 'none';
       generatedImage.src = '';
@@ -1168,7 +1197,7 @@
 
     announceBtn.addEventListener('click', () => {
       hideImage();
-      showResponse("Anda bisa menanyakan topik seperti:\n- 'teorema pythagoras'\n- 'pedoman negaraku'\n- 'proses perumusan uud 1945'\n- 'tata urutan perundang-undangan'\n- 'peraturan di rumahku'\n- 'persamaan kuadrat'\n- 'masuknya islam ke indonesia'");
+      showResponse("Anda bisa menanyakan topik seperti:\n- 'teorema pythagoras'\n- 'pedoman negaraku'\n- 'proses perumusan uud 1945'\n- 'tata urutan perundang-undangan'\n- 'peraturan di rumahku'\n- 'persamaan kuadrat'\n- 'masuknya islam ke indonesia'\n- 'berpikir komputasional'");
     });
 
     function escapeHtml(unsafe) {
@@ -1177,7 +1206,8 @@
       });
     }
 
-    showResponse("Halo! Tanyakan sesuatu, mis. 'teorema pythagoras', 'pedoman negaraku', 'tata urutan perundang-undangan', 'peraturan di rumahku', 'persamaan kuadrat', atau 'masuknya islam ke indonesia'.");
+    showResponse("Halo! Tanyakan sesuatu, mis. 'teorema pythagoras', 'pedoman negaraku', 'tata urutan perundang-undangan', 'peraturan di rumahku', 'persamaan kuadrat', 'masuknya islam ke indonesia', atau 'berpikir komputasional'.");
+
     window.addEventListener('unload', () => {
       try {
         if (generatedImage && generatedImage.src.startsWith('blob:')) URL.revokeObjectURL(generatedImage.src);
