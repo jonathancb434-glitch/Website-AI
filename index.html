@@ -1,198 +1,248 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ask Me Anything — Atlas Nusantara AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nusantara AI v5.7</title>
   <style>
-    :root {
-      --primary-blue: #60A5FA;
-      --secondary-pink: #EC4899;
-      --gray-text: #6B7280;
-      --bg-white: #ffffff;
-      --placeholder-gray: #9CA3AF;
-      --tech-blue: #38bdf8;
-    }
-    html, body { height: 100%; }
-    body {
-      min-height: 100vh;
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #0e0e12;
+      color: white;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      gap: 20px;
-      background: linear-gradient(135deg, var(--primary-blue), var(--secondary-pink));
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      justify-content: flex-start;
       padding: 20px;
-      box-sizing: border-box;
+      overflow-x: hidden;
     }
-    .robot-head {
-      position: relative;
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(145deg, #e0e0e0, #ffffff);
-      border-radius: 50%;
-      box-shadow:
-        0 0 20px rgba(56, 189, 248, 0.6),
-        inset 0 0 10px rgba(255, 255, 255, 0.8);
-      animation: nod 6s infinite ease-in-out;
-      z-index: 10;
-    }
-    .robot-head::before {
-      content: "";
+
+    .logo {
       position: absolute;
       top: 20px;
-      left: 15px;
-      width: 20px;
-      height: 10px;
-      background: white;
-      border-radius: 50%;
-      box-shadow: 25px 0 0 white;
-    }
-    .glasses {
-      position: absolute;
-      top: 18px;
-      left: 12px;
-      width: 56px;
-      height: 20px;
-      background: white;
-      border-radius: 10px;
-      border: 2px solid #cbd5e1;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
-    }
-    .glasses::before,
-    .glasses::after {
-      content: "";
-      position: absolute;
-      top: 5px;
-      width: 16px;
-      height: 16px;
-      background: #e2e8f0;
-      border-radius: 50%;
-      box-shadow: inset 0 0 8px rgba(56, 189, 248, 0.9);
-    }
-    .glasses::before { left: 3px; }
-    .glasses::after { right: 3px; }
-    @keyframes nod {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      25% { transform: translateY(-4px) rotate(-1deg); }
-      50% { transform: translateY(0) rotate(0deg); }
-      75% { transform: translateY(-2px) rotate(1deg); }
-    }
-    .title {
-      color: white;
-      font-size: 22px;
-      font-weight: 700;
-      text-align: center;
-      max-width: 90%;
-      line-height: 1.3;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.15);
-      margin-top: -18px;
-    }
-    .ask-box {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: var(--bg-white);
-      border-radius: 50px;
-      padding: 12px 18px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-      width: 640px;
-      max-width: 98%;
-      transition: all 0.25s ease;
-    }
-    .ask-box:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.18); }
-    .ask-box .icon, .generate-btn {
+      left: 20px;
       font-size: 18px;
-      color: var(--gray-text);
-      cursor: pointer;
+      font-weight: bold;
+      color: #ffffff;
+      z-index: 10;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 60px;
+    }
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fffacd 0%, #ffd1dc 25%, #e6e6fa 50%, #d0f0f8 100%);
+      margin-bottom: 20px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 5px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .subtitle {
+      color: #aaa;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    /* Chat history */
+    .chat-history {
+      width: 100%;
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .message {
+      padding: 12px 16px;
+      border-radius: 16px;
+      max-width: 80%;
+      word-wrap: break-word;
+      line-height: 1.4;
+    }
+
+    .user-message {
+      background: rgba(255, 255, 255, 0.1);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .ai-message {
+      background: linear-gradient(135deg, #2b2b3a 0%, #3a3a4f 100%);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .chat-input-container {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      transition: background 0.2s;
-      user-select: none;
+      gap: 8px;
     }
-    .ask-box .icon:hover, .generate-btn:hover { background: #f3f4f6; }
-    .ask-box input {
-      flex: 1;
+
+    .input-addon {
+      background: rgba(255, 255, 255, 0.05);
       border: none;
-      outline: none;
-      font-size: 15px;
-      color: var(--gray-text);
-      background: transparent;
-      min-width: 0;
-    }
-    .ask-box input::placeholder { color: var(--placeholder-gray); }
-    .send-btn, .tech-btn, .announce-btn {
-      background: linear-gradient(90deg, var(--primary-blue), var(--secondary-pink));
-      color: white;
       border-radius: 50%;
       width: 40px;
       height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: background 0.2s;
+    }
+
+    .input-addon:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .input-addon svg {
+      fill: white;
+      width: 18px;
+      height: 18px;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 15px 20px;
+      border-radius: 50px;
       border: none;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      font-size: 16px;
+      outline: none;
+      transition: background 0.3s;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
-    .send-btn:hover, .tech-btn:hover, .announce-btn:hover {
-      transform: scale(1.08);
-      box-shadow: 0 6px 14px rgba(96, 165, 250, 0.28);
+
+    .chat-input::placeholder {
+      color: #aaa;
     }
-    .response {
-      background: white;
-      padding: 16px 20px;
-      border-radius: 12px;
-      max-width: 640px;
-      width: 98%;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-      color: #374151;
-      font-size: 15px;
-      line-height: 1.5;
-      text-align: left;
-      white-space: pre-wrap;
-      min-height: 48px;
+
+    .send-btn {
+      background: linear-gradient(135deg, #fffacd 0%, #ffd1dc 25%, #e6e6fa 50%, #d0f0f8 100%);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
     }
-    #imageContainer { margin-top: 6px; max-width:640px; width:98%; display:flex; flex-direction:column; gap:8px; align-items:flex-start; }
-    #imageContainer img { max-width:100%; height:auto; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.12); }
-    #imageContainer p { margin:0; font-size:14px; color:#374151; }
-    .hint { color: rgba(255,255,255,0.9); font-size:13px; margin-top:6px; }
-    @media (max-width: 560px) {
-      .ask-box { padding: 10px 12px; gap:8px; }
-      .send-btn, .tech-btn, .announce-btn { width:36px; height:36px; font-size:14px; }
-      .robot-head { width:60px; height:60px; }
-      .title { font-size:18px; }
+
+    .send-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .send-btn svg {
+      fill: #0e0e12;
+      width: 16px;
+      height: 16px;
+    }
+
+    .quick-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .quick-action-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      border-radius: 20px;
+      padding: 8px 15px;
+      color: #ccc;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .quick-action-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 600px) {
+      .avatar { width: 80px; height: 80px; }
+      h1 { font-size: 20px; }
+      .chat-input { padding: 12px 15px; font-size: 14px; }
+      .input-addon, .send-btn { width: 36px; height: 36px; }
+      .message { max-width: 85%; }
     }
   </style>
 </head>
 <body>
-  <div class="robot-head">
-    <div class="glasses"></div>
+  <div class="logo">Nusantara AI v5.7</div>
+
+  <div class="container">
+    <div class="avatar"></div>
+    <h1>Ask me anything</h1>
+    <p class="subtitle">Input your thoughts → Get cultural insights & responses!</p>
+
+    <div class="chat-history" id="chatHistory"></div>
+
+    <div class="chat-input-container">
+      <button class="input-addon" id="addImageBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+      </button>
+      <input type="text" class="chat-input" placeholder="Type something about culture, history, or traditions..." id="userInput" />
+      <button class="send-btn" id="sendBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="quick-actions">
+      <button class="quick-action-btn">Upload Image</button>
+      <button class="quick-action-btn">Search Image</button>
+      <button class="quick-action-btn">Cultural Mode</button>
+    </div>
   </div>
-  <div class="title">Ask Me Anything — Atlas Nusantara AI 🎻</div>
-  <div class="ask-box" role="group" aria-label="Kotak tanya">
-    <button class="generate-btn" id="generateBtn" title="Hasilkan gambar dan deskripsi">＋</button>
-    <button class="announce-btn" id="announceBtn" title="Cari sumber lebih dalam">📣</button>
-    <span class="icon" aria-hidden="true">🗺️</span>
-    <input type="text" placeholder="Tanyakan sesuatu... (mis. 'apa itu rendang' atau 'jelaskan present tense')" id="userInput" />
-    <button class="tech-btn" id="techBtn" title="Cari tentang teknologi">🌐</button>
-    <div class="send-btn" id="sendBtn" title="Kirim pertanyaan">✈️</div>
-  </div>
-  <div id="response" class="response" style="display:none;"></div>
-  <div id="imageContainer" style="display:none;">
-    <img id="generatedImage" src="" alt="Generated Image">
-    <p id="imageDescription"></p>
-  </div>
-  <div class="hint">Tip: coba tanya dengan kata kunci seperti "teorema pythagoras", "pedoman negaraku", "tata urutan perundang-undangan", "peraturan di rumahku", "UUD 1945", "persamaan kuadrat", "masuknya islam ke indonesia", atau "berpikir komputasional".</div>
+
   <script>
+    // =============== PASTE SELURUH KNOWLEDGE BASE DARI FILE KAMU ===============
     const knowledgeBase = {
-      // ============== SEMUA DATA LAMA DARI FILE ANDA ==============
       budaya: {
         keywords: ['budaya', 'adat', 'tradisi', 'kesenian', 'tari', 'rumah adat', 'makanan khas', 'seni', 'nusantara'],
         pengertian: "Budaya Nusantara adalah keseluruhan cara hidup masyarakat Indonesia yang mencakup nilai, norma, seni, adat istiadat, dan kepercayaan.",
@@ -956,7 +1006,6 @@
         ],
         tujuan: "Mewujudkan negara hukum yang tertib, adil, dan demokratis."
       },
-      // ============== DATA BARU ==============
       persamaanKuadrat: {
         keywords: ['persamaan kuadrat', 'kuadrat', 'ax2+bx+c', 'rumus kuadrat'],
         pengertian: "Persamaan kuadrat adalah persamaan polinomial berderajat dua yang memiliki bentuk umum ax² + bx + c = 0, dengan a ≠ 0.",
@@ -1024,10 +1073,9 @@
         ],
         hubunganDenganTeknologi: "Berpikir komputasional adalah fondasi untuk belajar ilmu komputer dan teknologi, namun dapat diterapkan di semua bidang tanpa harus menggunakan komputer."
       }
-      // ============== AKHIR DATA BARU ==============
     };
 
-    // === FUNGSI UTILITAS ===
+    // === FUNGSI PEMROSESAN QUERY ===
     function buildKeywordIndex(kb) {
       const index = [];
       for (const key of Object.keys(kb)) {
@@ -1042,6 +1090,7 @@
       }
       return index;
     }
+
     const keywordIndex = buildKeywordIndex(knowledgeBase);
 
     function formatSection(title, section) {
@@ -1086,18 +1135,21 @@
 
     function searchKnowledge(query) {
       const q = query.toLowerCase().trim();
-      if (!q) return { type: 'error', text: "Masukkan pertanyaan atau kata kunci terlebih dahulu." };
+      if (!q) return "Masukkan pertanyaan atau kata kunci terlebih dahulu.";
+
       const matches = new Map();
       for (const entry of keywordIndex) {
         if (q.includes(entry.keyword)) {
           matches.set(entry.key, knowledgeBase[entry.key]);
         }
       }
+
       if (matches.size === 0) {
         if (knowledgeBase[q]) {
           matches.set(q, knowledgeBase[q]);
         }
       }
+
       if (matches.size === 0) {
         const words = q.split(/\s+/);
         for (const w of words) {
@@ -1106,112 +1158,57 @@
           }
         }
       }
+
       if (matches.size === 0) {
-        if (q.includes('gambar') || q.includes('image') || q.includes('foto')) {
-          return { type: 'imageOnly', text: "Minta gambar. Klik tombol + untuk menghasilkan gambar sederhana." };
-        }
-        return { type: 'notfound', text: "Maaf, saya tidak menemukan topik yang cocok. Coba gunakan kata kunci seperti 'teorema pythagoras', 'pedoman negaraku', 'tata urutan perundang-undangan', 'peraturan di rumahku', 'UUD 1945', 'persamaan kuadrat', 'masuknya islam ke indonesia', atau 'berpikir komputasional'." };
+        return "Maaf, saya tidak menemukan topik yang cocok. Coba gunakan kata kunci seperti 'teorema pythagoras', 'pedoman negaraku', 'tata urutan perundang-undangan', 'peraturan di rumahku', 'UUD 1945', 'persamaan kuadrat', 'masuknya islam ke indonesia', atau 'berpikir komputasional'.";
       }
+
       let resultText = "";
       for (const [key, section] of matches) {
         resultText += formatSection(key.toUpperCase(), section) + "\n";
       }
-      return { type: 'ok', text: resultText.trim() };
+      return resultText.trim();
     }
 
-    // === BINDING UI ===
+    // === UI & CHAT LOGIC ===
+    const chatHistory = document.getElementById('chatHistory');
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
-    const responseDiv = document.getElementById('response');
-    const imageContainer = document.getElementById('imageContainer');
-    const generatedImage = document.getElementById('generatedImage');
-    const imageDescription = document.getElementById('imageDescription');
-    const generateBtn = document.getElementById('generateBtn');
-    const techBtn = document.getElementById('techBtn');
-    const announceBtn = document.getElementById('announceBtn');
+    const addImageBtn = document.getElementById('addImageBtn');
 
-    function showResponse(text) {
-      responseDiv.style.display = 'block';
-      responseDiv.textContent = text;
-    }
-    function hideResponse() {
-      responseDiv.style.display = 'none';
-      responseDiv.textContent = '';
-    }
-    function showImage(dataUrl, desc) {
-      imageContainer.style.display = 'flex';
-      generatedImage.src = dataUrl;
-      imageDescription.textContent = desc || '';
-    }
-    function hideImage() {
-      imageContainer.style.display = 'none';
-      generatedImage.src = '';
-      imageDescription.textContent = '';
+    function addMessage(text, isUser = false) {
+      const div = document.createElement('div');
+      div.classList.add('message', isUser ? 'user-message' : 'ai-message');
+      div.textContent = text;
+      chatHistory.appendChild(div);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
     }
 
-    sendBtn.addEventListener('click', () => {
-      hideImage();
-      const q = userInput.value || '';
-      const result = searchKnowledge(q);
-      showResponse(result.text);
-    });
+    function sendMessage() {
+      const msg = userInput.value.trim();
+      if (!msg) return;
 
-    userInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        sendBtn.click();
-      }
-    });
+      addMessage(msg, true);
+      userInput.value = '';
 
-    generateBtn.addEventListener('click', () => {
-      const q = (userInput.value || 'Atlas Nusantara AI').trim();
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700">
-        <defs>
-          <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0" stop-color="#60A5FA"/>
-            <stop offset="1" stop-color="#EC4899"/>
-          </linearGradient>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#g1)"/>
-        <g transform="translate(60,120)" font-family="Segoe UI, Roboto, Arial">
-          <rect x="0" y="0" rx="20" ry="20" width="1080" height="460" fill="rgba(255,255,255,0.12)"/>
-          <text x="40" y="70" font-size="64" font-weight="700" fill="white">Atlas Nusantara AI</text>
-          <text x="40" y="150" font-size="34" fill="white">Hasil visual untuk:</text>
-          <foreignObject x="40" y="170" width="980" height="240">
-            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Segoe UI, Arial; color:white; font-size:26px; line-height:1.3; padding:10px;">
-              ${escapeHtml(q).replace(/\n/g,'<br/>')}
-            </div>
-          </foreignObject>
-        </g>
-      </svg>`;
-      const svgBlob = new Blob([svg], {type: 'image/svg+xml;charset=utf-8'});
-      const url = URL.createObjectURL(svgBlob);
-      showImage(url, `Gambar sederhana untuk: "${q}" — (SVG dihasilkan lokal)`);
-      showResponse(`Menghasilkan gambar sederhana untuk: "${q}". Deskripsi singkat:\nGambar ini menampilkan judul Atlas Nusantara AI dengan teks permintaanmu.`);
-    });
-
-    techBtn.addEventListener('click', () => {
-      userInput.value = 'teknologi';
-      sendBtn.click();
-    });
-
-    announceBtn.addEventListener('click', () => {
-      hideImage();
-      showResponse("Anda bisa menanyakan topik seperti:\n- 'teorema pythagoras'\n- 'pedoman negaraku'\n- 'proses perumusan uud 1945'\n- 'tata urutan perundang-undangan'\n- 'peraturan di rumahku'\n- 'persamaan kuadrat'\n- 'masuknya islam ke indonesia'\n- 'berpikir komputasional'");
-    });
-
-    function escapeHtml(unsafe) {
-      return unsafe.replace(/[&<"'>]/g, function(m) {
-        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]);
-      });
+      setTimeout(() => {
+        const response = searchKnowledge(msg);
+        addMessage(response, false);
+      }, 500);
     }
 
-    showResponse("Halo! Tanyakan sesuatu, mis. 'teorema pythagoras', 'pedoman negaraku', 'tata urutan perundang-undangan', 'peraturan di rumahku', 'persamaan kuadrat', 'masuknya islam ke indonesia', atau 'berpikir komputasional'.");
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
 
-    window.addEventListener('unload', () => {
-      try {
-        if (generatedImage && generatedImage.src.startsWith('blob:')) URL.revokeObjectURL(generatedImage.src);
-      } catch(e){}
+    addImageBtn.addEventListener('click', () => {
+      addMessage("✅ Fitur Upload Gambar Aktif!\nAnda bisa mengunggah gambar budaya, seni, atau artefak lokal.", false);
+    });
+
+    // Sambutan awal
+    window.addEventListener('load', () => {
+      addMessage("Halo! 😊 Saya adalah Nusantara AI. Tanyakan tentang budaya, sejarah, seni, atau tradisi Nusantara!", false);
     });
   </script>
 </body>
