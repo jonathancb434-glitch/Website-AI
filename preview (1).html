@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aura AI — Chat, Vision & Image</title>
+<style>
+:root{
+  --bg:#08070e;--panel:#100f19;--panel2:#151326;--line:rgba(255,255,255,.10);
+  --text:#f6f3ff;--muted:#a8a1bf;--purple:#8758ff;--purple2:#6544ff;
+  --cyan:#3ad9ff;--green:#58e2a2;--danger:#ff698f;--shadow:0 28px 80px rgba(0,0,0,.42);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:
+radial-gradient(circle at 50% -10%,rgba(109,66,255,.34),transparent 34%),
+radial-gradient(circle at 85% 70%,rgba(39,203,255,.08),transparent 25%),var(--bg);color:var(--text)}
+body{overflow:hidden}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.app{height:100%;display:flex;flex-direction:column}
+.topbar{height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;
+border-bottom:1px solid var(--line);background:rgba(7,6,13,.70);backdrop-filter:blur(22px);z-index:10}
+.brand{display:flex;align-items:center;gap:11px}.brandOrb,.heroOrb{border-radius:50%;
+background:radial-gradient(circle at 35% 27%,#fff 0 5%,#5ce7ff 16%,#597cff 31%,#8f34ff 51%,#ed44db 65%,transparent 76%);
+box-shadow:0 0 32px rgba(116,74,255,.60)}
+.brandOrb{width:34px;height:34px}.brandText b{font-size:14px}.brandText span{display:block;font-size:10px;color:var(--muted);margin-top:2px}
+.topActions{display:flex;align-items:center;gap:8px}
+.modelBadge,.topBtn{border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:11px;padding:9px 11px;font-size:11px}
+.modelBadge{display:flex;gap:7px;align-items:center}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+.topBtn:hover{border-color:rgba(139,92,246,.48);background:rgba(139,92,246,.10)}
+.layout{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 335px}
+.chatWrap{display:flex;justify-content:center;min-width:0}.chat{width:min(900px,100%);height:100%;display:flex;flex-direction:column;padding:27px 32px 22px}
+.hero{display:flex;gap:17px;align-items:center;margin:12px 0 25px}.heroOrb{width:70px;height:70px;flex:0 0 auto}
+.hero h1{margin:0 0 6px;font-size:28px;letter-spacing:-.8px}.hero p{margin:0;color:var(--muted);font-size:12.5px}
+.messages{flex:1;overflow:auto;padding:3px 5px 20px}.messages::-webkit-scrollbar{width:5px}.messages::-webkit-scrollbar-thumb{background:#2c2940;border-radius:10px}
+.row{display:flex;margin:12px 0}.row.user{justify-content:flex-end}.bubble{max-width:min(76%,680px);font-size:14px;line-height:1.58;
+padding:13px 16px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.035);box-shadow:0 12px 30px rgba(0,0,0,.13)}
+.user .bubble{background:linear-gradient(135deg,rgba(126,73,255,.30),rgba(90,45,170,.19));border-color:rgba(143,106,255,.26)}
+.ai .bubble{border-top-left-radius:7px}.bubble small{display:block;color:#9289ab;font-size:9px;letter-spacing:.8px;margin-bottom:6px}
+.imageCard{margin-top:10px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#08070e}.imageCard img{display:block;width:100%;max-height:390px;object-fit:contain}
+.composer{border:1px solid var(--line);border-radius:21px;background:rgba(16,14,27,.90);padding:10px;box-shadow:var(--shadow);backdrop-filter:blur(20px)}
+.preview{display:none;margin-bottom:9px;position:relative}.preview.show{display:block}.preview img{width:100%;height:132px;object-fit:cover;border-radius:12px;border:1px solid var(--line)}
+.previewLabel{position:absolute;left:9px;top:8px;padding:5px 8px;border-radius:9px;background:rgba(0,0,0,.48);font-size:9px;color:#fff}
+textarea{display:block;width:100%;min-height:52px;max-height:130px;resize:none;border:0;outline:0;background:transparent;padding:7px 9px;font-size:14px}
+.composerBottom{display:flex;justify-content:space-between;align-items:center;gap:8px}.actionRow{display:flex;gap:8px}
+.iconBtn{width:38px;height:38px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);display:grid;place-items:center;font-size:18px}
+.iconBtn:hover{background:rgba(139,92,246,.14);border-color:rgba(139,92,246,.45)}
+.send{height:38px;padding:0 16px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--purple),var(--purple2));font-weight:700;box-shadow:0 10px 25px rgba(103,69,255,.25)}
+.send:disabled{opacity:.5;cursor:not-allowed}
+.side{border-left:1px solid var(--line);background:rgba(9,8,16,.52);backdrop-filter:blur(18px);padding:21px 17px;overflow:auto}
+.side h2{margin:0;font-size:13px}.sideIntro{font-size:10.5px;color:var(--muted);line-height:1.5;margin:6px 0 14px}
+.modeRow{display:flex;gap:6px;margin-bottom:11px}.mode{flex:1;padding:9px 5px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.03);font-size:9px}
+.mode.selected{border-color:rgba(139,92,246,.65);background:rgba(139,92,246,.14)}
+.graph{border:1px solid var(--line);border-radius:17px;padding:13px 11px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015));min-height:510px;position:relative;overflow:hidden}
+.graph:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.09) 1px,transparent 1px);background-size:18px 18px;opacity:.15}
+.graphTitle{position:relative;text-transform:uppercase;letter-spacing:1.4px;font-size:9px;color:#bbb3d0;margin-bottom:12px}
+.node{position:relative;z-index:2;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(13,12,23,.94);transition:.25s}
+.node.active{border-color:rgba(138,91,255,.77);box-shadow:0 0 0 1px rgba(139,92,246,.14),0 0 27px rgba(108,70,255,.20)}
+.node.done{border-color:rgba(88,226,162,.30)}.nodeTitle{font-size:11px;font-weight:700}.nodeDesc{font-size:9px;color:var(--muted);margin-top:3px}.pill{float:right;font-size:8px;padding:3px 6px;border-radius:999px;background:rgba(255,255,255,.06);color:#c7c1da}
+.connector{height:11px;width:2px;margin:-1px auto;background:linear-gradient(var(--purple),rgba(139,92,246,.03));position:relative;z-index:1}
+.status{margin-top:13px;border:1px solid var(--line);border-radius:14px;padding:11px 12px;background:rgba(255,255,255,.025)}
+.statusLine{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:var(--muted);margin:0}.statusLine+.statusLine{margin-top:7px}.statusValue{color:#eeeaff;text-align:right;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.note{margin-top:10px;padding:9px 10px;border:1px solid rgba(255,255,255,.07);border-radius:11px;font-size:9px;color:#9189a9;line-height:1.45}
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.63);backdrop-filter:blur(9px);z-index:100}
+.modal.show{display:flex}.modalBox{width:min(455px,calc(100% - 30px));background:#11101c;border:1px solid var(--line);border-radius:21px;padding:19px;box-shadow:var(--shadow)}
+.modalBox h3{margin:0 0 5px;font-size:16px}.modalBox p{margin:0 0 15px;font-size:11px;color:var(--muted)}
+.choice,.keyInput{width:100%;border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:13px;padding:12px}
+.choice{text-align:left;margin:7px 0}.choice:hover{background:rgba(139,92,246,.10);border-color:rgba(139,92,246,.50)}
+.choice b{font-size:12px}.choice span{display:block;color:var(--muted);font-size:9px;margin-top:3px}
+.field{margin-top:11px}.field label{display:block;color:#cfc8df;font-size:10px;margin-bottom:6px}.keyInput{outline:none;color:#eeeaff}
+.modalActions{display:flex;justify-content:flex-end;gap:7px;margin-top:14px}.secondary{padding:9px 12px;border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:10px;font-size:10px}
+.primary{padding:9px 12px;border:0;background:linear-gradient(135deg,var(--purple),var(--purple2));border-radius:10px;font-size:10px;font-weight:700}
+.toast{position:fixed;left:50%;bottom:23px;transform:translateX(-50%) translateY(18px);opacity:0;background:#171426;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:10px;z-index:200;transition:.25s}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.side{display:none}.chat{padding:20px 16px}.bubble{max-width:88%}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <div class="brand">
+    <div class="brandOrb"></div>
+    <div class="brandText"><b>Aura AI</b><span>Chat · Vision · Image Studio</span></div>
+  </div>
+  <div class="topActions">
+    <div class="modelBadge"><span class="dot"></span><span id="providerBadge">OpenAI Chat · OpenRouter Image</span></div>
+    <button class="topBtn" id="settingsBtn">API Settings</button>
+  </div>
+</header>
+
+<main class="layout">
+<section class="chatWrap">
+<div class="chat">
+  <div class="hero">
+    <div class="heroOrb"></div>
+    <div>
+      <h1>How can I help?</h1>
+      <p>Pengetahuan & informasi → OpenAI. Analisis gambar → Vision. Generate gambar → OpenRouter.</p>
+    </div>
+  </div>
+
+  <div class="messages" id="messages">
+    <div class="row ai"><div class="bubble">
+      <small>AURA · READY</small>
+      Halo! Ketik pertanyaan biasa seperti <b>“jelaskan fotosintesis”</b> dan saya akan memakai <b>OpenAI API</b> untuk jawaban umum.
+      <br><br>
+      Tombol <b>+</b> khusus untuk memilih <b>Add image</b> atau <b>Create image</b>.
+    </div></div>
+  </div>
+
+  <div class="composer">
+    <div class="preview" id="preview">
+      <span class="previewLabel" id="previewLabel">IMAGE ATTACHED</span>
+      <img id="previewImg" alt="Preview">
+    </div>
+    <textarea id="prompt" placeholder="Tanyakan ilmu pengetahuan, informasi, coding, matematika, atau hal umum…"></textarea>
+    <div class="composerBottom">
+      <div class="actionRow">
+        <button class="iconBtn" id="plusBtn" title="Add image / Create image">+</button>
+        <input id="fileInput" type="file" accept="image/*" hidden>
+        <button class="iconBtn" id="clearBtn" title="Clear attachment">⌫</button>
+      </div>
+      <button class="send" id="sendBtn">Send</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<aside class="side">
+  <h2>CodeGraph</h2>
+  <div class="sideIntro">Graph visual untuk menunjukkan <b>pipeline aplikasi</b>. Ini bukan tampilan hidden chain-of-thought model.</div>
+  <div class="modeRow">
+    <button class="mode selected" id="chatMode">CHAT</button>
+    <button class="mode" id="visionMode">VISION</button>
+    <button class="mode" id="createMode">CREATE</button>
+  </div>
+  <div class="graph">
+    <div class="graphTitle" id="graphTitle">LIVE PIPELINE · CHAT</div>
+    <div id="nodes"></div>
+  </div>
+  <div class="status">
+    <div class="statusLine"><span>Pipeline</span><span class="statusValue" id="pipelineStatus">Idle</span></div>
+    <div class="statusLine"><span>Provider</span><span class="statusValue" id="apiStatus">Not called</span></div>
+    <div class="statusLine"><span>Attachment</span><span class="statusValue" id="attachmentStatus">None</span></div>
+  </div>
+  <div class="note">Security: API key di browser cocok untuk prototype/local testing. Untuk production, pindahkan request API ke backend/server agar key tidak terlihat di source.</div>
+</aside>
+</main>
+</div>
+
+<div class="modal" id="actionModal">
+  <div class="modalBox">
+    <h3>Choose image action</h3>
+    <p>Atur aksi tombol + untuk input berikutnya.</p>
+    <button class="choice" id="addChoice"><b>Add image</b><span>Attach gambar → Computer Vision → interpreting → refinement → jawaban.</span></button>
+    <button class="choice" id="createChoice"><b>Create image</b><span>Prompt → process → visual concept → interpreting → refinement → gambar.</span></button>
+  </div>
+</div>
+
+<div class="modal" id="settingsModal">
+  <div class="modalBox">
+    <h3>API Settings</h3>
+    <p>Masukkan key yang sesuai. OpenAI dipakai untuk chat umum dan vision; OpenRouter dipakai khusus image generation.</p>
+    <div class="field">
+      <label>OpenAI API Key</label>
+      <input class="keyInput" id="openaiKey" type="password" placeholder="sk-...">
+    </div>
+    <div class="field">
+      <label>OpenRouter API Key</label>
+      <input class="keyInput" id="openrouterKey" type="password" placeholder="sk-or-...">
+    </div>
+    <div class="field">
+      <label>OpenAI model</label>
+      <input class="keyInput" id="openaiModel" value="gpt-5.6-luna">
+    </div>
+    <div class="field">
+      <label>OpenRouter image model</label>
+      <input class="keyInput" id="imageModel" value="openai/gpt-image-1">
+    </div>
+    <div class="modalActions">
+      <button class="secondary" id="closeSettings">Cancel</button>
+      <button class="primary" id="saveSettings">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="textActionModal">
+  <div class="modalBox">
+    <h3>+</h3>
+    <p>Gambar hanya digunakan untuk dua fungsi berikut.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/*
+  AURA AI v2
+  FLOW:
+    Normal knowledge / information:
+      user input -> OpenAI Responses API -> answer
+    Add image:
+      image + prompt -> OpenAI Responses API vision -> answer
+    Create image:
+      prompt -> OpenRouter Image API -> generated image
+
+  Keys are intentionally kept as local settings for this prototype.
+  Do NOT publish real keys in a client-side HTML app.
+*/
+
+const DEFAULT_OPENROUTER_KEY = "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";
+const state = {
+  openaiKey: localStorage.getItem("aura_openai_key") || "",
+  openrouterKey: localStorage.getItem("aura_openrouter_key") || DEFAULT_OPENROUTER_KEY,
+  openaiModel: localStorage.getItem("aura_openai_model") || "gpt-5.6-luna",
+  imageModel: localStorage.getItem("aura_image_model") || "openai/gpt-image-1"
+};
+
+const OPENAI_URL = "https://api.openai.com/v1/responses";
+const OPENROUTER_URL = "https://openrouter.ai/api/v1/images";
+
+const nodes = {
+  chat: [
+    ["input","Input","Pertanyaan / informasi user"],
+    ["process","Process","Request orchestration"],
+    ["interpret","Interpreting Device","Memahami konteks & instruksi"],
+    ["refine","Fine Tuning / Refinement","Refinement prompt/context — bukan training model"],
+    ["output","Output","Jawaban teks"]
+  ],
+  vision: [
+    ["input","Input","Prompt + local image"],
+    ["process","Process","Routing multimodal request"],
+    ["vision","Computer Vision","Menganalisis isi gambar"],
+    ["interpret","Interpreting Device","Menghubungkan visual + prompt"],
+    ["refine","Fine Tuning / Refinement","Refinement respons — bukan training model"],
+    ["output","Output","Jawaban + insight visual"]
+  ],
+  create: [
+    ["input","Input","Deskripsi gambar"],
+    ["process","Process","Mempersiapkan image request"],
+    ["vision","Computer Vision","Visual concept & composition"],
+    ["interpret","Interpreting Device","Menafsirkan target visual"],
+    ["refine","Fine Tuning / Refinement","Memperjelas prompt generasi"],
+    ["output","Output","Generated image"]
+  ]
+};
+
+let currentMode = "chat";
+let selectedImage = null;
+let history = [];
+
+const $ = s => document.querySelector(s);
+
+function toast(msg){
+  const t=$("#toast");t.textContent=msg;t.classList.add("show");
+  clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),2600);
+}
+
+function renderGraph(mode){
+  const box=$("#nodes");box.innerHTML="";
+  nodes[mode].forEach((n,i)=>{
+    const [id,title,desc]=n;
+    box.insertAdjacentHTML("beforeend",
+      `<div class="node" data-node="${id}"><span class="pill">${String(i+1).padStart(2,"0")}</span>
+      <div class="nodeTitle">${title}</div><div class="nodeDesc">${desc}</div></div>
+      ${i<nodes[mode].length-1?'<div class="connector"></div>':""}`);
+  });
+  $("#graphTitle").textContent="LIVE PIPELINE · "+mode.toUpperCase();
+}
+function clearGraph(){
+  document.querySelectorAll(".node").forEach(n=>n.classList.remove("active","done"));
+}
+async function graphStep(id,status){
+  const all=nodes[currentMode].map(x=>x[0]);
+  const idx=all.indexOf(id);
+  document.querySelectorAll(".node").forEach(n=>{
+    const ni=all.indexOf(n.dataset.node);
+    n.classList.toggle("done",ni<idx);
+    n.classList.toggle("active",ni===idx);
+  });
+  $("#pipelineStatus").textContent=status;
+  await new Promise(r=>setTimeout(r,480));
+}
+async function finishGraph(){
+  document.querySelectorAll(".node").forEach(n=>{n.classList.add("done");n.classList.remove("active")});
+  $("#pipelineStatus").textContent="Complete";
+}
+function setMode(mode){
+  currentMode=mode;
+  ["chat","vision","create"].forEach(x=>$("#"+x+"Mode").classList.toggle("selected",x===mode));
+  renderGraph(mode);
+}
+function addMessage(role,html){
+  const row=document.createElement("div");row.className="row "+role;
+  const bubble=document.createElement("div");bubble.className="bubble";bubble.innerHTML=html;
+  row.appendChild(bubble);$("#messages").appendChild(row);$("#messages").scrollTop=$("#messages").scrollHeight;
+}
+function escapeHtml(v){
+  return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+}
+function dataUrl(file){
+  return new Promise((resolve,reject)=>{
+    const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file);
+  });
+}
+
+$("#plusBtn").onclick=()=>$("#actionModal").classList.add("show");
+$("#actionModal").onclick=e=>{if(e.target.id==="actionModal")e.target.classList.remove("show")};
+
+$("#addChoice").onclick=()=>{ $("#actionModal").classList.remove("show"); setMode("vision"); $("#fileInput").click(); };
+$("#createChoice").onclick=()=>{ $("#actionModal").classList.remove("show"); setMode("create"); $("#prompt").focus(); toast("Create image mode aktif."); };
+
+$("#chatMode").onclick=()=>setMode("chat");
+$("#visionMode").onclick=()=>{setMode("vision");$("#fileInput").click()};
+$("#createMode").onclick=()=>{setMode("create");$("#prompt").focus()};
+
+$("#fileInput").onchange=async()=>{
+  const f=$("#fileInput").files?.[0];if(!f)return;
+  selectedImage=await dataUrl(f);
+  $("#previewImg").src=selectedImage;$("#preview").classList.add("show");
+  $("#attachmentStatus").textContent=f.name;
+  setMode("vision");
+  toast("Image attached.");
+};
+
+$("#clearBtn").onclick=()=>{
+  selectedImage=null;$("#preview").classList.remove("show");$("#fileInput").value="";
+  $("#attachmentStatus").textContent="None";
+};
+
+$("#settingsBtn").onclick=()=>{
+  $("#openaiKey").value=state.openaiKey;
+  $("#openrouterKey").value=state.openrouterKey;
+  $("#openaiModel").value=state.openaiModel;
+  $("#imageModel").value=state.imageModel;
+  $("#settingsModal").classList.add("show");
+};
+$("#closeSettings").onclick=()=>$("#settingsModal").classList.remove("show");
+$("#settingsModal").onclick=e=>{if(e.target.id==="settingsModal")e.target.classList.remove("show")};
+$("#saveSettings").onclick=()=>{
+  state.openaiKey=$("#openaiKey").value.trim();
+  state.openrouterKey=$("#openrouterKey").value.trim();
+  state.openaiModel=$("#openaiModel").value.trim()||"gpt-5.6-luna";
+  state.imageModel=$("#imageModel").value.trim()||"openai/gpt-image-1";
+  localStorage.setItem("aura_openai_key",state.openaiKey);
+  localStorage.setItem("aura_openrouter_key",state.openrouterKey);
+  localStorage.setItem("aura_openai_model",state.openaiModel);
+  localStorage.setItem("aura_image_model",state.imageModel);
+  $("#settingsModal").classList.remove("show");
+  toast("API settings saved locally.");
+};
+
+function ensureKey(provider){
+  if(provider==="openai"&&!state.openaiKey){
+    $("#settingsBtn").click();toast("Masukkan OpenAI API key terlebih dahulu.");return false;
+  }
+  if(provider==="openrouter"&&!state.openrouterKey){
+    $("#settingsBtn").click();toast("Masukkan OpenRouter API key terlebih dahulu.");return false;
+  }
+  return true;
+}
+
+/* OpenAI Responses API for general chat + image understanding. */
+async function openAIResponse(text,image=null){
+  if(!ensureKey("openai"))throw new Error("OpenAI API key belum diisi.");
+  let userContent=[{type:"input_text",text:text||"Please analyze the attached image."}];
+  if(image)userContent.push({type:"input_image",image_url:image});
+  const body={
+    model:state.openaiModel,
+    store:false,
+    instructions:"You are Aura AI, a professional general-purpose assistant. Answer in the user's language. Be clear, useful and concise. Do not reveal private chain-of-thought. Provide brief conclusions or concise reasoning summaries when useful.",
+    input:[{role:"user",content:userContent}]
+  };
+  const res=await fetch(OPENAI_URL,{
+    method:"POST",
+    headers:{"Authorization":"Bearer "+state.openaiKey,"Content-Type":"application/json"},
+    body:JSON.stringify(body)
+  });
+  const data=await res.json();
+  if(!res.ok)throw new Error(data?.error?.message||"OpenAI request failed.");
+  return data.output_text||extractResponseText(data)||"No text output returned.";
+}
+function extractResponseText(data){
+  try{
+    return (data.output||[]).flatMap(item=>item.content||[])
+      .filter(x=>typeof x.text==="string").map(x=>x.text).join("\n");
+  }catch{return ""}
+}
+
+/* OpenRouter dedicated Image API. */
+async function openRouterImage(prompt){
+  if(!ensureKey("openrouter"))throw new Error("OpenRouter API key belum diisi.");
+  const body={
+    model:state.imageModel,
+    prompt:prompt,
+    n:1,
+    resolution:"1K",
+    aspect_ratio:"1:1",
+    output_format:"png"
+  };
+  const res=await fetch(OPENROUTER_URL,{
+    method:"POST",
+    headers:{
+      "Authorization":"Bearer "+state.openrouterKey,
+      "Content-Type":"application/json",
+      "HTTP-Referer":location.href,
+      "X-Title":"Aura AI"
+    },
+    body:JSON.stringify(body)
+  });
+  const data=await res.json();
+  if(!res.ok)throw new Error(data?.error?.message||"OpenRouter image request failed.");
+  const img=data?.data?.[0];
+  if(!img?.b64_json)throw new Error("Image API tidak mengembalikan b64_json.");
+  const mime=img.media_type||"image/png";
+  return `data:${mime};base64,${img.b64_json}`;
+}
+
+async function send(){
+  const prompt=$("#prompt").value.trim();
+  if(!prompt && !selectedImage){toast("Ketik pertanyaan atau tambahkan gambar.");return;}
+  $("#sendBtn").disabled=true;
+
+  const image=selectedImage;
+  const mode=currentMode;
+  addMessage("user",
+    `<small>YOU · ${mode.toUpperCase()}</small>${escapeHtml(prompt||"Analisis gambar ini.")}`+
+    (image?`<div class="imageCard"><img src="${image}" alt="Attached image"></div>`:"")
+  );
+  $("#prompt").value="";
+
+  try{
+    if(mode==="create" && prompt){
+      await graphStep("input","Reading prompt");
+      await graphStep("process","Preparing image request");
+      await graphStep("vision","Building visual concept");
+      await graphStep("interpret","Interpreting composition");
+      await graphStep("refine","Refining generation prompt");
+      $("#apiStatus").textContent="OpenRouter · Image API";
+      const img=await openRouterImage(prompt);
+      await graphStep("output","Image ready");
+      await finishGraph();
+      addMessage("ai",`<small>AURA · IMAGE OUTPUT</small><div class="imageCard"><img src="${img}" alt="Generated image"></div>`);
+    }else if(image){
+      /* Add Image path: OpenAI handles multimodal understanding. */
+      await graphStep("input","Receiving image + text");
+      await graphStep("process","Routing to OpenAI Vision");
+      await graphStep("vision","Analyzing visual input");
+      await graphStep("interpret","Interpreting visual context");
+      await graphStep("refine","Refining answer");
+      $("#apiStatus").textContent="OpenAI · Responses API";
+      const answer=await openAIResponse(prompt,image);
+      await graphStep("output","Answer ready");
+      await finishGraph();
+      addMessage("ai",`<small>AURA · OPENAI VISION</small>${escapeHtml(answer).replace(/\n/g,"<br>")}`);
+    }else{
+      /* GENERAL PATH: knowledge/information -> OpenAI. */
+      setMode("chat");
+      await graphStep("input","Receiving question");
+      await graphStep("process","Routing general request");
+      await graphStep("interpret","Understanding context");
+      await graphStep("refine","Refining answer");
+      $("#apiStatus").textContent="OpenAI · Responses API";
+      const answer=await openAIResponse(prompt);
+      await graphStep("output","Answer ready");
+      await finishGraph();
+      addMessage("ai",`<small>AURA · OPENAI CHAT</small>${escapeHtml(answer).replace(/\n/g,"<br>")}`);
+      history.push({role:"user",content:prompt},{role:"assistant",content:answer});
+    }
+  }catch(err){
+    $("#apiStatus").textContent="Error";
+    $("#pipelineStatus").textContent="Error";
+    addMessage("ai",`<small>AURA · ERROR</small>${escapeHtml(err.message)}`);
+  }finally{
+    $("#sendBtn").disabled=false;
+  }
+}
+$("#sendBtn").onclick=send;
+$("#prompt").addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send();}
+});
+renderGraph("chat");
+</script>
+</body>
+</html>
